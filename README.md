@@ -1,4 +1,4 @@
-![mf](https://github.com/user-attachments/assets/5eeabcf4-2901-4d27-85b0-91a97ab16a1c)
+![mf](https://github.com/user-attachments/assets/559e7b2e-f07c-4d23-8aae-9c69f4c6bcf2)
 # MilleFEuiIle
 ## Multi-InstrumentaL **Lagrangian**-Eulerian FEniCS-Using Ice-I Layer Explorer
 
