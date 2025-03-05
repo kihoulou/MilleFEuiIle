@@ -10,3 +10,13 @@
                              :::::::::::::::::::::::::::
  
  
+The MilleFEuiIle *) [mil·fœj] code is a finite-element computational code based on the
+open-source FEniCS python package, developed to solve thermo-mechanical evolution of
+ice shells as the main subject of my doctoral thesis. Starting in 2022 at Laboratoire de
+Planétologie et Géosciences in Nantes (France), the work now continues here at Depart-
+ment of Geophysics under a joint supervision of Ondřej Čadek, Klára Kalousová, Gaël
+Choblet and Gabriel Tobie.
+
+*) Multi-InstrumentaL Lagrangian-Eulerian FEniCS-Using Ice-I Layer Explorer, also a phonetic
+imitation of a French desert millefeuille made from staggered layers of puff pastry and pastry cream
+(see the front cover).
