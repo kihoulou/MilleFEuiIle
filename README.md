@@ -1,6 +1,6 @@
-# MilleFEuiIle
 ![mf](https://github.com/user-attachments/assets/5eeabcf4-2901-4d27-85b0-91a97ab16a1c)
-## Multi-InstrumentaL Lagrangian-Eulerian FEniCS-Using Ice-I Layer Explorer.
+# MilleFEuiIle
+## Multi-InstrumentaL Lagrangian-Eulerian FEniCS-Using Ice-I Layer Explorer
 
                                     ~ M i l l e F E u i I l e ~
                                      ___________     ___________
