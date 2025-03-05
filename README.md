@@ -18,3 +18,6 @@ ice shells of icy bodies. Combining finite element method and Lagrangian markers
 + phase transition between the ice shell and subsurface ocean
 + long-term tectonic extension/compression
 + tidally-driven partial melting
+
+M. Kihoulou, March 2025
+[Department of Geophysics, Charles University](https://geo.mff.cuni.cz/~kihoulou/)
