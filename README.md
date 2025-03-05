@@ -16,5 +16,5 @@ ice shells of icy bodies. Combining finite element method and Lagrangian markers
 + thermal/thermo-chemical convection
 + evolution of both surface and ice-ocean interface
 + phase transition between the ice shell and subsurface ocean
-+ tectonic simulations 
++ long-term tectonic extension/compression
 + tidally-driven partial melting
