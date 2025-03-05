@@ -7,7 +7,9 @@
                                 )) (__ __)\/(    )(    )
                                ((     ((   :::::::::::::
                                 ))     ))  (    )(     )
-                             :::::::::::::::::::::::::::The MilleFEuiIle *) [mil·fœj] code is a finite-element computational code based on the
+                             :::::::::::::::::::::::::::
+
+The MilleFEuiIle *) [mil·fœj] code is a finite-element computational code based on the
 open-source FEniCS python package, developed to solve thermo-mechanical evolution of
 ice shells as the main subject of my doctoral thesis. Starting in 2022 at Laboratoire de
 Planétologie et Géosciences in Nantes (France), the work now continues here at Depart-
