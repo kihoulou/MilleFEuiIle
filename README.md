@@ -10,7 +10,7 @@
                                         ))     ))  (    )(     )
                                      :::::::::::::::::::::::::::
 
-The **MilleFEuiIle** [ _mil·fœj_ ] is a finite-element computational code based on the open-source FEniCS python package, developed to solve thermo-mechanical evolution of
+**MilleFEuiIle** [ _mil·fœj_ ] is a computational code built upon the open-source finite-element python library FEniCS, developed to solve thermo-mechanical evolution of
 ice shells of icy bodies. Combining finite element method and Lagrangian markers, MilleFEuiIle can be used to address a variety of problems, such as
 
 + thermal/thermo-chemical convection
@@ -19,7 +19,7 @@ ice shells of icy bodies. Combining finite element method and Lagrangian markers
 + long-term tectonic extension/compression
 + tidally-driven partial melting
 
-The software is provided with several demos and a user guide.
+The code is provided with several demos and a thorough user guide.
 
 M. Kihoulou, March 2025  
 Charles University, [Department of Geophysics](https://geo.mff.cuni.cz/~kihoulou/)
