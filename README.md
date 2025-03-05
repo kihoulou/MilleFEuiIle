@@ -19,5 +19,7 @@ ice shells of icy bodies. Combining finite element method and Lagrangian markers
 + long-term tectonic extension/compression
 + tidally-driven partial melting
 
-M. Kihoulou, March 2025
-[Department of Geophysics, Charles University](https://geo.mff.cuni.cz/~kihoulou/)
+The software is provided with several demos and a user guide.
+
+M. Kihoulou, March 2025  
+Charles University, [Department of Geophysics](https://geo.mff.cuni.cz/~kihoulou/)
