@@ -15,3 +15,9 @@ open-source FEniCS python package, developed to solve thermo-mechanical evolutio
 ice shells as the main subject of my doctoral thesis. Starting in 2022 at Laboratoire de
 Planétologie et Géosciences in Nantes (France), the work now continues here at Department of Geophysics under a joint supervision of Ondřej Čadek, Klára Kalousová, Gaël
 Choblet and Gabriel Tobie.
+
++ thermal convection
++ phase transition between the ice shell and subsurface ocean
++ thermo-chemical convection
++ visco-elasto-plastic tectonic simulations
++ partial melting
