@@ -21,5 +21,5 @@ ice shells of icy bodies. Combining finite element method and Lagrangian markers
 
 The code is provided with several demos and a thorough user guide.
 
-M. Kihoulou, March 2025  
-Charles University, [Department of Geophysics](https://geo.mff.cuni.cz/~kihoulou/)
+[M. Kihoulou](https://geo.mff.cuni.cz/~kihoulou/), March 2025  
+martin.kihoulou@mff.cuni.cz 
