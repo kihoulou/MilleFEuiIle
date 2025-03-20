@@ -76,7 +76,7 @@ def melt_interpolation(mesh, tracers_in_cells, tracers, column, function):
                 tracer_no = tracers_in_cells[j][i]
                 weight_tracer = 1.0
                 
-                value_cell += weight_tracer*tracers[tracer_no][12][column]
+                value_cell += weight_tracer*tracers[tracer_no][11][column]
                 weight_cell += weight_tracer
 
             ranks.append(value_cell/weight_cell)
@@ -132,26 +132,17 @@ def stress_interpolation(mesh, tracers_in_cells, tracers, stress_tensor):
 
     for j in range(mesh.num_cells()):
         weight_cell = 0.0
-        
-        t_xx = 0.0
-        t_xz = 0.0
 
-        t_xx_pos = 0.0
-        t_xx_neg = 0.0
-
-        t_xz_pos = 0.0
-        t_xz_neg = 0.0
-
-        centroid = Cell(mesh, j).midpoint()
-
-        if (len(tracers_in_cells[j])==0 and only_melt_tracers == False):
-            # print("Interpolation: Zero tracers in cell", j, "len PIC",len(tracers_in_cells[j]))
-            # print("Cell coordinates:", centroid.x(), centroid.y())
-            # ranks.append(0.0)
-            print("Exiting...")
-            MPI.comm_world.Abort()
-
+        if (len(tracers_in_cells[j]) == 0):
+            ranks.append(0.0)
+            ranks.append(0.0)
+            ranks.append(0.0)
+            ranks.append(0.0)
+            
         # --- Linear averaging of the stress ---
+        # t_xx = 0.0
+        # t_xz = 0.0
+
         # if (len(tracers_in_cells[j])!=0):
         #     for i in range(0,len(tracers_in_cells[j])):
         #         tracer_no = tracers_in_cells[j][i]
@@ -166,6 +157,12 @@ def stress_interpolation(mesh, tracers_in_cells, tracers, stress_tensor):
         #     ranks.append(-t_xx/weight_cell)
 
         # --- Quasi-geometric averaging of the stress ---
+        t_xx_pos = 0.0
+        t_xx_neg = 0.0
+
+        t_xz_pos = 0.0
+        t_xz_neg = 0.0
+        
         if (len(tracers_in_cells[j])!=0):
             for i in range(0,len(tracers_in_cells[j])):
                 tracer_no = tracers_in_cells[j][i]
@@ -204,10 +201,6 @@ def stress_update(mesh, tracers_in_cells, tracers, visc, strain_rate_tensor, z_f
             e_xx = strain_rate_tensor(Point(px,pz))[0]
             e_xz = strain_rate_tensor(Point(px,pz))[1]
             e_zz = strain_rate_tensor(Point(px,pz))[3]
-
-            # Correction for nonzero trace
-            delta = (e_xx + e_zz)/2.0
-            # e_xx = e_xx - delta
 
             tracers[tracer_no][5]  += z_tracer*(2*visc_tracer*e_xx - tracers[tracer_no][5])
             tracers[tracer_no][6]  += z_tracer*(2*visc_tracer*e_xz - tracers[tracer_no][6])

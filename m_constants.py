@@ -4,7 +4,7 @@ kyr = 3600.0*24*365.25*1e3
 Myr = 3600.0*24*365.25*1e6
 
 # Molar gass constant
-R   = 8.314   # J K^-1 mol^-1
+R_gas   = 8.314   # J K^-1 mol^-1
 
 # Insolation at 1 AU from sun
 insol_1AU = 1360.0  # W m^2

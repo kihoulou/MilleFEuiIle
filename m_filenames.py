@@ -1,22 +1,57 @@
+from dolfin import *
 from m_parameters import *
 from m_constants import *
 from m_postproc import *
 from pathlib import Path
+import os 
 
 class SaveFiles:
-    def __init__(self, MeshClass, EqClass):
+    def __init__(self, MeshClass, ElemClass):
 
+        self.name = name
+        if (Path("data_" + name).is_dir() == True):
+            if (override_directory == True):
+                    if (rank == 0):
+                        os.system("rm data_" + name + "/HDF5/*")
+                        os.system("rm data_" + name + "/paraview/*.xdmf")
+                        os.system("rm data_" + name + "/paraview/*.h5")
+                        os.system("rm data_" + name + "/source_code/*.py")
+                        os.system("rm data_" + name + "/boundary_data/*.dat")
+                        os.system("rm data_" + name + "/tracers/*.dat")
+            else:
+                self.name += "_new"
+                if (rank == 0):
+                    print("\nWarning:\nName collision detected. New directory name is", str("data_" + self.name), ".\n")
+
+        MPI.barrier(comm)
         directories = ["HDF5", "tracers", "paraview", "source_code"]
         for dir in directories:
-            Path("data_" + name + "/" + dir).mkdir(parents = True, exist_ok = True)
+            Path("data_" + self.name + "/" + dir).mkdir(parents = True, exist_ok = True)
 
-        self.Temp = EqClass.Temp
-        self.v_k = EqClass.v_k
-        self.comp_0 = EqClass.comp_0
-        self.comp_1 = EqClass.comp_1
-        self.comp_2 = EqClass.comp_2
-        self.number_of_tracers = EqClass.number_of_tracers
-        self.mesh_ranks = EqClass.mesh_ranks
+        self.sDG0 = ElemClass.sDG0
+        self.Temp = ElemClass.Temp
+        self.v_k = ElemClass.v_k
+        self.p_k = ElemClass.p_k
+        self.comp_0 = ElemClass.comp_0
+        self.comp_1 = ElemClass.comp_1
+        self.comp_2 = ElemClass.comp_2
+        self.heating = ElemClass.heating
+        self.visc = ElemClass.visc
+        self.log10_visc = ElemClass.log10_visc
+        self.number_of_tracers = ElemClass.number_of_tracers
+        self.mesh_ranks = ElemClass.mesh_ranks
+        self.xm = ElemClass.xm
+        self.u_mesh = ElemClass.u_mesh
+        self.v_mesh = ElemClass.v_mesh
+        self.h_bot = ElemClass.h_bot
+        self.h_top = ElemClass.h_top
+        self.n_bot = ElemClass.n_bot
+        self.strain_rate_inv = ElemClass.strain_rate_inv
+        self.iteration_error = ElemClass.iteration_error
+        self.plastic_strain = ElemClass.plastic_strain
+        self.yield_stress = ElemClass.yield_stress
+        self.stress_dev_inv = ElemClass.stress_dev_inv
+        self.yield_function = ElemClass.yield_function
 
         self.mesh = MeshClass.mesh
         self.Save_Mesh = MeshClass.Save_Mesh
@@ -61,6 +96,12 @@ class SaveFiles:
             if (Paraview_Output[i] == "velocity"):
                 self.Function_Dict[Paraview_Output[i]] = self.v_k
 
+            if (Paraview_Output[i] == "pressure"):
+                self.Function_Dict[Paraview_Output[i]] = self.p_k
+
+            if (Paraview_Output[i] == "strain_rate_inv"):
+                self.Function_Dict[Paraview_Output[i]] = self.strain_rate_inv
+
             if (Paraview_Output[i] == "composition_0"):
                 self.Function_Dict[Paraview_Output[i]] = self.comp_0
 
@@ -75,7 +116,48 @@ class SaveFiles:
 
             if (Paraview_Output[i] == "ranks"):
                 self.Function_Dict[Paraview_Output[i]] = self.mesh_ranks
-        
+
+            if (Paraview_Output[i] == "viscosity_log"):
+                self.Function_Dict[Paraview_Output[i]] = self.log10_visc
+
+            if (Paraview_Output[i] == "viscosity"):
+                self.Function_Dict[Paraview_Output[i]] = self.visc
+            
+            if (Paraview_Output[i] == "tidal_heating"):
+                self.Function_Dict[Paraview_Output[i]] = self.heating
+            
+            if (Paraview_Output[i] == "melt_fraction"):
+                self.Function_Dict[Paraview_Output[i]] = self.xm
+
+            if (Paraview_Output[i] == "mesh_displacement"):
+                self.Function_Dict[Paraview_Output[i]] = self.u_mesh
+
+            if (Paraview_Output[i] == "mesh_velocity"):
+                self.Function_Dict[Paraview_Output[i]] = self.v_mesh
+
+            if (Paraview_Output[i] == "topography_bottom"):
+                self.Function_Dict[Paraview_Output[i]] = self.h_bot
+
+            if (Paraview_Output[i] == "topography_top"):
+                self.Function_Dict[Paraview_Output[i]] = self.h_top
+            
+            if (Paraview_Output[i] == "normal_bottom"):
+                self.Function_Dict[Paraview_Output[i]] = self.n_bot
+            
+            if (Paraview_Output[i] == "iteration_error"):
+                self.Function_Dict[Paraview_Output[i]] = self.iteration_error
+
+            if (Paraview_Output[i] == "plastic_strain"):
+                self.Function_Dict[Paraview_Output[i]] = self.plastic_strain
+
+            if (Paraview_Output[i] == "yield_stress"):
+                self.Function_Dict[Paraview_Output[i]] = self.yield_stress
+
+            if (Paraview_Output[i] == "stress_dev_inv"):
+                self.Function_Dict[Paraview_Output[i]] = self.stress_dev_inv
+
+            if (Paraview_Output[i] == "yield_function"):
+                self.Function_Dict[Paraview_Output[i]] = self.yield_function
     
     def write_statistic(self, t, step, stat_output, **kwargs):
         
@@ -98,6 +180,10 @@ class SaveFiles:
                 value = rms_vel(kwargs["v"])
                 if (rank == 0):
                     file.write(("%.5E\t\t")%(value))
+
+            if (arg == "avg_h_bot"):
+                if (rank == 0):
+                    file.write(("%.5E\t\t")%(kwargs[arg]))
 
             if (arg == "time"):
                 value = kwargs["time"]
@@ -138,14 +224,14 @@ class SaveFiles:
 
         i = 0
         for arg in args:
-            dataset = "/" + Functions_Input[i] + "/vector_%d" % (reload_HDF5)
+            dataset = "/" + reload_HDF5_functions[i] + "/vector_%d" % (reload_HDF5_step)
             files_hdf5_in['data'].read(arg, dataset)
             i += 1
 
         # --- Read the time and timestep ---
         file_time = open("data_" + reload_name + "/HDF5/data_timestamp.dat")
         lines = file_time.readlines()
-        sline = (lines[reload_HDF5 + 1]).split("\t\t")
+        sline = (lines[reload_HDF5_step + 1]).split("\t\t")
 
         dt.assign(float(sline[2])*time_units)
         if (restart_time == True):

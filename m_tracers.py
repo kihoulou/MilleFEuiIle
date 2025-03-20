@@ -7,35 +7,32 @@ rank = MPI.rank(comm)
 size = MPI.size(comm)
 
 class Tracers:
-    def __init__(self, MeshClass, EqClass):
-
+    def __init__(self, MeshClass, ElemClass):        
         self.mesh = MeshClass.mesh
+        self.moving_mesh = MeshClass.moving_mesh
         
-        self.Temp = EqClass.Temp
+        self.Temp = ElemClass.Temp
         
-        self.stress_dev_tensor  = EqClass.stress_dev_tensor
-        self.plastic_strain     = EqClass.plastic_strain
-        self.ocean_material     = EqClass.ocean_material
-        self.surface_material   = EqClass.surface_material
-        self.h_top              = EqClass.h_top
-        self.xm                 = EqClass.xm
-        self.number_of_tracers  = EqClass.number_of_tracers
-        self.composition        = EqClass.composition
-        self.height_fraction    = EqClass.height_fraction
-
-        self.mesh_ranks = EqClass.mesh_ranks
+        self.stress_dev_tensor  = ElemClass.stress_dev_tensor
+        self.plastic_strain     = ElemClass.plastic_strain
+        self.ocean_material     = ElemClass.ocean_material
+        self.surface_material   = ElemClass.surface_material
+        self.h_top              = ElemClass.h_top
+        self.xm                 = ElemClass.xm
+        self.number_of_tracers  = ElemClass.number_of_tracers
+        self.composition        = ElemClass.composition
+        self.height_fraction    = ElemClass.height_fraction
+        self.mesh_ranks    = ElemClass.mesh_ranks
 
         # --- Determine whether to use tracers or not ---
+        self.use_tracers = False
         if (plasticity == True or elasticity == True or internal_melting == True or len(materials) > 0):
             self.use_tracers = True
-        else:
-            self.use_tracers = False
-        
-        self.only_melt_tracers = False
-
+            
         # --- Only melt tracers exception ---
+        self.only_melt_tracers = False
         if (internal_melting == True):
-            if (plasticity == True or elasticity == True or multiple_composition == True or len(materials) > 0):
+            if (plasticity == True or elasticity == True or len(materials) > 0):
                 self.only_melt_tracers = False
             else:
                 self.only_melt_tracers = True
@@ -49,56 +46,15 @@ class Tracers:
             self.moving_tracers = []
             self.tracers_to_find = []
             
-            if (reloading_tracers == False):
+            if (reload_tracers == False):
                 if (self.only_melt_tracers == False):
                     self.introduce_tracers()
                 else:
                     for j in range(self.mesh.num_cells()):
                         self.tracers_in_cells.append([])
                     
-                    self.add_melt_tracers()
             else:
                 self.load_tracers()
-
-    # def find_cell_neighbours(self):
-
-    #     n_cells = self.mesh.num_cells()
-    #     n_cells_total = MPI.sum(comm, n_cells)
-
-    #     if (rank == 0):
-    #             search_start = time.time()
-    #             print("\n\tSearching neighbours between", int(n_cells_total), "cells...")
-
-    #     # Finds IDs of neighbouring elements
-    #     for j in range(self.mesh.num_cells()):
-
-    #         neighbour_cell = []
-    #         cell_j = Cell(self.mesh, j).get_vertex_coordinates()
-
-    #         for k in range(0, self.mesh.num_cells()):
-    #             cell_k = Cell(self.mesh,k).get_vertex_coordinates()
-    #             mutual_vertices = 0
-
-    #             if (k != j): # Exclude the cell itself
-    #                 for l in range(0, 3):     
-    #                     for m in range(0, 3):     
-    #                         if (cell_j[0 + 2*l] == cell_k[0 + 2*m] and cell_j[1 + 2*l] == cell_k[1 + 2*m]):
-    #                             mutual_vertices += 1
-    #                             break
-
-    #                 if (mutual_vertices > 0): # Cells that share at least one point
-    #                     neighbour_cell.append(k)
-                
-    #             # If the mesh is regular, we can stop searching at 14 neighbours
-    #             if (loading_mesh == False and len(refinement) == 0 and len(neighbour_cell) == 14):
-    #                 break
-
-    #         self.neighbour_cells.append(neighbour_cell)
-        
-        # MPI.barrier(comm)
-        # if (rank == 0):
-        #     search_end = time.time()
-        #     print("\tDone",'({:.2f} s).\n'.format(search_end - search_start))
 
     def save_tracers(self, step):
         file = open("data_"+name+"/tracers/step_" + str(step) + ".dat","a")
@@ -321,62 +277,6 @@ class Tracers:
                         self.tracers_in_cells[j].append(tracer_no)
                         tracer_no +=1   
 
-    def add_melt_tracers(self):
-        for j in range(self.mesh.num_cells()):
-            centroid = Cell(self.mesh, j).midpoint()
-        
-            r_in = Cell(mesh, j).inradius()
-            deg2rad = np.pi/180.0
-
-            temp_cell = self.Temp(Point(centroid.x(),centroid.y()))
-            xm_cell = self.xm(Point(centroid.x(),centroid.y()))
-
-            if (temp_cell > T_melt - dT_max and len(self.tracers_in_cells[j]) < 10):
-                for ii in range(0,5):
-                    tracer_angle = 90.0*(ii-1)
-
-                    if (ii==0):
-                        # First tracer to the cell center
-                        xx = centroid.x()
-                        yy = centroid.y()
-                    else:
-                        # Other tracers along a circle
-                        xx = centroid.x() + r_in*0.5*sin(tracer_angle*deg2rad)
-                        yy = centroid.y() + r_in*0.5*cos(tracer_angle*deg2rad)
-
-                    if (len(self.vacancy) > 0): # if possible, put them in the vacancies
-                        self.tracers[self.vacancy[0]] = [xx, yy, j, rank, rank, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, [xm_cell, 0.0], 1]
-                        self.tracers_in_cells[j].append(self.vacancy[0])
-                        del self.vacancy[0]
-
-                    else: # if no vacancy is available, put them at the end of the list
-                        self.tracers.append([xx, yy, j, rank, rank, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, [xm_cell, 0.0], 1])
-                        self.tracers_in_cells[j].append(len(self.tracers)-1) 
-
-    # When the temperature is below melting point and no melt is present, delete these tracers
-    def delete_melt_tracers(self):
-        MPI.barrier(comm)
-        for j in range(self.mesh.num_cells()):
-            to_remove = []
-            
-            for i in range(0,len(self.tracers_in_cells[j])):
-                tracer_no = self.tracers_in_cells[j][i]
-                xx = self.tracers[tracer_no][0]
-                yy = self.tracers[tracer_no][1]
-
-                temp_tracer = self.Temp(Point(xx,yy))
-                xm_tracer = self.tracers[tracer_no][12][0]
-
-                if (temp_tracer < T_melt - dT_max and xm_tracer == 0.0):
-                    to_remove.append(tracer_no)
-
-                    self.vacancy.append(tracer_no)
-                    self.tracers[tracer_no] = []
-
-            to_remove.sort(reverse=True)
-            for l in range(len(to_remove)):
-                self.tracers_in_cells[j].remove(to_remove[l])
-
     def load_tracers(self):
         # infile = open("data_"+reload_name+"/tracers/step_"+str(reload_step)+".dat", "r") 
         infile = open("step_3000_new.dat", "r") 
@@ -426,7 +326,6 @@ class Tracers:
         MPI.barrier(comm)
         infile.close()
 
-    # def advect_tracers(moving_tracers, vacancy, tracers_in_cells, name, method, tracers, t, step, dt, v, v_mesh, output_now):
     def advect_tracers(self, v, v_mesh, dt):
         
         self.start_advection = time.time()
@@ -470,17 +369,18 @@ class Tracers:
                         vx_total = (v1[0] + 2.0*v2[0] + 2.0*v3[0] + v4[0])/6.0
                         vy_total = (v1[1] + 2.0*v2[1] + 2.0*v3[1] + v4[1])/6.0
 
-                    # If the final position is in the domain, will it be even after mesh  moves?
-                    # Use the mesh velocity in the new position
-                    vm = v_mesh(Point(px + vx_total*float(dt), py + vy_total*float(dt)))
-                    
-                    # Now the mesh move needs to be checked before updating the position.
-                    # If the position is updated, but wouldn't be in the rank after mesh moved,
-                    # it would go to the "except part" and would be advected two times !!!
+                    if (self.moving_mesh == True):
+                        # If the final position is in the domain, will it be even after mesh  moves?
+                        # Use the mesh velocity in the new position
+                        vm = v_mesh(Point(px + vx_total*float(dt), py + vy_total*float(dt)))
+                        
+                        # Now the mesh move needs to be checked before updating the position.
+                        # If the position is updated, but wouldn't be in the rank after mesh moved,
+                        # it would go to the "except part" and would be advected two times !!!
 
-                    # Test for new mesh position (must presede the assignment of new position)
-                    v_test = v(Point(px + vx_total*float(dt), py + vy_total*float(dt) + 1.0*vm[1]*float(dt)))
-                    v_test = v(Point(px + vx_total*float(dt), py + vy_total*float(dt) - 1.0*vm[1]*float(dt)))
+                        # Test for new mesh position (must presede the assignment of new position)
+                        v_test = v(Point(px + vx_total*float(dt), py + vy_total*float(dt) + 1.0*vm[1]*float(dt)))
+                        v_test = v(Point(px + vx_total*float(dt), py + vy_total*float(dt) - 1.0*vm[1]*float(dt)))
 
                     # Only then update the tracer position (must be after the checking the mesh movement)
                     self.tracers[j][0] = px + vx_total*float(dt)
@@ -497,7 +397,11 @@ class Tracers:
                     self.vacancy.append(j)
                     self.tracers[j] = []
 
-        print("\t---> rank", rank, "is advecting", "{:.1f}%.".format((tracers_process - vacancies_process) / (tracers_total - vacancies_total)*100.0))
+        if (tracers_total > 0):
+            print("\t---> rank", rank, "is advecting", "{:.1f}%.".format((tracers_process - vacancies_process) / (tracers_total - vacancies_total)*100.0))
+        else:
+            if (rank == 0):
+                print("\t---> There are no tracers to advect.")
 
     def find_tracers(self, v, dt):
 
@@ -712,13 +616,6 @@ class Tracers:
         for j in range(self.mesh.num_cells()):                
             centroid    = Cell(self.mesh, j).midpoint()
             cell_j      = Cell(self.mesh,j).get_vertex_coordinates()
-
-            # --- If the cell is empty, save the info into a file ---
-            if (len(self.tracers_in_cells[j]) == 0):
-                file = open("data_" + name + "/empty_cells.dat", "a")
-                file.write((5*"\t" + 2*"%d\t" + 2*"%.3E\t" + "\n")%(j, rank, centroid.x(), centroid.y()))
-                file.close()
-
             # --- Do not add tracers to the cells where the composition is mixed
             # or if the cell is allowed not to have tracers ---
             skip_cell = False
@@ -740,7 +637,13 @@ class Tracers:
             
             if (skip_cell == True):
                 continue
-            
+
+            # --- If the cell is empty (and is not supposed to be), save the info into a file ---
+            if (len(self.tracers_in_cells[j]) == 0):
+                file = open("data_" + name + "/empty_cells.dat", "a")
+                file.write((5*"\t" + 2*"%d\t" + 2*"%.3E\t" + "\n")%(j, rank, centroid.x(), centroid.y()))
+                file.close()
+
             x_min   = min(cell_j[0], min(cell_j[2], cell_j[4]))
             x_max   = max(cell_j[0], max(cell_j[2], cell_j[4]))
             y_min   = min(cell_j[1], min(cell_j[3], cell_j[5]))

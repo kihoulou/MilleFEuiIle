@@ -5,9 +5,11 @@ from m_material_properties import *
 from m_rheology import *
 from m_boudnary_conditions import *
 from m_timestep import *
+from m_mesh import *
+from m_interpolation import *
 
 class Equations:
-    def __init__(self, MeshClass, ElemClass):
+    def __init__(self, MeshClass, ElemClass, TracersClass, MeltingClass):
 
         self.sCG2 = ElemClass.sCG2
         self.sCG1 = ElemClass.sCG1
@@ -15,37 +17,95 @@ class Equations:
         self.sDG0 = ElemClass.sDG0
         self.tDG0 = ElemClass.tDG0
         self.V = ElemClass.V
-        
-        self.mesh = MeshClass.mesh
+
+        if (TracersClass.use_tracers == True):
+            self.tracers = TracersClass.tracers
+            self.tracers_in_cells = TracersClass.tracers_in_cells
+            self.only_melt_tracers = TracersClass.only_melt_tracers
+            self.vacancy = TracersClass.vacancy
+
+            self.add_melt_tracers       = MeltingClass.add_melt_tracers
+            self.delete_melt_tracers    = MeltingClass.delete_melt_tracers
+            self.compute_melting    = MeltingClass.compute_melting
+
+        self.mesh   = MeshClass.mesh
+        self.ds     = MeshClass.ds
         self.boundary_parts = MeshClass.boundary_parts
 
+        if (viscosity_type == "GK_2001" or plasticity == True):
+            self.nonlinear_rheology = True
+        else:
+            self.nonlinear_rheology = False
+
+        self.viscosity_from = "strain_rate"
+        if (elasticity==True):
+            self.viscosity_from = "stress"
+
         self.e_z = MeshClass.e_z
+        self.e_x = MeshClass.e_x
         self.normal = FacetNormal(MeshClass.mesh)
 
-
         # --- Trial and test functions ---
-        self._Temp  = TrialFunction(self.sCG2)
-        self.Temp_  = TestFunction(self.sCG2)
-        self.Temp   = Function(self.sCG2)
-        self.Temp_k = Function(self.sCG2)
+        self._Temp  = ElemClass._Temp
+        self.Temp_  = ElemClass.Temp_
+        self.Temp   = ElemClass.Temp
+        self.delta_T   = ElemClass.delta_T
+        self.Temp_k = ElemClass.Temp_k
 
-        self.xm = Function(self.sDG0)
-        self.visc = Function(self.sDG0)
+        self.xm     = ElemClass.xm
+        self.xm_k   = ElemClass.xm_k
+        self.melting_rate   = ElemClass.melting_rate
+        self.heating = ElemClass.heating
+        self.visc       = ElemClass.visc
+        self.log10_visc = ElemClass.log10_visc
+        self.delta_T = ElemClass.delta_T
 
-        self.comp_0 = Function(self.sDG0)
-        self.comp_1 = Function(self.sDG0)
-        self.comp_2 = Function(self.sDG0)
+        self.stress_dev_inv      = ElemClass.stress_dev_inv
+        self.stress_dev_inv_k      = ElemClass.stress_dev_inv_k
+        self.strain_rate_inv     = ElemClass.strain_rate_inv
+
+        self.stress_dev_xx      = ElemClass.stress_dev_xx
+        self.stress_dev_xz      = ElemClass.stress_dev_xz
+        self.z_function         = ElemClass.z_function
+
+        self.strain_rate_tensor     = ElemClass.strain_rate_tensor
+        self.stress_dev_tensor      = ElemClass.stress_dev_tensor
+        self.stress_dev_tensor_k      = ElemClass.stress_dev_tensor_k
+        self.vorticity_tensor       = ElemClass.vorticity_tensor
+
+        self.u = ElemClass.u
+        self.n_bot = ElemClass.n_bot
+        self.comp_0 = ElemClass.comp_0
+        self.comp_1 = ElemClass.comp_1
+        self.comp_2 = ElemClass.comp_2
         self.composition = [self.comp_0, self.comp_1, self.comp_2]
 
+        self.q_ice = ElemClass.q_ice
+        self.q_water = ElemClass.q_water
+
+        self.plastic_strain     = ElemClass.plastic_strain
+        self.yield_stress       = ElemClass.yield_stress
+        self.yield_function     = ElemClass.yield_function
+
         self.number_of_tracers  = Function(self.sDG0)
-        self.stress_dev_tensor  = Function(self.tDG0)
-        self.plastic_strain     = Function(self.sDG0)
+        self.stress_dev_tensor  = ElemClass.stress_dev_tensor
+        
         self.ocean_material     = Function(self.sDG0)
         self.surface_material   = Function(self.sDG0)
-        self.h_top              = Function(self.sDG0)
         self.mesh_ranks          = Function(self.sDG0)
 
-        self.dt = Constant(1.0)
+        self.dt = Constant(kyr)
+
+        self.h_bot_aver = Constant(0.0)
+        self.q_ice_aver = Constant(0.0)
+        self.q_ice_aver_ini = Constant(0.0)
+        self.q_water_aver = Constant(0.0)
+
+        self.sr_min = Constant(0.0)
+
+        self.gamma = 0.005 
+        self.h_e_top = length/x_div
+        self.h_e_bot = length/x_div
 
         self.top_length = Constant(1.0)
         self.unit_scalar = Function(self.sCG1)
@@ -58,18 +118,23 @@ class Equations:
 
         self._lambda = Constant(1.0)
 
-        # --- Top and bottom boundary topography ---
-        self._h_top     = TrialFunction(self.sCG1)
-        self.h_top_     = TestFunction(self.sCG1)
-        self.h_top      = Function(self.sCG1)
-        
-        self.h_top_k    = Function(self.sCG1)
-        self.h_top1     = Function(self.sCG1)
+        self.v_aver = Constant(1.0)
+        self.v_top_aver = Constant(1.0)
 
-        self._h_bot     = TrialFunction(self.sCG1)
-        self.h_bot_     = TestFunction(self.sCG1)
-        self.h_bot      = Function(self.sCG1)
-        self.h_bot_k    = Function(self.sCG1)
+        # --- Top and bottom boundary topography ---        
+        # self.h_top1     = Function(self.sCG1)
+
+        self._h_top     = ElemClass._h_top
+        self.h_top_     = ElemClass.h_top_
+        self.h_top      = ElemClass.h_top
+        self.h_top_k    = ElemClass.h_top_k
+
+        self._h_bot     = ElemClass._h_bot
+        self.h_bot_     = ElemClass.h_bot_
+        self.h_bot      = ElemClass.h_bot
+        self.h_bot_k    = ElemClass.h_bot_k
+
+        self.iteration_error     = ElemClass.iteration_error
 
         # --- Mesh displacement ---
         # Mesh displecement
@@ -80,98 +145,183 @@ class Equations:
         self.h2_top = Function(self.sCG1)     # Top Dirichlet BC for harmonic mesh displacement
         self.h2_bot = Function(self.sCG1)     # Bottom Dirichlet BC for harmonic mesh displacement
 
+        _pv = TrialFunction(self.V)
+        self._p, _vl, _vb = split(_pv)
+        self._v = _vl + _vb 
 
-        
+        pv_ = TestFunction(self.V)
+        self.p_, vl_, vb_ = split(pv_)
+        self.v_ = vl_ + vb_ 
 
-        if (stokes_elements == "Mini"):
-            _pv = TrialFunction(self.V)
-            self._p, _vl, _vb = split(_pv)
-            self._v = _vl + _vb 
+        self.pv = Function(self.V)
+        self.p, vl, vb = split(self.pv)
+        self.v = vl + vb 
 
-            pv_ = TestFunction(self.V)
-            self.p_, vl_, vb_ = split(pv_)
-            self.v_ = vl_ + vb_ 
-
-            self.pv = Function(self.V)
-            self.p, vl, vb = split(self.pv)
-            self.v = vl + vb 
-
-            self.v_k = Function(self.vCG1)
-            self.v_mesh = Function(self.vCG1)
-            self.u_mesh = Function(self.vCG1)
-
-        if (stokes_elements == "TH"):
-            _pv = TrialFunction(self.V)
-            _p, _v = split(_pv)
-
-            pv_ = TestFunction(self.V)
-            p_, v_ = split(pv_)
-
-            pv = Function(self.V)
-            p, v = split(pv)
+        self.v_k = ElemClass.v_k
+        self.p_k = ElemClass.p_k
+        self.v_mesh = ElemClass.v_mesh
+        self.u_mesh = ElemClass.u_mesh
 
         top_left = Point_Fixed_Pressure()
-        self.bc_temp = apply_temperature_BC(self.sCG2, self.boundary_parts)
-        self.bc_stokes = apply_velocity_BC(self.V, self.boundary_parts, top_left)
-       
-        self.stationary_heat_eq()
-        self.PerturbProfile()
-        self.heat_eq()
+        self.bc_temp    = apply_temperature_BC(self.sCG2, self.boundary_parts)
+        self.bc_stokes  = apply_velocity_BC(self.V, self.boundary_parts, top_left)
 
-        self.Stokes_eq()
+        self.equation_heat_ini()
+        self.thermal_perturbation()
+        self.equation_heat()
 
-        self.Equation_top_free_surface(self)
-        self.Equation_bottom_free_surface(self)
-        self.Equation_displacement_distribution(self)
+        self.equation_Stokes()
 
+        self.equation_top_free_surface()
+        self.equation_bottom_free_surface()
+        self.equation_mesh_displacement()
     
-    def stationary_heat_eq(self):
-        # --- Boundary conditions ---
-        bc_T_top = DirichletBC(self.sCG2, T_top, self.boundary_parts,1)
-        bc_T_bot = DirichletBC(self.sCG2, T_bot, self.boundary_parts,2)
-        self.bc_temp = [bc_T_bot, bc_T_top]
+    def equation_heat_ini(self):
+        """ Defines the weak form of the stationary heat equation.
 
+        .. math::
+        
+            0 = \\int_\\Omega k(T, C)\\ \\nabla T \\cdot \\nabla \\hat{T}\\ \\textrm{d}\\Omega
+        
+        If ``BC_T_top = "radiation"``, the corresponding boundary condition is added
+
+        .. math::
+        
+            - \\int_{\\Gamma_{top}} (1 - A)I\\hat{T}\\ + T^4\\varepsilon\\sigma_{SB}\\hat{T}\\ \\textrm{d}\\Gamma_{top}
+
+        """
         # --- Equation ---
-        eq_energy_ini      = dot(nabla_grad(self._Temp),nabla_grad(self.Temp_))*dx
-        problem_energy_ini = LinearVariationalProblem(lhs(eq_energy_ini),rhs(eq_energy_ini), self.Temp, self.bc_temp)
-        self.solver_energy_ini  = LinearVariationalSolver(problem_energy_ini)
+        # if (nonlinear_heat_equation == True):
+        eq_energy_ini =  k(self.Temp, self.composition)*inner(nabla_grad(self.Temp), nabla_grad(self.Temp_))*dx
 
-    def PerturbProfile(self):
+        if (BC_T_top == "radiation"):
+            eq_energy_ini += - (1.0 - albedo)*insolation*self.Temp_*self.ds(1)\
+                        + pow(self.Temp, 4)*emis*SB_const*self.Temp_*self.ds(1)
+            
+        if (initial_tidal_dissipation == True):
+            eq_energy_ini += - tidal_heating(eta_eff(self.Temp, self.xm))*self.Temp_*dx
+            
+        J_eq_energy_ini = derivative(eq_energy_ini, self.Temp)
+        problem_energy_ini = NonlinearVariationalProblem(eq_energy_ini, self.Temp, self.bc_temp, J_eq_energy_ini)
+        self.solver_energy_ini  = NonlinearVariationalSolver(problem_energy_ini)
+
+        prm = self.solver_energy_ini.parameters
+        prm["newton_solver"]["absolute_tolerance"] = 1E-8
+        prm["newton_solver"]["relative_tolerance"] = 1E-7
+        prm["newton_solver"]["maximum_iterations"] = 25
+        prm["newton_solver"]["relaxation_parameter"] = 1.0
+        prm["newton_solver"]["linear_solver"] = "bicgstab"
+
+        # else:
+        #     eq_energy_ini  = dot(nabla_grad(self._Temp),nabla_grad(self.Temp_))*dx
+        #     if (initial_tidal_dissipation == True):
+        #         eq_energy_ini += -tidal_heating(self.visc)*self.Temp_*dx
+
+        #     problem_energy_ini = LinearVariationalProblem(lhs(eq_energy_ini),rhs(eq_energy_ini), self.Temp, self.bc_temp)
+        #     self.solver_energy_ini  = LinearVariationalSolver(problem_energy_ini)
+
+    def thermal_perturbation(self):
+        """ Defines the weak form of the stationary heat equation.
+        
+        :param perturb_ampl: amplitude of the thermal perturbation (:math:`A`\ )
+        :param perturb_freq: spatial frequency of the thermal perturbation (:math:`f`\ )
+
+        :returns:
+        .. math::
+        
+            T^\\prime = T - A\\sin\\left(\\frac{\\pi y}{h}\\right) \\cdot\\cos\\left(\\frac{2\\pi fx}{l}\\right)
+
+        """
         self.Temp_k.assign(project(Expression("Temp - pa*sin(pi*x[1]/h)*cos(2*pf*pi*x[0]/l)", Temp = self.Temp, l=length, h=height, pa=perturb_ampl, pf=perturb_freq, degree=1), self.sCG2)) 
         self.Temp.assign(self.Temp_k) 
 
-    def heat_eq(self):
-        eq_energy = (rho_s*cp(self.Temp_k, self.composition)*(self._Temp - self.Temp_k)/self.dt*self.Temp_
-                     
-                + 0.5*(rho_s*cp(self.Temp_k, self.composition)*dot(self.v_k - self.v_mesh,nabla_grad(self.Temp))*self.Temp_ 
-                       + k(self.Temp_k, self.composition)*dot(nabla_grad(self._Temp), nabla_grad(self.Temp_)))
+    def equation_heat(self):
+        """ Defines the weak form of the time-dependent heat equation using the semi-implicit Crank-Nicolson scheme.
 
-                + 0.5*(rho_s*cp(self.Temp_k, self.composition)*dot(self.v_k - self.v_mesh,nabla_grad(self.Temp_k))*self.Temp_ 
-                       + k(self.Temp_k, self.composition)*dot(nabla_grad(self.Temp_k),nabla_grad(self.Temp_))))*dx
+        .. math::
         
-        problem_energy = LinearVariationalProblem(lhs(eq_energy),rhs(eq_energy), self.Temp, self.bc_temp)
-        self.solver_energy  = LinearVariationalSolver(problem_energy)
+            0 = \\int_\\Omega \\rho_s c_p(T, C) \\frac{T - T^k}{\\Delta t}\\hat{T}
+            + 0.5(\\rho_s c_p(T, C)[(v - v_{mesh}) \\cdot T)]\\hat{T} 
+            + k(T, C)\\ \\nabla T \\cdot \\nabla \\hat{T})\\ \\textrm{d}\\Omega
+        
+        If ``BC_T_top = "radiation"``, the corresponding boundary condition is added
 
-    def Stokes_eq(self):
+        .. math::
+        
+            - \\int_{\\Gamma_{top}} (1 - A)I\\hat{T}\\ + T^4\\varepsilon\\sigma_{SB}\\hat{T}\\ \\textrm{d}\\Gamma_{top}
+
+        """
+        if (nonlinear_heat_equation == True):
+            eq_energy =  (rho_s*cp(self.Temp, self.composition)*(self.Temp - self.Temp_k)/self.dt*self.Temp_
+                        
+                    + 0.5*(rho_s*cp(self.Temp, self.composition)*dot(self.v_k - self.v_mesh, nabla_grad(self.Temp))*self.Temp_ 
+                        + k(self.Temp_k, self.composition)*dot(nabla_grad(self.Temp), nabla_grad(self.Temp_)))
+
+                    + 0.5*(rho_s*cp(self.Temp_k, self.composition)*dot(self.v_k - self.v_mesh, nabla_grad(self.Temp_k))*self.Temp_ 
+                        + k(self.Temp_k, self.composition)*dot(nabla_grad(self.Temp_k), nabla_grad(self.Temp_))))*dx
+
+            if (tidal_dissipation == True):
+                    eq_energy += - tidal_heating(self.visc)*self.Temp_*dx
+
+            if (BC_T_top == "radiation"):
+                eq_energy += - (1.0 - albedo)*insolation*self.Temp_*self.ds(1)\
+                            + pow(self.Temp, 4)*emis*SB_const*self.Temp_*self.ds(1)
+
+            J_eq_energy = derivative(eq_energy, self.Temp)
+            problem_energy = NonlinearVariationalProblem(eq_energy, self.Temp, self.bc_temp, J_eq_energy)
+            self.solver_energy  = NonlinearVariationalSolver(problem_energy)
+
+            prm = self.solver_energy.parameters
+            prm["newton_solver"]["absolute_tolerance"] = 1E-8
+            prm["newton_solver"]["relative_tolerance"] = 1E-7
+            prm["newton_solver"]["maximum_iterations"] = 25
+            prm["newton_solver"]["relaxation_parameter"] = 1.0
+            prm["newton_solver"]["linear_solver"] = "bicgstab"
+        
+        else:
+
+            eq_energy = (rho_s*cp(self.Temp_k, self.composition)*(self._Temp - self.Temp_k)/self.dt*self.Temp_
+                        
+                    + 0.5*(rho_s*cp(self.Temp_k, self.composition)*dot(self.v_k - self.v_mesh, nabla_grad(self._Temp))*self.Temp_ 
+                        + k(self.Temp_k, self.composition)*dot(nabla_grad(self._Temp), nabla_grad(self.Temp_)))
+
+                    + 0.5*(rho_s*cp(self.Temp_k, self.composition)*dot(self.v_k - self.v_mesh, nabla_grad(self.Temp_k))*self.Temp_ 
+                        + k(self.Temp_k, self.composition)*dot(nabla_grad(self.Temp_k), nabla_grad(self.Temp_))))*dx
+            
+            if (tidal_dissipation == True):
+                    eq_energy += -tidal_heating(self.visc)*self.Temp_*dx
+
+            problem_energy = LinearVariationalProblem(lhs(eq_energy), rhs(eq_energy), self.Temp, self.bc_temp)
+            self.solver_energy  = LinearVariationalSolver(problem_energy)
+
+    def equation_Stokes(self):
         eq_cont = div(self._v)*self.p_*dx
 
-        eq_momentum = (self._p*div(self.v_)
+        if (elasticity == False):
+            eq_momentum = (self._p*div(self.v_)
                 - density(self.Temp, self.composition, self.xm)*g*dot(self.e_z, self.v_)
                 - self.visc*inner(2.0*sym(nabla_grad(self._v)), nabla_grad(self.v_).T))*dx
+            
+        else:
+
+            eq_momentum = (self._p*div(self.v_)
+                - density(self.Temp, self.composition, self.xm)*g*dot(self.e_z, self.v_)
+                - z(self.visc, self.dt)*self.visc*inner(2.0*sym(nabla_grad(self._v)), nabla_grad(self.v_).T)\
+                - (1.0 - z(self.visc, self.dt))*inner(self.stress_dev_tensor, nabla_grad(self.v_).T))*dx
         
         # --- Top surface "drunken sailor" stabilization ---
         if (BC_vel_top == "free_surface"): 
-            eq_momentum += -density(self.Temp, self.xm, self.composition)*g*self._lambda*self.dt*dot(self._v, self.normal)*dot(self.ez, self.v_)*self.ds(1)
+            eq_momentum += -rho_s*g*self._lambda*self.dt*dot(self._v, self.normal)*dot(self.e_z, self.v_)*self.ds(1)
 
         # --- Hydrostatic pressure and bottom surface "drunken sailor"---
         if (BC_vel_bot == "free_surface" or phase_transition == True): 
             eq_momentum +=  dot(self.normal, self.v_)*(self.h_bot*rho_l - height*rho_s)*g*self.ds(2)\
-                        + (rho_l - rho_s)*g*self._lambda*self.dt*dot(self._v, self.normal)*dot(self.ez, self.v_)*self.ds(2)
-
+            + (rho_l - rho_s)*g*self._lambda*self.dt*dot(self._v + self.u, self.normal)*dot(self.e_z, self.v_)*self.ds(2)
+             
         problem_stokes = LinearVariationalProblem(lhs(eq_cont + eq_momentum),rhs(eq_cont + eq_momentum), self.pv, self.bc_stokes)
         self.solver_stokes = LinearVariationalSolver(problem_stokes)
 
-    def Equation_top_free_surface(self):
+    def equation_top_free_surface(self):
             # --- Top free surface equation ---
         eq_fs_top = (self._h_top.dx(1)*self.h_top_.dx(1))*dx\
             - (self._h_top.dx(1)*self.h_top_)*self.ds(1)\
@@ -183,12 +333,12 @@ class Equations:
         free_surface_top = LinearVariationalProblem(lhs(eq_fs_top), rhs(eq_fs_top), self.h_top, bc_fs_top)
         self.solver_free_surface_top = LinearVariationalSolver(free_surface_top)
 
-    def Equation_bottom_free_surface(self):
+    def equation_bottom_free_surface(self):
 
         # --- Bottom free surface equation ---
         eq_fs_bot = (self._h_bot.dx(1))*(self.h_bot_.dx(1))*dx\
             - (self._h_bot.dx(1))*self.h_bot_*self.ds(2)\
-            - (self._h_bot - self.h_bot_k + self.dt*(self._h_bot.dx(0)*(self.v_k[0] - self.u[0]) - (self.v_k[1] - self.u[1])))\
+            - (self._h_bot - self.h_bot_k + self.dt*(self._h_bot.dx(0)*(self.v_k[0] + self.u[0]) - (self.v_k[1] + self.u[1])))\
             * (self.h_bot_.dx(1) - self.h_bot_/(self.gamma*self.h_e_bot))*self.ds(2)
                                                                                     
         bc_fs_bot = []
@@ -205,9 +355,13 @@ class Equations:
     #     problem_surf_diff = LinearVariationalProblem(lhs(eq_surf_diff),rhs(eq_surf_diff),h_top,bc_sd)
     #     solver_surf_diff = LinearVariationalSolver(problem_surf_diff)
 
-    def Equation_displacement_distribution(self):
+    def equation_mesh_displacement(self):
         # --- Harmonics mesh displacement distribution ---
-        eq_surf_move = dot(nabla_grad(self._h2),nabla_grad(self.h2_))*dx
+        if (mesh_displacement_laplace == "full"):
+            eq_surf_move = dot(nabla_grad(self._h2), nabla_grad(self.h2_))*dx
+
+        if (mesh_displacement_laplace == "z-only"):
+            eq_surf_move = (self._h2.dx(1) * self.h2_.dx(1))*dx 
 
         bc_sm = [DirichletBC(self.sCG1, self.h2_top, self.boundary_parts, 1),\
                  DirichletBC(self.sCG1, self.h2_bot, self.boundary_parts, 2)]
@@ -215,41 +369,205 @@ class Equations:
         problem_surf_move = LinearVariationalProblem(lhs(eq_surf_move), rhs(eq_surf_move), self.h2, bc_sm)
         self.solver_surf_move = LinearVariationalSolver(problem_surf_move)
 
-    # ---------------------------------------------------------------
-    # DEF call solvers 
-    # ---------------------------------------------------------------
-    def solve_heat_equation(self):
-        self.solver_energy.solve()
-        self.Temp_k.assign(self.Temp)
-
-    def solve_Stokes_problem(self):
-        self.visc.assign(project(1.0, self.sDG0))
+    def solve_initial_heat_equation(self):
         
-        self.solver_stokes.solve()
-        if (stokes_elements == "Mini"):
+        if (initial_tidal_dissipation == True):
+            try:
+                self.visc.assign(project(eta_eff(self.Temp, self.xm), self.sDG0))
+                self.solver_energy_ini.solve()
+                
+            except:
+                if (rank == 0):
+                    print("\n\tError:")
+                    print("\tPrescribed amplitude of tidal heating might not compatible with conductive state.\n")
+                exit()
+
+        else:
+            self.solver_energy_ini.solve()
+
+        self.q_cond_top.assign(assemble(dot(-k(self.Temp, self.composition)*nabla_grad(self.Temp), self.normal)*self.ds(1)) / self.top_length)
+        self.q_ice_aver_ini.assign(assemble(sqrt(dot(self.q_ice, self.q_ice))*self.ds(2))/assemble(self.unit_scalar*self.ds(2)))
+        self.Temp_k.assign(self.Temp)
+    
+    def solve_heat_equation(self):
+        if (internal_melting == True):
+            # --- Algorithm from Kalousova (2015) ---
+            if (self.only_melt_tracers == True):
+                self.add_melt_tracers()
+
+            self.solver_energy.solve()
+
+            melt_interpolation(self.mesh, self.tracers_in_cells, self.tracers, 0, self.xm_k)
+
+            # Compute change in porosity and in temperature
+            self.compute_melting()
+
+            # Update temperature and porosity
+            melt_interpolation(self.mesh, self.tracers_in_cells, self.tracers, 1, self.delta_T)
+            self.Temp.assign(project(self.Temp + self.delta_T, self.sCG2))
+            
+            melt_interpolation(self.mesh, self.tracers_in_cells, self.tracers, 0, self.xm)
+            
+            # Evaluate melting/crystallization rate
+            self.melting_rate.assign(project(rho_m*(self.xm - self.xm_k)/self.dt*rho_s/rho_m, self.sDG0))
+
+            if (self.only_melt_tracers == True):
+                self.delete_melt_tracers()            
+            # -----------------
+        else:
+            self.solver_energy.solve()
+
+        self.Temp_k.assign(self.Temp)
+        self.q_ice.assign(project(-k(self.Temp, self.composition)*nabla_grad(self.Temp), self.vCG1))
+
+    def solve_Stokes_problem(self, step):
+        # self.heating.assign(project(tidal_heating(self.visc), self.sDG0))
+
+        # --- If there is the phase transition, estimate first phase change velocity
+        #     as it is in the stabilization term ---
+        if (BC_vel_bot == "free_surface" and phase_transition == True):
+            self.compute_u()
+        
+        Picard_iter = 0
+        v_error = 1.0
+
+        if (step == 0):
+            self.update_viscosity(step, Picard_iter)
+        
+        # --- Picard iterations of Stokes solver ---  
+        while (Picard_iter < Picard_iter_max and v_error > Picard_iter_error):
+
+            self.solver_stokes.solve()        
             self.p_out, self.v_out, self.vb = self.pv.split(True)
-        if (stokes_elements == "TH"):
-            self.p_out, self.v_out = self.pv.split(True)
 
-        self.v_k.assign(self.v_out)
+            if (BC_vel_top == "free_surface" and BC_vel_bot == "free_surface"):
 
-        self.dt.assign(time_step_domain(self.mesh, self.v_k, H_max, self.composition))
+                if (stokes_null == "volume"):
+                    self.v_aver.assign(assemble(self.v_out[1]*dx)/assemble(self.unit_scalar*dx))
+                    self.v_out.assign(project(self.v_out - self.v_aver*self.e_z, self.vCG1))
 
-    def Solver_Topography_evolution(self):
+                if (stokes_null == "boundary"):
+                    self.v_top_aver.assign(assemble(self.v_out[1]*self.ds(1))/assemble(self.unit_scalar*self.ds(1)))
+                    self.v_out.assign(project(self.v_out - self.v_top_aver*self.e_z, self.vCG1))
+
+            if (self.nonlinear_rheology == True):
+                self.iteration_error.assign(project(sqrt(dot(self.v_out - self.v_k, self.v_out - self.v_k))/sqrt(dot(self.v_k, self.v_k)), self.sCG1))
+        
+                if (step == 0 and Picard_iter == 0):
+                    v_error = 1.0
+                else:
+                    if (error_type == "maximum"):
+                        v_error = MPI.max(comm, np.abs(self.iteration_error.vector()).max()) 
+
+                    if (error_type == "integrated"):
+                        v_error = assemble(self.iteration_error*dx)/assemble(self.unit_scalar*dx)
+
+                if (rank == 0):
+                    print("\n\tPicard iteration %d. Error = %6.3E\n" % (Picard_iter, v_error))
+
+                    file = open("data_"+name+"/picard_iter.dat","a")
+                    file.write(("%.5E\t"+"%.5E"+"\n")%(step + Picard_iter/Picard_iter_max, v_error))    
+                    file.close() 
+                
+                self.p_k.assign(self.p_out)
+                self.v_k.assign(self.v_out)
+
+                self.strain_rate_inv.assign(project(strain_rate_II(self.v_k), self.sDG0))
+
+                # --- VEP iterations ---
+                # if (elasticity == True):
+                #     self.sr_min.assign(MPI.min(comm, self.strain_rate_inv.vector().min())) 
+                #     get_new_stress_iter(self.mesh, self.Temp_k, self.xm, self.stress_dev_inv, self.stress_dev_inv_k,\
+                #                         self.strain_rate_inv, step, Picard_iter, self.dt)
+                    
+                #     self.z_function.assign(project(z(self.visc, self.dt), self.sDG0))
+                # else:
+                #     self.stress_dev_inv.assign(project(2.0*self.visc*strain_rate_II(self.v_k), self.sDG0))
+
+                Picard_iter += 1
+                self.update_viscosity(step, Picard_iter)
+
+            else:
+                self.p_k.assign(self.p_out)
+                self.v_k.assign(self.v_out)
+                break
+        
+        if (time_step_position == "stokes"):
+            self.dt.assign(time_step(self.mesh, self.v_k, self.v_mesh, H_max, self.composition))        
+
+        if (plasticity == True):
+    
+            # if (elasticity == False):
+            #     self.stress_dev_inv.assign(project(2.0*self.visc*strain_rate_II(self.v_k), self.sDG0))
+            # else:
+            #     self.stress_dev_inv.assign(project(2.0*self.z_function*self.visc*strain_rate_II(self.v_k)\
+            #                                        + (1.0 - self.z_function)*self.stress_dev_inv_k, self.sDG0))
+
+            self.stress_dev_inv.assign(project(2.0*self.visc*strain_rate_II(self.v_k), self.sDG0))
+            self.yield_stress.assign(project(sigma_yield(self.p_k, self.plastic_strain), self.sDG0)) 
+            self.yield_function.assign(project(self.stress_dev_inv - self.yield_stress, self.sDG0))
+
+            # --- Integrate plastic strain on tracers ---
+            plastic_strain_integration(self.mesh, self.tracers_in_cells, self.tracers, self.dt, self.yield_function, self.strain_rate_inv)            
+            scalar_interpolation(self.mesh, self.tracers_in_cells, self.tracers, 6, "ARITM", self.plastic_strain)
+            
+    def update_stress(self):
+        # --- Update stress ---
+        stress_update(self.mesh, self.tracers_in_cells, self.tracers, self.visc, self.strain_rate_tensor, self.z_function)
+
+        # --- Reduce stress where the ice is yielding ---
+        stress_reduction(self.mesh, self.tracers_in_cells, self.tracers, self.yield_function, self.yield_stress, self.stress_dev_inv)
+
+        # --- Rotate stress ---
+        self.vorticity_tensor.assign(project(skew(nabla_grad(self.v_k)), self.tDG0))
+        stress_rotation(self.mesh, self.tracers_in_cells, self.tracers, self.vorticity_tensor, self.dt)
+
+        stress_interpolation(self.mesh, self.tracers_in_cells, self.tracers, self.stress_dev_tensor_k)
+        self.stress_dev_inv_k.assign(project(tensor_2nd_invariant(self.stress_dev_tensor_k), self.sDG0))
+
+        if (rank==0):
+            print("Done.")
+
+    def update_viscosity(self, step, Picard_iter):
+        """ Updates the viscosity fuction """
+        self.visc.assign(project(eta_eff(self.p_k, self.Temp, self.strain_rate_inv,\
+                                        self.stress_dev_inv, self.xm, self.composition, self.yield_function, self.plastic_strain,\
+                                        step, Picard_iter, self.stress_dev_inv_k, self.dt, self.sr_min), self.sDG0))
+
+    def compute_u(self):
+        self.q_ice.assign(project(-k(self.Temp, self.composition)*nabla_grad(self.Temp), self.vCG1))
+        self.q_ice_aver.assign(assemble(sqrt(dot(self.q_ice, self.q_ice))*self.ds(2))/assemble(self.unit_scalar*self.ds(2)))
+        self.q_water.assign(project((self.q_ice_aver - DAL_factor*self.h_bot)*self.e_z, self.vCG1))
+        self.u.assign(project(- dot(self.n_bot, self.q_ice - self.q_water)*self.n_bot/(Lt*rho_s), self.vCG1))
+
+    def solve_topography_evolution(self):
+        # --- Compute the top topography evolution ---
         if (BC_vel_top == "free_surface"):
             self.solver_free_surface_top.solve()
 
-        if (BC_vel_bot == "free_surface"):
+        # --- Upwards-facing normal vector to the bottom boundary ---
+        self.n_bot.assign(project((self.e_z - self.e_x*dot(nabla_grad(self.h_bot), self.e_x))/sqrt(1.0 + dot(nabla_grad(self.h_bot), self.e_x)**2), self.vCG1))
+
+        # --- Compute the velocity of the phase change ---
+        if (BC_vel_bot == "free_surface" and phase_transition == True):
+            self.compute_u()
+
+        # --- Compute the bottom topography evolution ---
+        if (BC_vel_bot == "free_surface" or phase_transition == True):
             self.solver_free_surface_bot.solve()
 
-        # --- Mesh displacement solver ---
-        self.h2_top.assign(self.h_top - self.h_top_k)
-        self.h2_bot.assign(self.h_bot - self.h_bot_k)
+        # --- Compute the mesh displecement distribution ---
+        if (BC_vel_top == "free_surface" or BC_vel_bot == "free_surface"):    
+            self.h2_top.assign(self.h_top - self.h_top_k)
+            self.h2_bot.assign(self.h_bot - self.h_bot_k)
 
-        self.h_top_k.assign(self.h_top)
-        self.h_bot_k.assign(self.h_bot)
+            self.solver_surf_move.solve()
+            self.u_mesh.assign(project(self.h2*self.e_z, self.vCG1))
 
-        self.solver_surf_move.solve()
-        # self.u_mesh.assign(project(Expression(("0.0", "h2"), h2 = self.h2, degree = 1), self.vCG1))
-        self.u_mesh.assign(project(self.h2*self.e_z, self.vCG1))
-        self.v_mesh.assign(project(self.u_mesh/self.dt, self.vCG1))
+            self.h_top_k.assign(self.h_top)
+            self.h_bot_k.assign(self.h_bot)
+
+            self.v_mesh.assign(project(self.u_mesh/self.dt, self.vCG1))
+
+        if (time_step_position == "end"):
+            self.dt.assign(time_step(self.mesh, self.v_k, self.u, H_max, self.composition))        

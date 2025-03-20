@@ -11,7 +11,7 @@ class MeshModule:
         if (loading_mesh == True):
             self.Load_Mesh()
         else:
-            self.create_mesh()
+            self.create_mesh()            
             self.refine_mesh()
             self.define_boundaries()
 

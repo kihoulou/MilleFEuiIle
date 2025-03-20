@@ -2,7 +2,7 @@ from m_parameters import *
 from m_constants import *
 import os
 
-def Check_Input_Parameters():
+def check_input_parameters():
 
     print("Performing check of input parameters...")
 
@@ -16,17 +16,17 @@ def Check_Input_Parameters():
             print("Possible inputs: 1.0, yr, kyr, Myr")
             print(" ")
 
-    if ((reloading_HDF5 == True or reloading_tracers == True) and reload_name == name):
+    if ((reload_HDF5 == True or reload_tracers == True) and reload_name == name):
         exit_code = True
         if (rank == 0):
             print("Reloading file = new file. Cannot overwrite data the code is reading from.")
             print(" ")
 
     input_par = ["steps", "time"]
-    if (output_type not in input_par):
+    if (output_frequency[0] not in input_par):
         exit_code = True
         if(rank == 0):
-            print("Invalid 'output_time' parameter:", output_type)
+            print("Invalid 'output_time' parameter:", output_frequency[0])
             print("Possible inputs:", input_par)
             print(" ")
 
@@ -152,10 +152,10 @@ def Check_Input_Parameters():
             print(" ")
 
     input_par = ["domain", "cell", "constant"]
-    if (timestep_strategy not in input_par):
+    if (time_step_strategy not in input_par):
         exit_code = True
         if(rank == 0):
-            print("Invalid time step strategy:", timestep_strategy)
+            print("Invalid time step strategy:", time_step_strategy)
             print("Possible inputs:", input_par)
             print(" ")
 

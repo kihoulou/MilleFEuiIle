@@ -10,9 +10,10 @@ rank = MPI.rank(comm)
 size = MPI.size(comm)
 
 def Output_Timing(step, step_output, t, time_output):
+    
     if (step == 1\
-        or (output_type == "steps" and step % every_n == 0)\
-        or (output_type == "time" and float(t) >= time_output[step_output])):
+        or (output_frequency[0] == "steps" and step % output_frequency[1] == 0)\
+        or (output_frequency[0] == "time" and float(t) >= time_output[step_output])):
         value = True
         step_output += 1
         
@@ -21,63 +22,43 @@ def Output_Timing(step, step_output, t, time_output):
 
     return step_output, value
 
-def time_step_domain(mesh, v, H_max, composition):
+def time_step(mesh, v, v_mesh, H_max, composition):
 
-    x_min_ranks = length
-    for f in facets(mesh):
-            for e in edges(f):
-                if (e.length()< x_min_ranks): x_min_ranks = e.length()
+    if (time_step_strategy == "constant"):
+        return dt_const
     
-    x_min = MPI.min(comm, x_min_ranks) 
-    v_max = MPI.max(mesh.mpi_comm(), np.abs(v.vector().get_local()).max()) 
+    if (time_step_strategy == "domain"):
+        # --- Determine minimum elememt size in the mesh ---
+        x_min_ranks = length
+        for f in facets(mesh):
+                for e in edges(f):
+                    if (e.length()< x_min_ranks): x_min_ranks = e.length()
+        
+        x_min = MPI.min(comm, x_min_ranks) 
 
-    dt_conv = cfl*x_min/v_max
-    dt_cond = cfl*x_min**2*rho_s*cp((T_bot+T_top)/2.0, composition)/k((T_bot+T_top)/2.0 , composition)
-    dt_H_max = cfl*rho_s*cp(T_bot, composition)*dT_max/H_max
-    
+        # --- Compute the maximum speed in the domain ---
+        v_max = MPI.max(mesh.mpi_comm(), np.abs(v.vector().get_local()).max()) 
+        
+        dt_list = []
 
-    return dt_conv
-    # if (solve_energy_problem == True):
-    #     if (tidal_dissipation == True):
-    #         return min(min(dt_conv, dt_cond), dt_H_max)
-    #     else:
-    #         return min(dt_conv, dt_cond)
-    # else:
-    #     return dt_conv
-    
-def time_step_cell(v, Temp, timestep):
-    ranks = []
-    dt_min = 10.0*Myr
+        # --- Convective time step ---
+        dt_conv = cfl*x_min/v_max
+        dt_list.append(dt_conv)
 
-    for j in range(mesh.num_cells()):
-        cell_j = Cell(mesh,j).get_vertex_coordinates()
-        centroid = Cell(mesh, j).midpoint()
+        # --- Conductive time step ---
+        if (solve_energy_problem == True):
+            dt_cond = cfl*x_min**2*rho_s*cp((T_bot+T_top)/2.0, composition)/k((T_bot+T_top)/2.0 , composition)
+            dt_list.append(dt_cond)
 
-        temp_cell = Temp(Point(centroid.x(),centroid.y()))
-        v_cell = sqrt(v(Point(centroid.x(),centroid.y()))[0]**2 + v(Point(centroid.x(),centroid.y()))[1]**2)
+        # --- Mesh displacement time step ---
+        if (BC_vel_bot == "free_surface" or BC_vel_top == "free_surface"):
+            v_max_mesh = MPI.max(mesh.mpi_comm(), np.abs(v_mesh.vector().get_local()).max()) 
+            dt_mesh = cfl*(height/1e3)/(v_max_mesh + 1e-15)
+            dt_list.append(dt_mesh)
+        
+        # --- Internal heating time step ---
+        if (tidal_dissipation == True):
+            dt_H = cfl*rho_s*cp(T_bot, composition)*dT_max/H_max
+            dt_list.append(dt_H)
 
-        side_1 = sqrt((cell_j[0] - cell_j[2])**2 + (cell_j[1] - cell_j[3])**2)
-        side_2 = sqrt((cell_j[2] - cell_j[4])**2 + (cell_j[3] - cell_j[5])**2)
-        side_3 = sqrt((cell_j[0] - cell_j[4])**2 + (cell_j[1] - cell_j[5])**2)
-
-        x_min = min(side_1,min(side_2, side_3))
-
-        # --- Timestep for advection problems ---
-        dt_conv = cfl*x_min/v_cell
-
-        # --- Timestep for heat equation ---
-        dt_cond = cfl*x_min**2*rho_s*cp(temp_cell)/k(temp_cell)
-
-        min_timestep = min(dt_cond, dt_conv)
-        ranks.append(min_timestep/kyr)
-
-        if (min_timestep < dt_min):
-            dt_min = min_timestep
-
-    MPI.barrier(comm)
-    dt_min = MPI.min(comm, dt_min)
-
-    ranks = numpy.array(ranks)                                                            
-    timestep.vector().set_local(ranks)
-    
-    return dt_min
+        return min(dt_list)

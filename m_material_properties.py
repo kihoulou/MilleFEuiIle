@@ -16,10 +16,24 @@ def density(Temp, composition, xm):
         mm = a0 + a3*T_ref**3 + a4*T_ref**4  + a5*T_ref**5 + a6*T_ref**6 + a7*T_ref**7
 
         # --- Van Keken RT-instability benchmark ---
-        return -1*composition[0] 
-        #     return (1.0-xm)*rho_s*mm/VV + xm*rho_m
+        # return -1*composition[0] 
+
+        # --- Shear bands benchmark ---
+        return rho_s
+
+        # --- Ice with melt ---
+        # return (1.0-xm)*rho_s*mm/VV + xm*rho_m
+
+        # --- Ice ---
+        if (len(materials) == 0):
+                # With melt
+                return (1.0-xm)*rho_s*mm/VV + xm*rho_m
+        else:
+                # With salt and melt
+                return ((1.0-xm)*rho_s*mm/VV + xm*rho_m)*(composition[0] + 1.005*composition[1])
+
         # return rho_s*(1.0-alpha_exp*(Temp-T_ref)) + xm*rho_s*(1.0-rho_s/rho_l) # Tobie et al. (2003)
-        # return (1.0-(xm+5e-2))*rho_s*(1.0-alpha_exp*(Temp-T_ref)) + (xm+5e-2)*rho_m # Klada PhD. (2015)
+        # return (1.0-(xm+5e-2))*rho_s*(1.0-alpha_exp*(Temp-T_ref)) + (xm+5e-2)*rho_m # Klara PhD. (2015)
         #     return -Ra*Temp - Rb*composition[0] 
 
     # return Ra/(2.5e-5*1e3) - Ra*Temp
@@ -27,7 +41,13 @@ def density(Temp, composition, xm):
         # return 2700.0
         
 def k(Temp, composition):
-        return 1.0 #567.0/Temp
+        return 567.0/Temp
 
 def cp(Temp, composition):
-        return 1.0 #185.0 + 7.037*Temp
+        return 185.0 + 7.037*Temp
+
+# def shear_modulus(composition):
+#     # --- Rising plume benchmark ---
+#     # return G_mantle**composition[0] * G_lid**composition[1] * G_plume**composition[2]
+
+#     return 5e10
