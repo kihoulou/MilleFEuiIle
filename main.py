@@ -28,7 +28,7 @@ rank = MPI.rank(comm)
 size = MPI.size(comm)
 
 code_start = time.time()
-code_now_k = time.time()
+code_now_k = time.time() #Ahoj
 
 if (rank == 0):
     print(" ")
