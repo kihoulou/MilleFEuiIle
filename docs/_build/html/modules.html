@@ -1,0 +1,618 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>MilleFEuille_NEW &#8212; MilleFEuiIle  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'modules';</script>
+    <link rel="icon" href="_static/mf.png"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="m_boudnary_conditions module" href="m_boudnary_conditions.html" />
+    <link rel="prev" title="Support" href="support.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+     
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/mf.png" class="logo__image only-light" alt="MilleFEuiIle  documentation - Home"/>
+    <script>document.write(`<img src="_static/mf.png" class="logo__image only-dark" alt="MilleFEuiIle  documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="contents.html">
+                    <no title>
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Get started:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation and running</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tips:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation and running</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Structure:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">MilleFEuille_NEW</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="m_boudnary_conditions.html">m_boudnary_conditions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_check.html">m_check module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_constants.html">m_constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_elements.html">m_elements module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_equations.html">m_equations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_filenames.html">m_filenames module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_interpolation.html">m_interpolation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_material_properties.html">m_material_properties module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_melting.html">m_melting module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_mesh.html">m_mesh module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html">m_parameters module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_postproc.html">m_postproc module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_rheology.html">m_rheology module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_timestep.html">m_timestep module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_tracers.html">m_tracers module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main_old.html">main_old module</a></li>
+</ul><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/modules.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>MilleFEuille_NEW</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="millefeuille-new">
+<h1>MilleFEuille_NEW<a class="headerlink" href="#millefeuille-new" title="Link to this heading">#</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="m_boudnary_conditions.html">m_boudnary_conditions module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="m_boudnary_conditions.html#m_boudnary_conditions.Point_Fixed_Pressure"><code class="docutils literal notranslate"><span class="pre">Point_Fixed_Pressure</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="m_boudnary_conditions.html#m_boudnary_conditions.Point_Fixed_Pressure.inside"><code class="docutils literal notranslate"><span class="pre">Point_Fixed_Pressure.inside()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="m_boudnary_conditions.html#m_boudnary_conditions.apply_temperature_BC"><code class="docutils literal notranslate"><span class="pre">apply_temperature_BC()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_boudnary_conditions.html#m_boudnary_conditions.apply_velocity_BC"><code class="docutils literal notranslate"><span class="pre">apply_velocity_BC()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="m_check.html">m_check module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="m_check.html#m_check.SaveSourceCode"><code class="docutils literal notranslate"><span class="pre">SaveSourceCode()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_check.html#m_check.check_input_parameters"><code class="docutils literal notranslate"><span class="pre">check_input_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="m_constants.html">m_constants module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="m_elements.html">m_elements module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="m_elements.html#m_elements.Elements"><code class="docutils literal notranslate"><span class="pre">Elements</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="m_equations.html">m_equations module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="m_equations.html#m_equations.Equations"><code class="docutils literal notranslate"><span class="pre">Equations</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="m_equations.html#m_equations.Equations.compute_u"><code class="docutils literal notranslate"><span class="pre">Equations.compute_u()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_equations.html#m_equations.Equations.equation_Stokes"><code class="docutils literal notranslate"><span class="pre">Equations.equation_Stokes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_equations.html#m_equations.Equations.equation_bottom_free_surface"><code class="docutils literal notranslate"><span class="pre">Equations.equation_bottom_free_surface()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_equations.html#m_equations.Equations.equation_heat"><code class="docutils literal notranslate"><span class="pre">Equations.equation_heat()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_equations.html#m_equations.Equations.equation_heat_ini"><code class="docutils literal notranslate"><span class="pre">Equations.equation_heat_ini()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_equations.html#m_equations.Equations.equation_mesh_displacement"><code class="docutils literal notranslate"><span class="pre">Equations.equation_mesh_displacement()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_equations.html#m_equations.Equations.equation_top_free_surface"><code class="docutils literal notranslate"><span class="pre">Equations.equation_top_free_surface()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_equations.html#m_equations.Equations.solve_Stokes_problem"><code class="docutils literal notranslate"><span class="pre">Equations.solve_Stokes_problem()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_equations.html#m_equations.Equations.solve_heat_equation"><code class="docutils literal notranslate"><span class="pre">Equations.solve_heat_equation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_equations.html#m_equations.Equations.solve_initial_heat_equation"><code class="docutils literal notranslate"><span class="pre">Equations.solve_initial_heat_equation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_equations.html#m_equations.Equations.solve_topography_evolution"><code class="docutils literal notranslate"><span class="pre">Equations.solve_topography_evolution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_equations.html#m_equations.Equations.thermal_perturbation"><code class="docutils literal notranslate"><span class="pre">Equations.thermal_perturbation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_equations.html#m_equations.Equations.update_stress"><code class="docutils literal notranslate"><span class="pre">Equations.update_stress()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_equations.html#m_equations.Equations.update_viscosity"><code class="docutils literal notranslate"><span class="pre">Equations.update_viscosity()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="m_filenames.html">m_filenames module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="m_filenames.html#m_filenames.SaveFiles"><code class="docutils literal notranslate"><span class="pre">SaveFiles</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="m_filenames.html#m_filenames.SaveFiles.Load_HDF5"><code class="docutils literal notranslate"><span class="pre">SaveFiles.Load_HDF5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_filenames.html#m_filenames.SaveFiles.Save_HDF5"><code class="docutils literal notranslate"><span class="pre">SaveFiles.Save_HDF5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_filenames.html#m_filenames.SaveFiles.Save_Paraview"><code class="docutils literal notranslate"><span class="pre">SaveFiles.Save_Paraview()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_filenames.html#m_filenames.SaveFiles.write_statistic"><code class="docutils literal notranslate"><span class="pre">SaveFiles.write_statistic()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="m_interpolation.html">m_interpolation module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="m_interpolation.html#m_interpolation.Max"><code class="docutils literal notranslate"><span class="pre">Max()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_interpolation.html#m_interpolation.Min"><code class="docutils literal notranslate"><span class="pre">Min()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_interpolation.html#m_interpolation.composition_interpolation"><code class="docutils literal notranslate"><span class="pre">composition_interpolation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_interpolation.html#m_interpolation.melt_interpolation"><code class="docutils literal notranslate"><span class="pre">melt_interpolation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_interpolation.html#m_interpolation.scalar_interpolation"><code class="docutils literal notranslate"><span class="pre">scalar_interpolation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_interpolation.html#m_interpolation.stress_interpolation"><code class="docutils literal notranslate"><span class="pre">stress_interpolation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_interpolation.html#m_interpolation.stress_reduction"><code class="docutils literal notranslate"><span class="pre">stress_reduction()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_interpolation.html#m_interpolation.stress_rotation"><code class="docutils literal notranslate"><span class="pre">stress_rotation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_interpolation.html#m_interpolation.stress_update"><code class="docutils literal notranslate"><span class="pre">stress_update()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_interpolation.html#m_interpolation.tracer_count_interpolation"><code class="docutils literal notranslate"><span class="pre">tracer_count_interpolation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_interpolation.html#m_interpolation.tracer_counting"><code class="docutils literal notranslate"><span class="pre">tracer_counting()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="m_material_properties.html">m_material_properties module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="m_material_properties.html#m_material_properties.cp"><code class="docutils literal notranslate"><span class="pre">cp()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_material_properties.html#m_material_properties.density"><code class="docutils literal notranslate"><span class="pre">density()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_material_properties.html#m_material_properties.k"><code class="docutils literal notranslate"><span class="pre">k()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="m_melting.html">m_melting module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="m_melting.html#m_melting.Melting"><code class="docutils literal notranslate"><span class="pre">Melting</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="m_melting.html#m_melting.Melting.add_melt_tracers"><code class="docutils literal notranslate"><span class="pre">Melting.add_melt_tracers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_melting.html#m_melting.Melting.compute_melting"><code class="docutils literal notranslate"><span class="pre">Melting.compute_melting()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_melting.html#m_melting.Melting.delete_melt_tracers"><code class="docutils literal notranslate"><span class="pre">Melting.delete_melt_tracers()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="m_mesh.html">m_mesh module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="m_mesh.html#m_mesh.MeshModule"><code class="docutils literal notranslate"><span class="pre">MeshModule</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="m_mesh.html#m_mesh.MeshModule.Load_Mesh"><code class="docutils literal notranslate"><span class="pre">MeshModule.Load_Mesh()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_mesh.html#m_mesh.MeshModule.Save_Mesh"><code class="docutils literal notranslate"><span class="pre">MeshModule.Save_Mesh()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_mesh.html#m_mesh.MeshModule.create_mesh"><code class="docutils literal notranslate"><span class="pre">MeshModule.create_mesh()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_mesh.html#m_mesh.MeshModule.define_boundaries"><code class="docutils literal notranslate"><span class="pre">MeshModule.define_boundaries()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_mesh.html#m_mesh.MeshModule.move_mesh"><code class="docutils literal notranslate"><span class="pre">MeshModule.move_mesh()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_mesh.html#m_mesh.MeshModule.refine_mesh"><code class="docutils literal notranslate"><span class="pre">MeshModule.refine_mesh()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_mesh.html#m_mesh.MeshModule.save_mesh"><code class="docutils literal notranslate"><span class="pre">MeshModule.save_mesh()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="m_mesh.html#m_mesh.count_nodes"><code class="docutils literal notranslate"><span class="pre">count_nodes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_mesh.html#m_mesh.detect_oscillations"><code class="docutils literal notranslate"><span class="pre">detect_oscillations()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_mesh.html#m_mesh.output_timing"><code class="docutils literal notranslate"><span class="pre">output_timing()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="m_parameters.html">m_parameters module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.Picard_iter_error"><code class="docutils literal notranslate"><span class="pre">Picard_iter_error</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.Picard_iter_max"><code class="docutils literal notranslate"><span class="pre">Picard_iter_max</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.Tracers_Output"><code class="docutils literal notranslate"><span class="pre">Tracers_Output</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.Tracers_header"><code class="docutils literal notranslate"><span class="pre">Tracers_header</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.allow_empty_cells"><code class="docutils literal notranslate"><span class="pre">allow_empty_cells</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.default_composition"><code class="docutils literal notranslate"><span class="pre">default_composition</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.empty_region"><code class="docutils literal notranslate"><span class="pre">empty_region</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.interface"><code class="docutils literal notranslate"><span class="pre">interface()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.loading_mesh"><code class="docutils literal notranslate"><span class="pre">loading_mesh</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.mesh_displacement_laplace"><code class="docutils literal notranslate"><span class="pre">mesh_displacement_laplace</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.name"><code class="docutils literal notranslate"><span class="pre">name</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.output_frequency"><code class="docutils literal notranslate"><span class="pre">output_frequency</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.override_directory"><code class="docutils literal notranslate"><span class="pre">override_directory</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.refinement"><code class="docutils literal notranslate"><span class="pre">refinement</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.reload_HDF5"><code class="docutils literal notranslate"><span class="pre">reload_HDF5</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.reload_HDF5_functions"><code class="docutils literal notranslate"><span class="pre">reload_HDF5_functions</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.reload_HDF5_step"><code class="docutils literal notranslate"><span class="pre">reload_HDF5_step</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.reload_name"><code class="docutils literal notranslate"><span class="pre">reload_name</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.reload_tracers"><code class="docutils literal notranslate"><span class="pre">reload_tracers</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.reload_tracers_step"><code class="docutils literal notranslate"><span class="pre">reload_tracers_step</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.restart_time"><code class="docutils literal notranslate"><span class="pre">restart_time</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.save_tracers"><code class="docutils literal notranslate"><span class="pre">save_tracers</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.time_step_position"><code class="docutils literal notranslate"><span class="pre">time_step_position</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.time_step_strategy"><code class="docutils literal notranslate"><span class="pre">time_step_strategy</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.time_units"><code class="docutils literal notranslate"><span class="pre">time_units</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.time_units_string"><code class="docutils literal notranslate"><span class="pre">time_units_string</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html#m_parameters.triangle_types"><code class="docutils literal notranslate"><span class="pre">triangle_types</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="m_postproc.html">m_postproc module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="m_postproc.html#m_postproc.closest_point_interpolation"><code class="docutils literal notranslate"><span class="pre">closest_point_interpolation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_postproc.html#m_postproc.entrainment"><code class="docutils literal notranslate"><span class="pre">entrainment()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_postproc.html#m_postproc.melt_height"><code class="docutils literal notranslate"><span class="pre">melt_height()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_postproc.html#m_postproc.nusselt"><code class="docutils literal notranslate"><span class="pre">nusselt()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_postproc.html#m_postproc.rms_vel"><code class="docutils literal notranslate"><span class="pre">rms_vel()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="m_rheology.html">m_rheology module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="m_rheology.html#m_rheology.cohesion"><code class="docutils literal notranslate"><span class="pre">cohesion()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_rheology.html#m_rheology.eta"><code class="docutils literal notranslate"><span class="pre">eta()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_rheology.html#m_rheology.eta_BS"><code class="docutils literal notranslate"><span class="pre">eta_BS()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_rheology.html#m_rheology.eta_GBS"><code class="docutils literal notranslate"><span class="pre">eta_GBS()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_rheology.html#m_rheology.eta_diff"><code class="docutils literal notranslate"><span class="pre">eta_diff()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_rheology.html#m_rheology.eta_disl"><code class="docutils literal notranslate"><span class="pre">eta_disl()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_rheology.html#m_rheology.eta_eff"><code class="docutils literal notranslate"><span class="pre">eta_eff()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_rheology.html#m_rheology.get_mechanisms"><code class="docutils literal notranslate"><span class="pre">get_mechanisms()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_rheology.html#m_rheology.get_new_stress_iter"><code class="docutils literal notranslate"><span class="pre">get_new_stress_iter()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_rheology.html#m_rheology.max_function"><code class="docutils literal notranslate"><span class="pre">max_function()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_rheology.html#m_rheology.plastic_strain_integration"><code class="docutils literal notranslate"><span class="pre">plastic_strain_integration()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_rheology.html#m_rheology.sigma_yield"><code class="docutils literal notranslate"><span class="pre">sigma_yield()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_rheology.html#m_rheology.strain_rate_II"><code class="docutils literal notranslate"><span class="pre">strain_rate_II()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_rheology.html#m_rheology.tensor_2nd_invariant"><code class="docutils literal notranslate"><span class="pre">tensor_2nd_invariant()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_rheology.html#m_rheology.tidal_heating"><code class="docutils literal notranslate"><span class="pre">tidal_heating()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_rheology.html#m_rheology.z"><code class="docutils literal notranslate"><span class="pre">z()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="m_timestep.html">m_timestep module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="m_timestep.html#m_timestep.Output_Timing"><code class="docutils literal notranslate"><span class="pre">Output_Timing()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_timestep.html#m_timestep.time_step"><code class="docutils literal notranslate"><span class="pre">time_step()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="m_tracers.html">m_tracers module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="m_tracers.html#m_tracers.Tracers"><code class="docutils literal notranslate"><span class="pre">Tracers</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="m_tracers.html#m_tracers.Tracers.add_tracers"><code class="docutils literal notranslate"><span class="pre">Tracers.add_tracers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_tracers.html#m_tracers.Tracers.advect_tracers"><code class="docutils literal notranslate"><span class="pre">Tracers.advect_tracers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_tracers.html#m_tracers.Tracers.check_tracers"><code class="docutils literal notranslate"><span class="pre">Tracers.check_tracers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_tracers.html#m_tracers.Tracers.delete_and_find"><code class="docutils literal notranslate"><span class="pre">Tracers.delete_and_find()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_tracers.html#m_tracers.Tracers.find_tracers"><code class="docutils literal notranslate"><span class="pre">Tracers.find_tracers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_tracers.html#m_tracers.Tracers.introduce_tracers"><code class="docutils literal notranslate"><span class="pre">Tracers.introduce_tracers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_tracers.html#m_tracers.Tracers.load_tracers"><code class="docutils literal notranslate"><span class="pre">Tracers.load_tracers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_tracers.html#m_tracers.Tracers.rank_interpolation"><code class="docutils literal notranslate"><span class="pre">Tracers.rank_interpolation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_tracers.html#m_tracers.Tracers.save_header_tracer"><code class="docutils literal notranslate"><span class="pre">Tracers.save_header_tracer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_tracers.html#m_tracers.Tracers.save_indiv_tracer"><code class="docutils literal notranslate"><span class="pre">Tracers.save_indiv_tracer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_tracers.html#m_tracers.Tracers.save_tracers"><code class="docutils literal notranslate"><span class="pre">Tracers.save_tracers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_tracers.html#m_tracers.Tracers.tracer_count_interpolation"><code class="docutils literal notranslate"><span class="pre">Tracers.tracer_count_interpolation()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="main_old.html">main_old module</a></li>
+</ul>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="support.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Support</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="m_boudnary_conditions.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">m_boudnary_conditions module</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Martin Kihoulou
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Martin Kihoulou.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

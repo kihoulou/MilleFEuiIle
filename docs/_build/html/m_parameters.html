@@ -1,0 +1,937 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>m_parameters module &#8212; MilleFEuiIle  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'm_parameters';</script>
+    <link rel="icon" href="_static/mf.png"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="m_postproc module" href="m_postproc.html" />
+    <link rel="prev" title="m_mesh module" href="m_mesh.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+     
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/mf.png" class="logo__image only-light" alt="MilleFEuiIle  documentation - Home"/>
+    <script>document.write(`<img src="_static/mf.png" class="logo__image only-dark" alt="MilleFEuiIle  documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="contents.html">
+                    <no title>
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Get started:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation and running</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tips:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation and running</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Structure:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="modules.html">MilleFEuille_NEW</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="m_boudnary_conditions.html">m_boudnary_conditions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_check.html">m_check module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_constants.html">m_constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_elements.html">m_elements module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_equations.html">m_equations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_filenames.html">m_filenames module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_interpolation.html">m_interpolation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_material_properties.html">m_material_properties module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_melting.html">m_melting module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_mesh.html">m_mesh module</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">m_parameters module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_postproc.html">m_postproc module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_rheology.html">m_rheology module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_timestep.html">m_timestep module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_tracers.html">m_tracers module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main_old.html">main_old module</a></li>
+</ul><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/m_parameters.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>m_parameters module</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> On this page: </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.Picard_iter_error"><code class="docutils literal notranslate"><span class="pre">Picard_iter_error</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.Picard_iter_max"><code class="docutils literal notranslate"><span class="pre">Picard_iter_max</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.Tracers_Output"><code class="docutils literal notranslate"><span class="pre">Tracers_Output</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.Tracers_header"><code class="docutils literal notranslate"><span class="pre">Tracers_header</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.allow_empty_cells"><code class="docutils literal notranslate"><span class="pre">allow_empty_cells</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.default_composition"><code class="docutils literal notranslate"><span class="pre">default_composition</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.empty_region"><code class="docutils literal notranslate"><span class="pre">empty_region</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.interface"><code class="docutils literal notranslate"><span class="pre">interface()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.loading_mesh"><code class="docutils literal notranslate"><span class="pre">loading_mesh</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.mesh_displacement_laplace"><code class="docutils literal notranslate"><span class="pre">mesh_displacement_laplace</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.name"><code class="docutils literal notranslate"><span class="pre">name</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.output_frequency"><code class="docutils literal notranslate"><span class="pre">output_frequency</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.override_directory"><code class="docutils literal notranslate"><span class="pre">override_directory</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.refinement"><code class="docutils literal notranslate"><span class="pre">refinement</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.reload_HDF5"><code class="docutils literal notranslate"><span class="pre">reload_HDF5</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.reload_HDF5_functions"><code class="docutils literal notranslate"><span class="pre">reload_HDF5_functions</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.reload_HDF5_step"><code class="docutils literal notranslate"><span class="pre">reload_HDF5_step</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.reload_name"><code class="docutils literal notranslate"><span class="pre">reload_name</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.reload_tracers"><code class="docutils literal notranslate"><span class="pre">reload_tracers</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.reload_tracers_step"><code class="docutils literal notranslate"><span class="pre">reload_tracers_step</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.restart_time"><code class="docutils literal notranslate"><span class="pre">restart_time</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.save_tracers"><code class="docutils literal notranslate"><span class="pre">save_tracers</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.time_step_position"><code class="docutils literal notranslate"><span class="pre">time_step_position</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.time_step_strategy"><code class="docutils literal notranslate"><span class="pre">time_step_strategy</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.time_units"><code class="docutils literal notranslate"><span class="pre">time_units</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.time_units_string"><code class="docutils literal notranslate"><span class="pre">time_units_string</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.triangle_types"><code class="docutils literal notranslate"><span class="pre">triangle_types</span></code></a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="m-parameters-module">
+<h1>m_parameters module<a class="headerlink" href="#m-parameters-module" title="Link to this heading">#</a></h1>
+<p>This module contains the most important computation parameters. <code class="docutils literal notranslate"><span class="pre">reStructuredText</span></code> syntax. See the</p>
+<dl class="py data" id="module-m_parameters">
+<dt class="sig sig-object py" id="m_parameters.Picard_iter_error">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">Picard_iter_error</span></span><a class="headerlink" href="#m_parameters.Picard_iter_error" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Minimum relative error in velocity field sufficient to exit the Stokes solver Picard iterations.</p>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.Picard_iter_max">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">Picard_iter_max</span></span><a class="headerlink" href="#m_parameters.Picard_iter_max" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Maximum number of Stokes solver Picard iterations in case of nonlinear rheology (stress-dependent viscosity, plasticity).</p>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.Tracers_Output">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">Tracers_Output</span></span><a class="headerlink" href="#m_parameters.Tracers_Output" title="Link to this definition">#</a></dt>
+<dd><p>List of strings indicating which properties carried by the tracers will be saved, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Tracers_Output</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;rank&quot;</span><span class="p">,</span> <span class="s2">&quot;dev_stress_xx&quot;</span><span class="p">,</span> <span class="s2">&quot;melt_fraction&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="pst-scrollable-table-container"><table class="table" id="id1">
+<caption><span class="caption-text">Properties to save on tracers</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>String</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>rank</p></td>
+<td><p>the process the tracer belongs to</p></td>
+</tr>
+<tr class="row-odd"><td><p>dev_stress_xx</p></td>
+<td><p><em>xx</em> component of the deviatoric stress</p></td>
+</tr>
+<tr class="row-even"><td><p>dev_stress_xz</p></td>
+<td><p><em>xz</em> component of the deviatoric stress</p></td>
+</tr>
+<tr class="row-odd"><td><p>plastic_strain</p></td>
+<td><p>amount of plastic strain</p></td>
+</tr>
+<tr class="row-even"><td><p>ocean_material</p></td>
+<td><p>1 if marked as “ocean material”, 0 otherwise</p></td>
+</tr>
+<tr class="row-odd"><td><p>surface_material</p></td>
+<td><p>1 if marked as “surface material”, 0 otherwise</p></td>
+</tr>
+<tr class="row-even"><td><p>original_depth</p></td>
+<td><p>original <em>z</em>-coordinate of the tracer</p></td>
+</tr>
+<tr class="row-odd"><td><p>composition_n</p></td>
+<td><p>concentration of material <em>n</em> (<em>n</em> being a number)</p></td>
+</tr>
+<tr class="row-even"><td><p>melt_fraction</p></td>
+<td><p>amount of partial melt on the tracer</p></td>
+</tr>
+<tr class="row-odd"><td><p>origin</p></td>
+<td><p>0 if the tracer is original, 1 if added later</p></td>
+</tr>
+<tr class="row-even"><td><p>id</p></td>
+<td><p>unique ID of the tracer</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.Tracers_header">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">Tracers_header</span></span><a class="headerlink" href="#m_parameters.Tracers_header" title="Link to this definition">#</a></dt>
+<dd><p>List of headers for the properties specified in <code class="docutils literal notranslate"><span class="pre">tracers_output</span></code>, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Tracers_Output</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;rank (-)&quot;</span><span class="p">,</span> <span class="s2">&quot;sigma_xx (Pa)&quot;</span><span class="p">,</span> <span class="s2">&quot;xm (-)&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.allow_empty_cells">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">allow_empty_cells</span></span><a class="headerlink" href="#m_parameters.allow_empty_cells" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether or not allow to have elements without tracers</p>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.default_composition">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">default_composition</span></span><a class="headerlink" href="#m_parameters.default_composition" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If <code class="docutils literal notranslate"><span class="pre">allow_empty_cells</span> <span class="pre">=</span> <span class="pre">True</span></code> this determines the composition of empty cells</p>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.empty_region">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">empty_region</span></span><a class="headerlink" href="#m_parameters.empty_region" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Specifies geometry of the region where the empty cells will be be given  <code class="docutils literal notranslate"><span class="pre">default</span> <span class="pre">composition</span></code> even without tracers inside.</p>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="m_parameters.interface">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_parameters.interface" title="Link to this definition">#</a></dt>
+<dd><p>A function just for me.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is a note admonition.</p>
+</div>
+<div class="math notranslate nohighlight">
+\[f(x) = Acos(x)\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>my_arg</strong> – The first of my arguments.</p></li>
+<li><p><strong>my_other_arg</strong> – The second of my arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A message (just for me, of course).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.loading_mesh">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">loading_mesh</span></span><a class="headerlink" href="#m_parameters.loading_mesh" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>True</strong> reads a mesh from file <code class="docutils literal notranslate"><span class="pre">mesh_name</span></code>.</p></li>
+<li><p><strong>False</strong> creates a new mesh based on <code class="docutils literal notranslate"><span class="pre">x_div</span></code>, <code class="docutils literal notranslate"><span class="pre">z_div</span></code> and <code class="docutils literal notranslate"><span class="pre">triangle_types</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.mesh_displacement_laplace">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">mesh_displacement_laplace</span></span><a class="headerlink" href="#m_parameters.mesh_displacement_laplace" title="Link to this definition">#</a></dt>
+<dd><p>Determines whether full Laplace equation or only its <em>z</em>-part will 
+be solved to obtain mesh displacement on the mesh between the top and bottom boundary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;full&quot;</span></code> distributes the displacement by solving <span class="math notranslate nohighlight">\(\nabla^2 h_2 = 0\)</span>. Useful for simulation involving tectonics, mesh is more stable.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;z_only&quot;</span></code> distributes the displacement linearly by solving <span class="math notranslate nohighlight">\(\nabla^2_z h_2 = 0\)</span></p></li>
+</ul>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.name">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#m_parameters.name" title="Link to this definition">#</a></dt>
+<dd><p>Name of the directory with the results. The directory with the results will be named <code class="docutils literal notranslate"><span class="pre">data_name</span></code>.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.output_frequency">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">output_frequency</span></span><a class="headerlink" href="#m_parameters.output_frequency" title="Link to this definition">#</a></dt>
+<dd><p>Frequency for the output to ParaView, HDF5 data and tracer files. The first time step is always saved, the
+last one if the simulation arrives at <span class="math notranslate nohighlight">\(t_{end}\)</span> succesfully.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[&quot;steps&quot;,</span> <span class="pre">10]</span></code> outputs the data every 10 steps</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[&quot;time&quot;,</span> <span class="pre">100*kyr]</span></code> outputs the data every 100 kyr</p></li>
+</ul>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>list consisting of a string <code class="docutils literal notranslate"><span class="pre">&quot;steps&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;time&quot;</span></code>, and an integer/float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.override_directory">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">override_directory</span></span><a class="headerlink" href="#m_parameters.override_directory" title="Link to this definition">#</a></dt>
+<dd><ul class="simple">
+<li><p><strong>True</strong>: Repeared run with the same <code class="docutils literal notranslate"><span class="pre">name</span></code> overwrites the data</p></li>
+<li><p><strong>False</strong>: Original <code class="docutils literal notranslate"><span class="pre">name</span></code> directory will be protected, attempted run creates a directory <code class="docutils literal notranslate"><span class="pre">data_name_new</span></code></p></li>
+</ul>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.refinement">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">refinement</span></span><a class="headerlink" href="#m_parameters.refinement" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Minimum and maximum <em>x</em>- and <em>y</em>-coordinates of a rectangle area of the mesh to be refined:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">refinement</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">height</span><span class="o">/</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">height</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Repeating the sequence superposes the refinements. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">refinement</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="o">/</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="o">/</span><span class="mf">4.0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>gives first-level refinement in the bottom half domain and second-level one in the bottom quarter of the domain.</p>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of 4x <em>n</em> floats, where <em>n</em> is the number of refined areas</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.reload_HDF5">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">reload_HDF5</span></span><a class="headerlink" href="#m_parameters.reload_HDF5" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether or not to load HDF5 data from <code class="docutils literal notranslate"><span class="pre">data_reload_name/HDF5/data.h5</span></code>.</p>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.reload_HDF5_functions">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">reload_HDF5_functions</span></span><a class="headerlink" href="#m_parameters.reload_HDF5_functions" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Fields to be loaded from the HDF5 file <code class="docutils literal notranslate"><span class="pre">data_reload_name/HDF5/data.h5</span></code>.</p>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of strings</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.reload_HDF5_step">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">reload_HDF5_step</span></span><a class="headerlink" href="#m_parameters.reload_HDF5_step" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Time stamp of the HDF5 file which will be loaded when <code class="docutils literal notranslate"><span class="pre">reloading_HDF5</span> <span class="pre">=</span> <span class="pre">True</span></code>.</p>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.reload_name">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">reload_name</span></span><a class="headerlink" href="#m_parameters.reload_name" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The directory from which the data will be reloaded when <code class="docutils literal notranslate"><span class="pre">reloading_HDF5</span> <span class="pre">=</span> <span class="pre">True</span></code>.</p>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.reload_tracers">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">reload_tracers</span></span><a class="headerlink" href="#m_parameters.reload_tracers" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether to load tracers from <code class="docutils literal notranslate"><span class="pre">data_reload_name/tracers/</span></code>.</p>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.reload_tracers_step">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">reload_tracers_step</span></span><a class="headerlink" href="#m_parameters.reload_tracers_step" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Specifies the file from which to read the tracers <code class="docutils literal notranslate"><span class="pre">data_reload_name/tracers/step_</span></code>.</p>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.restart_time">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">restart_time</span></span><a class="headerlink" href="#m_parameters.restart_time" title="Link to this definition">#</a></dt>
+<dd><p>Whether to reset time when <code class="docutils literal notranslate"><span class="pre">reloading_HDF5</span> <span class="pre">=</span> <span class="pre">True</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>True</strong> sets time to 0.</p></li>
+<li><p><strong>False</strong> continues from the given checkpoint.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.save_tracers">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">save_tracers</span></span><a class="headerlink" href="#m_parameters.save_tracers" title="Link to this definition">#</a></dt>
+<dd><p>Whether to save tracers into files located at <code class="docutils literal notranslate"><span class="pre">data_name/tracers</span></code>. Timing of the output is given by…</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.time_step_position">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">time_step_position</span></span><a class="headerlink" href="#m_parameters.time_step_position" title="Link to this definition">#</a></dt>
+<dd><p>Determines where to compute new time step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">&quot;stokes&quot;</span></code> after the Stokes solver or  <code class="docutils literal notranslate"><span class="pre">&quot;end&quot;</span></code> at the end of the time loop</p>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.time_step_strategy">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">time_step_strategy</span></span><a class="headerlink" href="#m_parameters.time_step_strategy" title="Link to this definition">#</a></dt>
+<dd><p>Method for computing a new time step</p>
+<dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;domain&quot;</span></code> computes a new time step based on specific criteria in every step of the time loop (see <code class="docutils literal notranslate"><span class="pre">m_timestep</span></code> module)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;constant&quot;</span></code> prescribes a constant time step given by xxx</p></li>
+</ul>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.time_units">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">time_units</span></span><a class="headerlink" href="#m_parameters.time_units" title="Link to this definition">#</a></dt>
+<dd><p>Time units at which the output will be written.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Use <code class="docutils literal notranslate"><span class="pre">1.0</span></code> for seconds or in case of non-dimensional problems, or <code class="docutils literal notranslate"><span class="pre">yr</span></code>, <code class="docutils literal notranslate"><span class="pre">kyr</span></code> or <code class="docutils literal notranslate"><span class="pre">Myr</span></code></p>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.time_units_string">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">time_units_string</span></span><a class="headerlink" href="#m_parameters.time_units_string" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>String representation of <code class="docutils literal notranslate"><span class="pre">time_units</span></code> up to the user.</p>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters.triangle_types">
+<span class="sig-prename descclassname"><span class="pre">m_parameters.</span></span><span class="sig-name descname"><span class="pre">triangle_types</span></span><a class="headerlink" href="#m_parameters.triangle_types" title="Link to this definition">#</a></dt>
+<dd><p>Method of dividing basic squares into mesh triangle elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">&quot;crossed&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;left&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;right&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;right/left&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;left/right&quot;</span></code></p>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="m_mesh.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">m_mesh module</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="m_postproc.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">m_postproc module</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page:
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.Picard_iter_error"><code class="docutils literal notranslate"><span class="pre">Picard_iter_error</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.Picard_iter_max"><code class="docutils literal notranslate"><span class="pre">Picard_iter_max</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.Tracers_Output"><code class="docutils literal notranslate"><span class="pre">Tracers_Output</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.Tracers_header"><code class="docutils literal notranslate"><span class="pre">Tracers_header</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.allow_empty_cells"><code class="docutils literal notranslate"><span class="pre">allow_empty_cells</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.default_composition"><code class="docutils literal notranslate"><span class="pre">default_composition</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.empty_region"><code class="docutils literal notranslate"><span class="pre">empty_region</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.interface"><code class="docutils literal notranslate"><span class="pre">interface()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.loading_mesh"><code class="docutils literal notranslate"><span class="pre">loading_mesh</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.mesh_displacement_laplace"><code class="docutils literal notranslate"><span class="pre">mesh_displacement_laplace</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.name"><code class="docutils literal notranslate"><span class="pre">name</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.output_frequency"><code class="docutils literal notranslate"><span class="pre">output_frequency</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.override_directory"><code class="docutils literal notranslate"><span class="pre">override_directory</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.refinement"><code class="docutils literal notranslate"><span class="pre">refinement</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.reload_HDF5"><code class="docutils literal notranslate"><span class="pre">reload_HDF5</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.reload_HDF5_functions"><code class="docutils literal notranslate"><span class="pre">reload_HDF5_functions</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.reload_HDF5_step"><code class="docutils literal notranslate"><span class="pre">reload_HDF5_step</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.reload_name"><code class="docutils literal notranslate"><span class="pre">reload_name</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.reload_tracers"><code class="docutils literal notranslate"><span class="pre">reload_tracers</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.reload_tracers_step"><code class="docutils literal notranslate"><span class="pre">reload_tracers_step</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.restart_time"><code class="docutils literal notranslate"><span class="pre">restart_time</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.save_tracers"><code class="docutils literal notranslate"><span class="pre">save_tracers</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.time_step_position"><code class="docutils literal notranslate"><span class="pre">time_step_position</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.time_step_strategy"><code class="docutils literal notranslate"><span class="pre">time_step_strategy</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.time_units"><code class="docutils literal notranslate"><span class="pre">time_units</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.time_units_string"><code class="docutils literal notranslate"><span class="pre">time_units_string</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#m_parameters.triangle_types"><code class="docutils literal notranslate"><span class="pre">triangle_types</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Martin Kihoulou
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Martin Kihoulou.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

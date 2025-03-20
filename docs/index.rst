@@ -1,0 +1,57 @@
+.. MilleFEuiIle documentation master file, created by
+   sphinx-quickstart on Sat Mar 15 14:02:03 2025.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+MilleFEuiIle  documentation
+==========================
+
+Welcome to the *MilleFEuiIle*'s documentation!
+
+The scope of *MilleFEuiIle*
+-------------------------
+
+*MilleFEuiIle* [mil·fœj], a short for **M**\ ulti-\ **I**\ nstrumenta\ **L** **L**\ agrangian-\ **E**\ ulerian **FE**\ niCS-\ **U**\ sing
+**I**\ ce-\ **I** **L**\ ayer **E**\ xplorer, is a computational code built 
+upon the open-source finite-element python library FEniCS, developed to solve thermo-mechanical 
+evolution of ice shells of icy bodies. Combining finite element method and Lagrangian markers, 
+*MilleFEuiIle* can be used to address a variety of problems in 2D Cartesian geometry, such as
+
+
+* thermal and thermo-compositional convection
+* evolution of surface and ice-ocean interface
+* phase transition at the ice-ocean interface
+* long-term tectonic deformation with visco-elasto-plastic rheology
+* melt generation and transport inside the ice shell (using Rayleigh-Taylor approximation)
+
+Installation and running
+-------------------------
+
+You can download the most recent version 
+`here <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_\.
+
+For running, simply type into the command line::
+
+   mpirun -n 6 main.py > log.out 2> log_e.out&
+
+Pre- and post-process scripts
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+something something
+
+Support
+--------------------------
+
+This page was last updated on |today|\ and is still under development.
+
+With any questions or issues, please contact me at `kihoulou@karel.troja.cuni.cz <mailto:kihoulou@karel.troja.cuni.cz>`_\ .
+
+.. .. toctree::
+..    :maxdepth: 2
+..    :includehidden:
+..    :caption: Structure:
+
+..    modules
+
+
+
