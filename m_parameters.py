@@ -33,7 +33,7 @@ Name of the directory with the results. The directory with the results will be n
 
 :meta hide-value:
 """
-override_directory = False # Protection from overwriting the directory above
+override_directory = True # Protection from overwriting the directory above
 """
 * **True**: Repeared run with the same ``name`` overwrites the data
 * **False**: Original ``name`` directory will be protected, attempted run creates a directory ``data_name_new``
@@ -271,7 +271,7 @@ loading_mesh = False
 mesh_name 	= "meshes/mesh_25x100km.xml"
 
 # --- Basic mesh resolution if not loading mesh ---
-z_div = 50
+z_div = 100
 x_div = int(z_div*(length/height)) # (keeps aspect ratio 1)
 triangle_types = "crossed" # crossed, left, right, left/right, right/left
 """
@@ -390,7 +390,7 @@ time_step_strategy = "constant"
 """
 
 cfl = 0.5
-Picard_iter_max 	= 10
+Picard_iter_max 	= 25
 """ 
 :var: Maximum number of Stokes solver Picard iterations in case of nonlinear rheology (stress-dependent viscosity, plasticity).
 :vartype: integer
@@ -437,11 +437,11 @@ velocity_bot_x = Constant(0.0)
 velocity_bot_y = Constant(0.0)
 
 # Left boundary
-velocity_left_x = Constant(-2.0)
+velocity_left_x = Constant(+2.0)
 velocity_left_y = Constant(0.0)
 
 # Right boundary
-velocity_right_x = Constant(2.0)
+velocity_right_x = Constant(-2.0)
 velocity_right_y = Constant(0.0)
 
 # Method for correcting velocity field in case of multiple free surface conditions
@@ -520,7 +520,7 @@ dT_max = 4.0
 # "cell" computes timestep in each cell and chooses the minimal
 
 # "constant" prescribes a constant timestep
-dt_const = 30*kyr/1e15 #0.5*kyr #0.5*kyr*time_scaling
+dt_const = 0.0005 #0.5*kyr #0.5*kyr*time_scaling
 
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #---------------------------- 6/ RHEOLOGY -----------------------------
@@ -568,15 +568,54 @@ shear_modulus = 3.52e9
 stress_iter_error = 1e-4
 
 # --- Plasticity ---
-int_friction_angle = 30.0*(np.pi/180.0)
-cohesion_strong = 400.0
-cohesion_weak = 50.0
+int_friction_angle = 40.0*(np.pi/180.0)
+int_friction_angle2 = 0.0
+"""
+Angle of internal friction in radians.
 
-yield_stress_max = 1e4
-yield_stress_min = 200
+:meta hide-value:
+"""
+cohesion_strong, cohesion_weak = 400.0, 50.0
+"""
+Cohesion of an undamaged and a fully damaged material, respectively.
+
+:meta hide-value:
+"""
+
+yield_stress_max, yield_stress_min = 1e4, 200
+"""
+Upper and lower cut-off values for the yield stress, respectively.
+
+:meta hide-value:
+"""
 
 eps_strong = 0
+"""
+Value of the plastic strain at which the material starts to accumulate damage.
+
+:meta hide-value:
+"""
+
 eps_weak = 0.1
+"""
+Critical value of the plastic strain beyond which the material is considered as fully damaged.
+
+:meta hide-value:
+"""
 
 healing = False
+"""
+Whether the accumulated plastic strain decreases in time due to microscopic healing processes.
+If ``True`` the the plastic strain is decreased by a following formula
+
+.. math::
+
+:meta hide-value:
+"""
+
 recovery_time = 300*kyr
+"""
+Characteristic time scale for the microscopic healing processes.
+
+:meta hide-value:
+"""

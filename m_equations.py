@@ -504,7 +504,7 @@ class Equations:
             #                                        + (1.0 - self.z_function)*self.stress_dev_inv_k, self.sDG0))
 
             self.stress_dev_inv.assign(project(2.0*self.visc*strain_rate_II(self.v_k), self.sDG0))
-            self.yield_stress.assign(project(sigma_yield(self.p_k, self.plastic_strain), self.sDG0)) 
+            self.yield_stress.assign(project(sigma_yield(self.p_k, self.plastic_strain, self.composition), self.sDG0)) 
             self.yield_function.assign(project(self.stress_dev_inv - self.yield_stress, self.sDG0))
 
             # --- Integrate plastic strain on tracers ---

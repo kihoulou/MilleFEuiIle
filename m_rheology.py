@@ -60,8 +60,9 @@ def cohesion(plastic_strain):
 
     return conditional(lt(plastic_strain, eps_weak), value, cohesion_weak)
 
-def sigma_yield(p_k, plastic_strain):
-    value = p_k*sin(int_friction_angle) + cohesion(plastic_strain)*cos(int_friction_angle)
+def sigma_yield(p_k, plastic_strain, composition):
+    angle = int_friction_angle*composition[0] + int_friction_angle2*composition[1]
+    value = p_k*sin(angle) + cohesion(plastic_strain)*cos(angle)
 
     return conditional(lt(value, yield_stress_min), yield_stress_min, conditional(gt(value, yield_stress_max), yield_stress_max, value))
 
@@ -219,10 +220,10 @@ def eta_eff(p_k, Temp, strain_rate, stress, xm, composition, yield_function, pla
 
     if (plasticity == True):
             if (elasticity == False):
-                eta_p = 0.5*sigma_yield(p_k, plastic_strain)/strain_rate
+                eta_p = 0.5*sigma_yield(p_k, plastic_strain, composition)/strain_rate
             else:
-                eta_p = 0.5*sigma_yield(p_k, plastic_strain)/max_function(strain_rate\
-                - (sigma_yield(p_k, plastic_strain) - stress_dev_inv_k)/(2.0*shear_modulus*dt), sr_min*1e-6)
+                eta_p = 0.5*sigma_yield(p_k, plastic_strain, composition)/max_function(strain_rate\
+                - (sigma_yield(p_k, plastic_strain, composition) - stress_dev_inv_k)/(2.0*shear_modulus*dt), sr_min*1e-6)
 
     if (viscosity_type=="constant"):
         eta_v = eta_0
