@@ -52,6 +52,7 @@ class SaveFiles:
         self.yield_stress = ElemClass.yield_stress
         self.stress_dev_inv = ElemClass.stress_dev_inv
         self.yield_function = ElemClass.yield_function
+        self.eta_v = ElemClass.eta_v
 
         self.mesh = MeshClass.mesh
         self.Save_Mesh = MeshClass.Save_Mesh
@@ -158,6 +159,9 @@ class SaveFiles:
 
             if (Paraview_Output[i] == "yield_function"):
                 self.Function_Dict[Paraview_Output[i]] = self.yield_function
+
+            if (Paraview_Output[i] == "eta_v"):
+                self.Function_Dict[Paraview_Output[i]] = self.eta_v
     
     def write_statistic(self, t, step, stat_output, **kwargs):
         

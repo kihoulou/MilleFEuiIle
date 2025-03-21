@@ -23,8 +23,14 @@ class Elements:
         sCG2_elem = FiniteElement("Lagrange", self.mesh.ufl_cell(), 2)
         self.sCG2 = FunctionSpace(self.mesh, sCG2_elem)
 
-        vB_elem  = VectorElement("B", self.mesh.ufl_cell(), self.mesh.topology().dim() + 1)
-        self.V = FunctionSpace(self.mesh, MixedElement([sCG1_elem, vCG1_elem, vB_elem]))
+        if (stokes_elements == "Mini"):
+            vB_elem  = VectorElement("B", self.mesh.ufl_cell(), self.mesh.topology().dim() + 1)
+            self.V = FunctionSpace(self.mesh, MixedElement([sCG1_elem, vCG1_elem, vB_elem]))
+            self.stokes_space = self.sCG1
+            
+        if (stokes_elements == "TH"):
+            self.V = FunctionSpace(self.mesh, MixedElement([sCG1_elem, vCG2_elem]))
+            self.stokes_space = self.sCG2
 
         self._Temp  = TrialFunction(self.sCG2)
         self.Temp_  = TestFunction(self.sCG2)
@@ -36,6 +42,7 @@ class Elements:
         self.xm_k = Function(self.sDG0)
         self.heating = Function(self.sDG0)
         self.visc = Function(self.sDG0)
+        self.eta_v = Function(self.sDG0)
         self.log10_visc = Function(self.sDG0)
         self.delta_T = Function(self.sDG0)
 

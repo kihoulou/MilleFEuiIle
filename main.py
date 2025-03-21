@@ -103,7 +103,7 @@ for i in range(len(materials)):
 
 while (float(t) < t_end):
     # --- Solve Stokes problem ---
-    EqClass.solve_Stokes_problem(step)
+    EqClass.solve_Stokes_problem(step, FilesClass)
 
     # --- Update time and step ---
     t.assign(float(t + EqClass.dt))

@@ -133,6 +133,7 @@ List of headers for the properties specified in ``tracers_output``, e.g.::
 
 :meta hide-value:
 """
+
 # --- What functions to write into Paraview and HDF5 file ---
 Paraview_Output = ["velocity",\
                 "pressure",\
@@ -145,6 +146,7 @@ Paraview_Output = ["velocity",\
                 "stress_dev_inv",\
                 "yield_stress",\
                 "yield_function",\
+                "eta_v",\
                 "viscosity"]
 
 # --- What values to print in a text file every time step? Must be one of the following (order does not matter):
@@ -213,7 +215,6 @@ reload_tracers 	= False
 """
 
 reload_tracers_step		= 120 # Second column in data_timestamp.dat
-
 """
 :var:  Specifies the file from which to read the tracers ``data_reload_name/tracers/step_``.
 
@@ -235,10 +236,11 @@ Whether to reset time when ``reloading_HDF5 = True``.
 
 :meta hide-value:
 """
+
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #------------------------- 3/ SIMULATION DURATION ---------------------
 #----------------------------------------------------------------------
-t_end = 200*Myr # s 
+t_end = 0.02 #200*Myr # s 
 
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #------------------------- 3/ TRACERS OPTIONS -------------------------
@@ -268,6 +270,7 @@ loading_mesh = False
 
 :meta hide-value:
 """
+
 mesh_name 	= "meshes/mesh_25x100km.xml"
 
 # --- Basic mesh resolution if not loading mesh ---
@@ -282,6 +285,7 @@ Method of dividing basic squares into mesh triangle elements.
 
 :meta hide-value:
 """
+
 # --- Rectangular mesh refinement ---
 # --- From x_left to x_right and y_bottom to y_top
 # e.g. refinement = [x_left, x_right, y_bottom, y_top] ---
@@ -350,6 +354,7 @@ allow_empty_cells = False
 
 :meta hide-value:
 """
+
 default_composition = 0
 """
 :var: If ``allow_empty_cells = True`` this determines the composition of empty cells
@@ -357,6 +362,7 @@ default_composition = 0
 
 :meta hide-value:
 """
+
 empty_region = [["rectangle",  0, length, 20e3, height]] #  So far rectangle implemented
 """
 :var: Specifies geometry of the region where the empty cells will be be given  ``default composition`` even without tracers inside.
@@ -364,9 +370,12 @@ empty_region = [["rectangle",  0, length, 20e3, height]] #  So far rectangle imp
 
 :meta hide-value:
 """
+
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #------------ 4/ STOKES PROBLEM BOUNDARY CONDITIONS -------------------
 #----------------------------------------------------------------------
+stokes_elements = "TH"
+
 time_step_position = "stokes" #stokes (right after Stokes problem) or "end" (at the end of the time loop)
 """Determines where to compute new time step.
 
@@ -569,13 +578,14 @@ stress_iter_error = 1e-4
 
 # --- Plasticity ---
 int_friction_angle = 40.0*(np.pi/180.0)
-int_friction_angle2 = 0.0
+int_friction_angle2 = 0.0*(np.pi/180.0)
 """
 Angle of internal friction in radians.
 
 :meta hide-value:
 """
-cohesion_strong, cohesion_weak = 400.0, 50.0
+
+cohesion_strong, cohesion_weak = 400.0, 20.0
 """
 Cohesion of an undamaged and a fully damaged material, respectively.
 

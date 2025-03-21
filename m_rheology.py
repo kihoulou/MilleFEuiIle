@@ -66,7 +66,7 @@ def sigma_yield(p_k, plastic_strain, composition):
 
     return conditional(lt(value, yield_stress_min), yield_stress_min, conditional(gt(value, yield_stress_max), yield_stress_max, value))
 
-def plastic_strain_integration(mesh, tracers_in_cells, tracers, dt, yield_function, strain_rate):
+def plastic_strain_integration(mesh, tracers_in_cells, tracers, dt, yield_function, strain_rate, visc, eta_v):
     for j in range(mesh.num_cells()):
         for i in range(0,len(tracers_in_cells[j])):
             tracer_no = tracers_in_cells[j][i]
@@ -75,6 +75,8 @@ def plastic_strain_integration(mesh, tracers_in_cells, tracers, dt, yield_functi
 
             yield_function_tracer = yield_function(Point(px,py))
             strain_rate_tracer = strain_rate(Point(px,py))
+            visc_tracer = visc(Point(px,py))
+            eta_v_tracer = eta_v(Point(px,py))
 
             tol = 1e-10
             if (yield_function_tracer >= -tol):
@@ -214,6 +216,8 @@ def get_mechanisms(mesh,Temp,stress_invariant,old_stress_invariant,strain_rate_i
     ranks = numpy.array(ranks)
     mechanisms.vector().set_local(ranks)
 
+def eta_visc(composition):
+    return  1e5**composition[0]*1e0**composition[1]
 
 def eta_eff(p_k, Temp, strain_rate, stress, xm, composition, yield_function, plastic_strain, step, Picard_iter, stress_dev_inv_k, dt, sr_min):
     eval_type = "mesh"
@@ -243,10 +247,11 @@ def eta_eff(p_k, Temp, strain_rate, stress, xm, composition, yield_function, pla
                     + 1.0/eta_max)*exp(-45.0*xm)
             
     if (viscosity_type == "composition"):
-        eta_v = composition[0]*1e5 + composition[1]*1e0
+        eta_v = 1e5**composition[0]*1.0**composition[1]
             
     return conditional(lt(eta_p, eta_v), eta_p, eta_v)
-    # return conditional(le(yield_function, 0.0), eta_v, conditional(lt(eta_p, eta_v), eta_p, eta_v))
+    # return conditional(le(yield_function, -1e-10), eta_v, eta_p)
+    # return conditional(le(yield_function, -1e-10), eta_v, conditional(lt(eta_p, eta_v), eta_p, eta_v))
 
     # if (plasticity == True):
     #     if (step == 0 and Picard_iter == 0):
