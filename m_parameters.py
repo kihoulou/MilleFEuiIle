@@ -28,17 +28,17 @@ size = MPI.size(comm)
 #----------------------------------------------------------------------
 
 # --- Name of the directory with results ---
-if (str(sys.argv[1]) == "ext"):
-   name = "extension_res" + str(int(sys.argv[2])) + "_phi" + str(int(sys.argv[3]))
-
-if (str(sys.argv[1]) == "comp"):
-   name = "compression_res" + str(int(sys.argv[2])) + "_phi" + str(int(sys.argv[3]))
+name = "ice_shell_extension_GK"
 """
-Name of the directory with the results. The directory with the results will be named ``data_name``.
+:var: Name of the directory with the results. The directory with the results will be named ``data_name``.
+
+
+:vartype: string
 
 :meta hide-value:
 """
-override_directory = True # Protection from overwriting the directory above
+
+override_directory = False # Protection from overwriting the directory above
 """
 * **True**: Repeared run with the same ``name`` overwrites the data
 * **False**: Original ``name`` directory will be protected, attempted run creates a directory ``data_name_new``
@@ -245,7 +245,7 @@ Whether to reset time when ``reloading_HDF5 = True``.
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #------------------------- 3/ SIMULATION DURATION ---------------------
 #----------------------------------------------------------------------
-t_end = 0.005 #200*Myr # s 
+t_end = 1*Myr #200*Myr # s 
 
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #------------------------- 3/ TRACERS OPTIONS -------------------------
@@ -262,8 +262,8 @@ weight_tracers_by_ratio = False
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #------------------------ 3/ MESH GEOMETRY ----------------------------
 #----------------------------------------------------------------------
-height = 1 # m
-length = 4 # m
+height = 25e3 # m
+length = 50e3 # m
 
 loading_mesh = False
 """
@@ -279,7 +279,7 @@ loading_mesh = False
 mesh_name 	= "meshes/mesh_25x100km.xml"
 
 # --- Basic mesh resolution if not loading mesh ---
-z_div = int(sys.argv[2]) #50
+z_div = 50
 x_div = int(z_div*(length/height)) # (keeps aspect ratio 1)
 triangle_types = "crossed" # crossed, left, right, left/right, right/left
 """
@@ -348,7 +348,7 @@ ll = length/2.0 - dd/2.0
 rr = length/2.0 + dd/2.0
 bb = 0.0
 tt = dd/2.0
-materials = [["rectangle",  0.0, length, 0.0, height], ["rectangle",  ll, rr, bb, tt]] # [["interface", "above"], ["interface", "below"]]
+materials = [] #[["rectangle",  0.0, length, 0.0, height], ["rectangle",  ll, rr, bb, tt]] # [["interface", "above"], ["interface", "below"]]
 
 # --- If True, the cells without tracers will be assigned material "default_composition" ---
 # --- Applicable only if the material composition is the only tracer-requiring feature ---
@@ -424,7 +424,7 @@ error_type          = "maximum" # "maximum or integrated"
 
 # Boundary conditions for velocity (free_slip, no_slip, free surface, velocity, velocity_x, velocity_y)
 BC_vel_top 		= "free_surface" 
-BC_vel_bot 		= "free_slip"
+BC_vel_bot 		= "velocity_y"
 BC_vel_left 	= "velocity_x"
 BC_vel_right 	= "velocity_x"
 
@@ -448,31 +448,33 @@ velocity_top_y = Constant(0.0)
 
 # Bottom boundary
 velocity_bot_x = Constant(0.0)
-velocity_bot_y = Constant(0.0)
+velocity_bot_y = Constant(+10e3/Myr)
 
 # Left boundary
-if (str(sys.argv[1]) == "ext"):
-   velocity_left_x = Constant(-2.0)
-if (str(sys.argv[1]) == "comp"):
-   velocity_left_x = Constant(+2.0)
+velocity_left_x = Constant(-10e3/Myr)
 velocity_left_y = Constant(0.0)
 
 # Right boundary
-if (str(sys.argv[1]) == "ext"):
-   velocity_right_x = Constant(+2.0)
-if (str(sys.argv[1]) == "comp"):
-   velocity_right_x = Constant(-2.0)
+velocity_right_x = Constant(+10e3/Myr)
 velocity_right_y = Constant(0.0)
 
 # Method for correcting velocity field in case of multiple free surface conditions
 stokes_null = "boundary"
+""" 
+:var: Method for correcting velocity field in case of free surface conditions on both top and bottom boundary.
+:vartype:
+   * ``"boundary"`` for subtracting the average :math:`v_z`\ integrated along the top boundary 
+   * ``"volume"`` for subtracting the average :math:`v_z`\ integrated over the full domain
+
+:meta hide-value:
+"""
 
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #------------ 5/ HEAT TRANSFER BOUNDARY CONDITIONS -------------------
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 # --- Solve heat transfer? ---
-solve_energy_problem = False
+solve_energy_problem = True
 nonlinear_heat_equation = False
 
 BC_T_top 	= "temperature" 	# temperature, heat_flux or radiation
@@ -519,7 +521,7 @@ init_cond_profile = True
 
 # --- Cosine perturbation of initial temperature ---
 cos_perturbation = True
-perturb_ampl 	= 1 # K
+perturb_ampl 	= 2 # K
 perturb_freq 	= 1 # Number of cos waves in lateral direction
 #----------------------------------------------------------------------
 
@@ -540,14 +542,14 @@ dT_max = 4.0
 # "cell" computes timestep in each cell and chooses the minimal
 
 # "constant" prescribes a constant timestep
-dt_const = 0.0005 #0.5*kyr #0.5*kyr*time_scaling
+dt_const = 0.5*kyr #0.5*kyr*time_scaling
 
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 #---------------------------- 6/ RHEOLOGY -----------------------------
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 # === PHYSICAL PARAMETERS ===
-g 		= 1.0				# m s^-2
-rho_s 	= 2700.0 #1.0 	# kg m^-3
+g 		= 1.3				# m s^-2
+rho_s 	= 920.0 #1.0 	# kg m^-3
 rho_l 	= 1000.0 #2*Ra/(2.5e-5*1e3) - Ra*1.0		# kg m^-3
 rho_m 	= rho_l		# kg m^-3
 alpha_exp = 1.6e-4	# K^-1
@@ -568,7 +570,7 @@ topo_diff = 1e-8*time_scaling
 
 # --- Rheological parameters ---
 # --- VISCOSITY ---
-viscosity_type = "composition" # constant, temp-dep, GK_2001 (Goldsby and Kohlstedt, 2001) or composition
+viscosity_type = "GK_2001" # constant, temp-dep, GK_2001 (Goldsby and Kohlstedt, 2001) or composition
 
 # --- Parameters for constant / temperature-dependent viscosity ---
 eta_0 = 1e15	# Pa.s
@@ -588,27 +590,36 @@ shear_modulus = 3.52e9
 stress_iter_error = 1e-4
 
 # --- Plasticity ---
-int_friction_angle = int(sys.argv[3])*(np.pi/180.0)
-int_friction_angle2 = 0.0*(np.pi/180.0)
+int_friction_angle = 16.0
+int_friction_angle2 = 0.0
 """
-Angle of internal friction in radians.
+:var: Angle of internal friction in degrees.
+
+:vartype: float
 
 :meta hide-value:
 """
 
-cohesion_strong, cohesion_weak = 400.0, 20.0
+cohesion_strong, cohesion_weak = 1e6, 0.0
 """
-Cohesion of an undamaged and a fully damaged material, respectively.
+:var: Cohesion of an undamaged and a fully damaged material, respectively.
+
+
+:vartype: float, float
 
 :meta hide-value:
 """
 
-yield_stress_max, yield_stress_min = 1e4, 200
+
+yield_stress_max, yield_stress_min = 1e7, 0.1
 """
-Upper and lower cut-off values for the yield stress, respectively.
+:var: Upper and lower cut-off values for the yield stress, respectively.
+
+:vartype: float, float
 
 :meta hide-value:
 """
+
 
 eps_strong = 0
 """
@@ -617,7 +628,7 @@ Value of the plastic strain at which the material starts to accumulate damage.
 :meta hide-value:
 """
 
-eps_weak = 0.1
+eps_weak = 0.2
 """
 Critical value of the plastic strain beyond which the material is considered as fully damaged.
 
@@ -626,17 +637,19 @@ Critical value of the plastic strain beyond which the material is considered as 
 
 healing = False
 """
-Whether the accumulated plastic strain decreases in time due to microscopic healing processes.
-If ``True`` the the plastic strain is decreased by a following formula
+:var: Whether the accumulated plastic strain decreases in time due to microscopic healing processes. 
+      See ``plastic_strain_integration`` in ``m_rheology`` module for more details.
 
-.. math::
+:vartype: boolean
 
 :meta hide-value:
 """
 
 recovery_time = 300*kyr
 """
-Characteristic time scale for the microscopic healing processes.
+:var: Characteristic time scale for the microscopic healing processes.
+
+:vartype: float
 
 :meta hide-value:
 """

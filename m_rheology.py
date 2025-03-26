@@ -56,13 +56,51 @@ def max_function(a,b):
 
 # --- Plasticity ---
 def cohesion(plastic_strain):
+    """ Computes the cohesion depending on the plastic strain (damage) of the material. 
+
+    :param plastic_strain: plastic strain (:math:`\\varepsilon_p`\ )
+    :param cohesion_strong: lower cut-off value (:math:`\\sigma_Y^{min}`\ , from ``m_parameters`` module)
+    :param cohsesion_weak: upper cut-off value (:math:`\\sigma_Y^{max}`\ , from ``m_parameters`` module)
+    :param eps_strong: upper cut-off value (:math:`\\sigma_Y^{max}`\ , from ``m_parameters`` module)
+    :param eps_weak: upper cut-off value (:math:`\\sigma_Y^{max}`\ , from ``m_parameters`` module)
+
+    :returns:
+       .. math::
+
+           C = \\begin{cases}
+           C_0 &\\text{if } \\varepsilon_p < \\varepsilon_0\\\\
+           C_0 + (C_\\infty - C_0)\\frac{\\varepsilon_p - \\varepsilon_0}{\\varepsilon_\\infty - \\varepsilon_0} &\\text{if } \\varepsilon_0 < \\varepsilon_p < \\varepsilon_\\infty\\\\
+           C_\\infty & \\text{if } \\varepsilon_p \\geq \\varepsilon_\\infty 
+           \\end{cases}
+
+    """
     value = cohesion_strong + (cohesion_weak - cohesion_strong)*plastic_strain/eps_weak
 
     return conditional(lt(plastic_strain, eps_weak), value, cohesion_weak)
 
 def sigma_yield(p_k, plastic_strain, composition):
-    angle = int_friction_angle*composition[0] + int_friction_angle2*composition[1]
+    """ Computes the yield stress :math:`\\sigma_Y`\ . 
+
+    :param p_k: pressure (:math:`p`\ )
+    :param plastic_strain: plastic strain (:math:`\\varepsilon_p`\ )
+    :param composition: material composition (:math:`C`\ )
+    :param yield_stress_min: lower cut-off value (:math:`\\sigma_Y^{min}`\ , from ``m_parameters`` module)
+    :param yield_stress_max: upper cut-off value (:math:`\\sigma_Y^{max}`\ , from ``m_parameters`` module)
+
+    :returns:
+       .. math::
+          \\sigma_Y = \\textrm{min}(\\textrm{max}(p\\sin(\\varphi) + C(\\varepsilon_p)\\cos(\\varphi),\ \\sigma_Y^{min}) ,\ \\sigma_Y^{max})
+
+    """
+
+    angle = int_friction_angle*(np.pi/180.0)
     value = p_k*sin(angle) + cohesion(plastic_strain)*cos(angle)
+
+    # angle = (int_friction_angle*composition[0] + int_friction_angle2*composition[1])*(np.pi/180.0)
+    # value = p_k*sin(angle) + cohesion(plastic_strain)*cos(angle)
+
+    # friction_coef = 0.6
+    # value = (cohesion(plastic_strain) + friction_coef*(p_k))*cos(atan(friction_coef))
 
     return conditional(lt(value, yield_stress_min), yield_stress_min, conditional(gt(value, yield_stress_max), yield_stress_max, value))
 

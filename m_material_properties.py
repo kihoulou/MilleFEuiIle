@@ -19,10 +19,10 @@ def density(Temp, composition, xm):
         # return -1*composition[0] 
 
         # --- Shear bands benchmark ---
-        return rho_s
+        # return rho_s
 
         # --- Ice with melt ---
-        # return (1.0-xm)*rho_s*mm/VV + xm*rho_m
+        return (1.0-xm)*rho_s*mm/VV + xm*rho_m
 
         # --- Ice ---
         if (len(materials) == 0):
@@ -41,7 +41,7 @@ def density(Temp, composition, xm):
         # return 2700.0
         
 def k(Temp, composition):
-        return 567.0/Temp
+        return 2.3 #567.0/Temp
 
 def cp(Temp, composition):
         return 185.0 + 7.037*Temp

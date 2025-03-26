@@ -54,6 +54,7 @@ MeltingClass    = Melting(MeshClass, ElemClass, TracersClass)
 FilesClass      = SaveFiles(MeshClass, ElemClass)
 EqClass         = Equations(MeshClass, ElemClass, TracersClass, MeltingClass)
 
+exit()
 # --- Save the source code ---
 if (rank == 0):
     os.system("cp  main.py data_" + name + "/source_code")
