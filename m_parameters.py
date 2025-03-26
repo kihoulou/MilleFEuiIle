@@ -1,6 +1,7 @@
 from dolfin import *
 from m_constants import *
 import numpy as np
+import sys
 
 comm = MPI.comm_world
 rank = MPI.rank(comm)
@@ -27,7 +28,11 @@ size = MPI.size(comm)
 #----------------------------------------------------------------------
 
 # --- Name of the directory with results ---
-name = "shear_bands"
+if (str(sys.argv[1]) == "ext"):
+   name = "extension_res" + str(int(sys.argv[2])) + "_phi" + str(int(sys.argv[3]))
+
+if (str(sys.argv[1]) == "comp"):
+   name = "compression_res" + str(int(sys.argv[2])) + "_phi" + str(int(sys.argv[3]))
 """
 Name of the directory with the results. The directory with the results will be named ``data_name``.
 
@@ -146,7 +151,7 @@ Paraview_Output = ["velocity",\
                 "stress_dev_inv",\
                 "yield_stress",\
                 "yield_function",\
-                "eta_v",\
+                "tracers",\
                 "viscosity"]
 
 # --- What values to print in a text file every time step? Must be one of the following (order does not matter):
@@ -240,7 +245,7 @@ Whether to reset time when ``reloading_HDF5 = True``.
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #------------------------- 3/ SIMULATION DURATION ---------------------
 #----------------------------------------------------------------------
-t_end = 0.02 #200*Myr # s 
+t_end = 0.005 #200*Myr # s 
 
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #------------------------- 3/ TRACERS OPTIONS -------------------------
@@ -274,7 +279,7 @@ loading_mesh = False
 mesh_name 	= "meshes/mesh_25x100km.xml"
 
 # --- Basic mesh resolution if not loading mesh ---
-z_div = 100
+z_div = int(sys.argv[2]) #50
 x_div = int(z_div*(length/height)) # (keeps aspect ratio 1)
 triangle_types = "crossed" # crossed, left, right, left/right, right/left
 """
@@ -374,7 +379,7 @@ empty_region = [["rectangle",  0, length, 20e3, height]] #  So far rectangle imp
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #------------ 4/ STOKES PROBLEM BOUNDARY CONDITIONS -------------------
 #----------------------------------------------------------------------
-stokes_elements = "TH"
+stokes_elements = "Mini"
 
 time_step_position = "stokes" #stokes (right after Stokes problem) or "end" (at the end of the time loop)
 """Determines where to compute new time step.
@@ -446,11 +451,17 @@ velocity_bot_x = Constant(0.0)
 velocity_bot_y = Constant(0.0)
 
 # Left boundary
-velocity_left_x = Constant(+2.0)
+if (str(sys.argv[1]) == "ext"):
+   velocity_left_x = Constant(-2.0)
+if (str(sys.argv[1]) == "comp"):
+   velocity_left_x = Constant(+2.0)
 velocity_left_y = Constant(0.0)
 
 # Right boundary
-velocity_right_x = Constant(-2.0)
+if (str(sys.argv[1]) == "ext"):
+   velocity_right_x = Constant(+2.0)
+if (str(sys.argv[1]) == "comp"):
+   velocity_right_x = Constant(-2.0)
 velocity_right_y = Constant(0.0)
 
 # Method for correcting velocity field in case of multiple free surface conditions
@@ -577,7 +588,7 @@ shear_modulus = 3.52e9
 stress_iter_error = 1e-4
 
 # --- Plasticity ---
-int_friction_angle = 40.0*(np.pi/180.0)
+int_friction_angle = int(sys.argv[3])*(np.pi/180.0)
 int_friction_angle2 = 0.0*(np.pi/180.0)
 """
 Angle of internal friction in radians.

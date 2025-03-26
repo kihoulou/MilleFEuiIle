@@ -91,7 +91,9 @@ class MeshModule:
 
 def output_timing(step, time_out):
     
-    if (step == 1 or (output_type == "steps" and step%every_n==0) or (output_type == "time" and float(time_out)>=every_t)):
+    if (step == 1 or (output_frequency[0] == "steps" and step % output_frequency[1] == 0)\
+        or (output_frequency[0] == "time" and float(time_out) >= output_frequency[1])):
+        
         value = True
     else:
         value = False

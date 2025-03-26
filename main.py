@@ -148,6 +148,10 @@ while (float(t) < t_end):
         # --- Interpolate tracer-carried functions ---
         for i in range(len(materials)):
             composition_interpolation(MeshClass.mesh, TracersClass.tracers_in_cells, TracersClass.tracers, i, EqClass.composition[i])
+        
+        tracer_count_interpolation(MeshClass.mesh, TracersClass.tracers_in_cells,  EqClass.number_of_tracers)
+
+        scalar_interpolation(MeshClass.mesh, TracersClass.tracers_in_cells, TracersClass.tracers, 6, "ARITM", EqClass.plastic_strain)
     
     # --- Update stress ---
     if (elasticity == True):

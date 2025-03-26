@@ -119,7 +119,7 @@ def scalar_interpolation(mesh, tracers_in_cells, tracers, column, avg_type, func
     ranks = numpy.array(ranks)                                                            
     function.vector().set_local(ranks)
 
-def tracer_count_interpolation(mesh, tracers_in_cells, tracers, function):
+def tracer_count_interpolation(mesh, tracers_in_cells, function):
     ranks = []
     for j in range(mesh.num_cells()):
         ranks.append(len(tracers_in_cells[j]))

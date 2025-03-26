@@ -326,7 +326,7 @@ class Equations:
             eq_momentum = (self._p*div(self.v_)
                 - density(self.Temp, self.composition, self.xm)*g*dot(self.e_z, self.v_)
                 - eta_eff(self.p_k, self.Temp, self.strain_rate_inv,\
-                                        self.stress_dev_inv, self.xm, self.composition, self.yield_function, self.plastic_strain,\
+                                        self.stress_dev_inv, self.xm, self.composition, self.plastic_strain,\
                                         step, Picard_iter, self.stress_dev_inv_k, self.dt, self.sr_min)*inner(2.0*sym(nabla_grad(self._v)), nabla_grad(self.v_).T))*dx
             
             
@@ -460,7 +460,7 @@ class Equations:
         v_error = 1.0
 
         # --- After the tracers are advected (from the previous loop) ---
-        scalar_interpolation(self.mesh, self.tracers_in_cells, self.tracers, 6, "ARITM", self.plastic_strain)
+        # scalar_interpolation(self.mesh, self.tracers_in_cells, self.tracers, 6, "ARITM", self.plastic_strain)
 
         if (step == 0):
             self.update_viscosity(step, Picard_iter)
@@ -506,10 +506,6 @@ class Equations:
                     file.close() 
                 
                 self.strain_rate_inv.assign(project(strain_rate_II(self.v_out), self.sDG0))
-
-                if (plasticity == True and step == 0 and Picard_iter == 0):
-                    self.yield_stress.assign(project(sigma_yield(self.p_out, self.plastic_strain, self.composition), self.sDG0)) 
-                    self.yield_function.assign(project(2.0*self.eta_v*self.strain_rate_inv - self.yield_stress, self.sDG0))
                 
                 self.p_k.assign(self.p_out)
                 self.v_k.assign(self.v_out)
@@ -528,12 +524,10 @@ class Equations:
         if (plasticity == True):
             self.stress_dev_inv.assign(project(2.0*self.visc*strain_rate_II(self.v_out), self.sDG0))
             self.yield_stress.assign(project(sigma_yield(self.p_k, self.plastic_strain, self.composition), self.sDG0)) 
-            self.yield_function.assign(project(2.0*self.visc*strain_rate_II(self.v_out) - sigma_yield(self.p_out, self.plastic_strain, self.composition), self.sDG0))
-            # self.yield_function.assign(project(self.stress_dev_inv - self.yield_stress, self.sDG0))
+            self.yield_function.assign(project(self.stress_dev_inv - self.yield_stress, self.sDG0))
 
             # --- Integrate plastic strain on tracers ---
-            self.eta_v.assign(project(eta_visc(self.composition), self.sDG0))
-            plastic_strain_integration(self.mesh, self.tracers_in_cells, self.tracers, self.dt, self.yield_function, self.strain_rate_inv, self.visc, self.eta_v)            
+            plastic_strain_integration(self.mesh, self.tracers_in_cells, self.tracers, self.dt, self.yield_function, self.strain_rate_inv)
             
             
     def update_stress(self):
@@ -556,7 +550,7 @@ class Equations:
     def update_viscosity(self, step, Picard_iter):
         """ Updates the viscosity fuction """
         self.visc.assign(project(eta_eff(self.p_k, self.Temp, self.strain_rate_inv,\
-                                        self.stress_dev_inv, self.xm, self.composition, self.yield_function, self.plastic_strain,\
+                                        self.stress_dev_inv, self.xm, self.composition, self.plastic_strain,\
                                         step, Picard_iter, self.stress_dev_inv_k, self.dt, self.sr_min), self.sDG0))
 
     def compute_u(self):
