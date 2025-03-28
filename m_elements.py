@@ -2,6 +2,10 @@ from dolfin import *
 from m_parameters import *
 
 class Elements:
+    """ 
+    :returns: Initializes elements and function spaces, and also trial, test and common functions.
+    """
+    
     def __init__(self, MeshClass):
         self.mesh = MeshClass.mesh
         

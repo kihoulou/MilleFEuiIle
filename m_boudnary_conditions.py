@@ -39,7 +39,11 @@ def apply_temperature_BC(sCG2, boundary_parts):
     return bc_temp
 
 class Point_Fixed_Pressure(SubDomain):
-    def inside(self, x, on_boundary):
+    def inside(self, x,):
+        """ 
+        :returns: Identifies the node that is located at the top left corner of the domain, where the 
+                  pressure will be anchored in case of no free surface boundary condition.
+        """
         return near(x[0], 0.0) and near(x[1], height)
 
 def apply_velocity_BC(V, boundary_parts, top_left):
