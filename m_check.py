@@ -3,6 +3,12 @@ from m_constants import *
 import os
 
 def check_input_parameters():
+    """Performs a check on all string-type inputs in ``m_parameters`` module before running the code.
+
+    :returns: Parameters that have an incorrect input (if there are any) and their admissible values.
+
+    .. note:: Only the string-type parameters are being checked.
+    """
 
     print("Performing check of input parameters...")
 
@@ -42,89 +48,89 @@ def check_input_parameters():
 
     bc_list = ["free_slip", "no_slip", "free_surface", "velocity", "velocity_x", "velocity_y"]
     
-    if (BC_vel_top not in bc_list):
+    if (BC_Stokes_problem[0][0] not in bc_list):
         exit_code = True
         if (rank == 0):
-            print("Top boundary condition for Stokes problem undefined:", BC_vel_top)
+            print("Top boundary condition for Stokes problem undefined:", BC_Stokes_problem[0][0])
             print("Possible inputs:", bc_list)
             print(" ")
 
-    if (BC_vel_bot not in bc_list):
+    if (BC_Stokes_problem[1][0] not in bc_list):
         exit_code = True
         if (rank == 0):
-            print("Bottom boundary condition for Stokes problem undefined.", BC_vel_bot)
+            print("Bottom boundary condition for Stokes problem undefined.", BC_Stokes_problem[1][0])
             print("Possible inputs:", bc_list)
             print(" ")
 
     bc_list = ["free_slip", "no_slip", "velocity", "velocity_x", "velocity_y"]
 
-    if (BC_vel_left not in bc_list):
+    if (BC_Stokes_problem[2][0] not in bc_list):
         exit_code = True
         if (rank == 0):
-            print("Left boundary condition for Stokes problem undefined.", BC_vel_left)
+            print("Left boundary condition for Stokes problem undefined.", BC_Stokes_problem[2][0])
             print("Possible inputs:", bc_list)
             print(" ")
 
-    if (BC_vel_right not in bc_list):
+    if (BC_Stokes_problem[3][0] not in bc_list):
         exit_code = True
         if (rank == 0):
-            print("Right boundary condition for Stokes problem undefined.", BC_vel_right)
+            print("Right boundary condition for Stokes problem undefined.", BC_Stokes_problem[3][0])
             print("Possible inputs:", bc_list)
             print(" ")
 
-    if (BC_vel_left == "free_surface" or BC_vel_right == "free_surface"):
+    if (BC_Stokes_problem[2][0] == "free_surface" or BC_Stokes_problem[3][0] == "free_surface"):
         exit_code = True
         if (rank == 0):
             print("No free surface boudnary condition for side boundaries.")
             print("Possible inputs:", bc_list)
             print(" ")
 
-    bc_temp_top_list = ["temperature", "heat_flux", "radiation"]
+    bc_temp_top_list = ["temp", "heat_flux", "radiation"]
     
-    if (BC_T_top not in bc_temp_top_list):
+    if (BC_heat_transfer[0][0] not in bc_temp_top_list):
         exit_code = True
         if (rank == 0):
-            print("Top boundary condition for Energy balance undefined:", BC_T_top)
+            print("Top boundary condition for Energy balance undefined:", BC_heat_transfer[0][0])
             print("Possible inputs:", bc_temp_top_list)
             print(" ")
     
-    bc_temp_list = ["temperature", "heat_flux"]
-    if (BC_T_bot not in bc_temp_list):
+    bc_temp_list = ["temp", "heat_flux"]
+    if (BC_heat_transfer[1][0] not in bc_temp_list):
         exit_code = True
         if (rank == 0):
-            print("Bottom boundary condition for Energy balance undefined:", BC_T_bot)
+            print("Bottom boundary condition for Energy balance undefined:", BC_heat_transfer[1][0])
             print("Possible inputs:", bc_temp_list)
             print(" ")
 
-    if (BC_T_left not in bc_temp_list):
+    if (BC_heat_transfer[2][0] not in bc_temp_list):
         exit_code = True
         if (rank == 0):
-            print("Left boundary condition for Energy balance undefined:", BC_T_left)
+            print("Left boundary condition for Energy balance undefined:", BC_heat_transfer[2][0])
             print("Possible inputs:", bc_temp_list)
             print(" ")
 
-    if (BC_T_right not in bc_temp_list):
+    if (BC_heat_transfer[3][0] not in bc_temp_list):
         exit_code = True
         if (rank == 0):
-            print("Right boundary condition for Energy balance undefined:", BC_T_right)
+            print("Right boundary condition for Energy balance undefined:", BC_heat_transfer[3][0])
             print("Possible inputs:", bc_temp_list)
             print(" ")
 
-    if ((BC_T_top == "temperature" and T_top < 0.0)\
-        or (BC_T_bot == "temperature" and T_bot < 0.0)\
-        or (BC_T_right == "temperature" and T_right < 0.0)\
-        or (BC_T_left == "temperature" and T_left < 0.0)):
+    if ((BC_heat_transfer[0][0] == "temp"    and BC_heat_transfer[0][1] < 0.0)\
+        or (BC_heat_transfer[1][0] == "temp" and BC_heat_transfer[1][1] < 0.0)\
+        or (BC_heat_transfer[2][0] == "temp" and BC_heat_transfer[2][1] < 0.0)\
+        or (BC_heat_transfer[3][0] == "temp" and BC_heat_transfer[3][1] < 0.0)):
 
         exit_code = True
         if (rank == 0):
             print("Temperature boundary condition cannot be less than 0 K.")
             print(" ")
 
-    if ((BC_T_top == "heat_flux" or BC_T_top == "radiation") and BC_T_bot == "heat_flux" and BC_T_left == "heat_flux" and BC_T_right == "heat_flux"):
+    if (BC_heat_transfer[0][0] != "temp" and BC_heat_transfer[1][0] != "temp" and BC_heat_transfer[2][0] != "temp" and BC_heat_transfer[3][0] != "temp"):
 
         exit_code = True
         if (rank == 0):
-            print("At least one Dirichlet boundary condition needs to be prescribed for the Energy balance.")
+            print("At least one Dirichlet boundary condition needs to be prescribed for the heat transfer problem.")
             print(" ")
 
     input_par = ["constant", "temp-dep", "GK_2001", "composition"]
@@ -163,8 +169,3 @@ def check_input_parameters():
         exit()
     else:
         print("Check done.\n")
-
-def SaveSourceCode():
-    if (rank == 0): 
-        os.system("cp  main*.py data_" + name + "/source_code")
-        os.system("cp  m_*.py data_" + name + "/source_code")	

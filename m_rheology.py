@@ -93,14 +93,14 @@ def sigma_yield(p_k, plastic_strain, composition):
 
     """
 
-    angle = int_friction_angle*(np.pi/180.0)
-    value = p_k*sin(angle) + cohesion(plastic_strain)*cos(angle)
+    # angle = int_friction_angle*(np.pi/180.0)
+    # value = p_k*sin(angle) + cohesion(plastic_strain)*cos(angle)
 
     # angle = (int_friction_angle*composition[0] + int_friction_angle2*composition[1])*(np.pi/180.0)
     # value = p_k*sin(angle) + cohesion(plastic_strain)*cos(angle)
 
-    # friction_coef = 0.6
-    # value = (cohesion(plastic_strain) + friction_coef*(p_k))*cos(atan(friction_coef))
+    friction_coef = 0.6
+    value = (cohesion(plastic_strain) + friction_coef*(p_k))*cos(atan(friction_coef))
 
     return conditional(lt(value, yield_stress_min), yield_stress_min, conditional(gt(value, yield_stress_max), yield_stress_max, value))
 
@@ -114,12 +114,11 @@ def plastic_strain_integration(mesh, tracers_in_cells, tracers, dt, yield_functi
             yield_function_tracer = yield_function(Point(px,py))
             strain_rate_tracer = strain_rate(Point(px,py))
 
-            tol = cohesion_strong/1e9
-            if (yield_function_tracer >= -tol):
+            if (yield_function_tracer >= 0.0):
                 tracers[tracer_no][6] += float(dt)*strain_rate_tracer
 
             if (healing == True):
-                tracers[tracer_no][6] = tracers[tracer_no][6]/(1.0 + float(dt)/recovery_time)
+                tracers[tracer_no][6] = tracers[tracer_no][6]/(1.0 + float(dt)/healing_timescale)
 
 # --- Elasticity ---
 def z(visc, dt):
@@ -132,6 +131,42 @@ def z(visc, dt):
 
     """
     return dt/(dt + visc/shear_modulus)
+
+def get_new_stress(mesh, Temp, xm, stress_invariant, strain_rate_invariant, composition, step, Picard_iter):
+    """Evaluates the deviatoric stress invariant assuming fully ductile viscosity. 
+
+    :param mesh: computational domain
+    :param Temp: temperature
+    :param xm: melt fraction
+    :param stress_invariant: second invariant of the deviatoric part of the Cauchy stress tensor
+    :param strain_rate_invariant: second invariant of the strain rate tensor
+
+    :returns:
+    .. math::
+       \\sigma_{II}^{visc} = 2\\eta_{visc}\\dot{\\varepsilon}_{II}
+
+    """
+
+    ranks = []
+    eval_type = "local"
+    for j in range(mesh.num_cells()):
+        centroid = Cell(mesh, j).midpoint()
+        temp_cell = Temp(Point(centroid.x(),centroid.y()))
+        eps_cell = strain_rate_invariant(Point(centroid.x(),centroid.y()))
+        tau_cell = stress_invariant(Point(centroid.x(),centroid.y()))
+        xm_cell = xm(Point(centroid.x(),centroid.y()))
+        
+        comp_cell = []
+        for i in range (len(composition)):
+            comp_cell.append(composition[i](Point(centroid.x(),centroid.y())))
+
+        visc_cell = eta_ductile(temp_cell, eps_cell, tau_cell, xm_cell, comp_cell, step, Picard_iter, eval_type)
+
+        new_stress = 2.0*visc_cell*eps_cell
+        ranks.append(new_stress)
+        
+    ranks = numpy.array(ranks)                                                            
+    stress_invariant.vector().set_local(ranks)
 
 def get_new_stress_iter(mesh, Temp, xm, stress_dev_inv, stress_dev_inv_k, strain_rate_inv, step, iter, dt):
     ranks = []
@@ -252,31 +287,49 @@ def get_mechanisms(mesh,Temp,stress_invariant,old_stress_invariant,strain_rate_i
     ranks = numpy.array(ranks)
     mechanisms.vector().set_local(ranks)
 
-def eta_visc(composition):
-    return  1e5**composition[0]*1e0**composition[1]
 
-def eta_eff(p_k, Temp, strain_rate, stress, xm, composition, plastic_strain, step, Picard_iter, stress_dev_inv_k, dt, sr_min):
-    eval_type = "mesh"
+def eta_ductile(Temp, strain_rate, stress, xm, composition, step, Picard_iter, eval_type):
+    """Evaluates the ductile viscosity based on the ``viscosity_type`` choice in ``m_parameters`` module. 
 
-    if (plasticity == True):
-            if (elasticity == False):
-                eta_p = 0.5*sigma_yield(p_k, plastic_strain, composition)/strain_rate
-            else:
-                eta_p = 0.5*sigma_yield(p_k, plastic_strain, composition)/max_function(strain_rate\
-                - (sigma_yield(p_k, plastic_strain, composition) - stress_dev_inv_k)/(2.0*shear_modulus*dt), sr_min*1e-6)
+    :param mesh: computational domain
+    :param Temp: temperature
+    :param xm: melt fraction
+    :param stress_invariant: second invariant of the deviatoric part of the Cauchy stress tensor
+    :param strain_rate_invariant: second invariant of the strain rate tensor
 
+    :var viscosity_type: method for computing the viscosity, specified in the ``m_parameters`` module.
+
+    :returns: 
+
+    * ``"constant"`` for constant viscosity of value :math:`\\eta_0`\ . 
+    .. math::
+       \\eta = \\eta_0
+
+    * ``"temp-dep"`` for temperature-dependent viscosity
+    .. math::
+       \\eta(T) =\\eta_0\\cdot\\exp\\left[\\frac{Q}{R}\\left(\\frac{1}{T} - \\frac{1}{T_{\\rm melt}}\\right)\\right]
+
+    * ``"GK_2001"`` for temperature and stress-dependent viscosity of ice-I
+    .. math::
+       \\eta(T, \\sigma_{\\rm II}) = \\left(\\frac{1}{\\eta_{\\rm diff}} + \\frac{1}{\\eta_{\\rm disl}} + \\frac{1}{\\eta_{\\rm BS} + \\eta_{\\rm GBS}} + \\frac{1}{\\eta_{\\rm max} } \\right)^{-1}
+
+    * ``"composition"`` for composition-dependent viscosity (used for selected benchmarks)
+
+    .. tip:: Custom viscosity function can be easily defined here.
+
+    """
+    
     if (viscosity_type=="constant"):
         eta_v = eta_0
 
     if (viscosity_type == "temp-dep"):
+        T_bot = BC_heat_transfer[1][1]
         eta_v = 1.0/(1.0/(eta_0*exp(Q_activ/R_gas*(1.0/Temp - 1.0/T_bot))) + 1.0/eta_max)*exp(-45.0*xm)
 
     if (viscosity_type == "GK_2001"):
         if (step == 0 and Picard_iter == 0):
             eta_v =  1.0/(1.0/eta_diff(Temp) + 1.0/eta_max)*exp(-45.0*xm) 
-
-        else:            
-            
+        else:               
             eta_v = 1.0/(1.0/eta_diff(Temp)\
                     + 1.0/eta_disl(Temp, strain_rate, stress, eval_type)\
                     + 1.0/(eta_GBS(Temp, strain_rate, stress, eval_type) + eta_BS(Temp, strain_rate, stress))\
@@ -284,8 +337,43 @@ def eta_eff(p_k, Temp, strain_rate, stress, xm, composition, plastic_strain, ste
             
     if (viscosity_type == "composition"):
         eta_v = 1e5**composition[0]*1.0**composition[1]
+
+    return eta_v
+
+def eta_eff(p_k, Temp, strain_rate, stress, xm, composition, plastic_strain, step, Picard_iter, stress_dev_inv_k, dt, sr_min):
+    """Evaluates the 'visco-plastic' viscosity :math:`\\eta_{vp}`\ . 
+
+    :param mesh: computational domain
+    :param Temp: temperature
+    :param xm: melt fraction
+    :param stress_invariant: second invariant of the deviatoric part of the Cauchy stress tensor
+    :param strain_rate_invariant: second invariant of the strain rate tensor
+
+    :var eta_min_plast: lower cut-off value for plastic viscosity :math:`\\eta_{p}`\ . Maintains reasonable viscosity contrast between tectonic faults and their surrounfings, see ``m_parameters.py``.
+
+    :returns: 
+    .. math::
+       \\eta_{vp} = \\textrm{min}(\\textrm{max}(\\eta_p,\ \\eta_p^{min}) ,\ \\eta_v)
+
+    """
+    
+    eval_type = "mesh"
+
+    # --- Plastic viscosity ---
+    if (plasticity == True):
+        if (elasticity == False):
+            eta_p = 0.5*sigma_yield(p_k, plastic_strain, composition)/strain_rate
+        else:
+            eta_p = 0.5*sigma_yield(p_k, plastic_strain, composition)/max_function(strain_rate\
+            - (sigma_yield(p_k, plastic_strain, composition) - stress_dev_inv_k)/(2.0*shear_modulus*dt), sr_min*1e-6)
+
+    # --- Ductile viscosity ---
+    eta_v = eta_ductile(Temp, strain_rate, stress, xm, composition, step, Picard_iter, eval_type)
             
-    return conditional(lt(eta_p, eta_v), eta_p, eta_v)
+    # return conditional(lt(eta_p, eta_v), eta_p, eta_v)
+    return conditional(lt(eta_p, eta_min_plast), eta_min_plast, conditional(lt(eta_p, eta_v), eta_p, eta_v))
+    # eta_vp =  1.0/(1.0/eta_v + 1.0/eta_p + 1.0/eta_max)
+    # return conditional(lt(eta_vp, eta_min_plast), eta_min_plast, eta_vp)
 
     # if (plasticity == True):
     #     if (step == 0 and Picard_iter == 0):
@@ -321,6 +409,24 @@ def eta_diff(Temp):
     return 1.0/(2*(3.0/2.0*14)*V_m)*R_gas*Temp*d_grain**2/(D_v + np.pi*delta*D_b/d_grain)
 
 def eta_disl(Temp, strain_rate_II, stress_II, eval_type):
+    """Computes the viscosity resulting from the dislocation creep :math:`\\eta_{disl}`\ . 
+
+    :param Temp: temperature (:math:`T`\ )
+    :param strain_rate_II: second invariant of the strain rate tensor (:math:`\\dot{\\varepsilon}_{II}`\ )
+    :param *stress_II*: second invariant of the deviatoric part of the Cauchy stress tensor (:math:`\\sigma_{II}`\ )
+    :param eval_type: determines the method of the jump at the premelting temperature. String ``"mesh"`` returns conditional, ``"local"`` returns a simple if
+
+    :var n: stress coefficient
+    :var p: grain size coefficient
+    :var T_crit: temperature of premelting (:math:`T_{crit}`\ )
+    :var Q_below: activation energy below the premelting temperature
+    :var A_below: prefactor below the premelting temperature
+    :var Q_above: activation energy above the premelting temperature
+    :var A_above: prefactor above the premelting temperature
+
+    :returns: calls the function ``eta()`` with the parameters of dislocation creep
+
+    """
     n = 4.0           # -
     p = 0.0           # -
     T_crit = 258      # K

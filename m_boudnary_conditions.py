@@ -6,24 +6,35 @@ rank = MPI.rank(comm)
 size = MPI.size(comm)
 
 def apply_temperature_BC(sCG2, boundary_parts):
-    bc_T_top    = DirichletBC(sCG2, T_top, boundary_parts,1)
-    bc_T_bot    = DirichletBC(sCG2, T_bot, boundary_parts,2)
-    bc_T_left   = DirichletBC(sCG2, T_left, boundary_parts,3)
-    bc_T_right  = DirichletBC(sCG2, T_right, boundary_parts,4)
+    """Applies the Dirichlet boundary conditions for the heat equation.
+
+    :param sCG2: function space for the temperature
+    :param boundary_parts:  how to describe that....
+
+    :returns: A list of the Dirichlet BCs (temperature) that will be given to the
+
+       * the stationary heat equation, see :func:`m_equations.Equations.equation_heat_ini`
+       * the time-dependent heat equation, see :func:`m_equations.Equations.equation_heat`
+
+    """
 
     bc_temp = []
 
-    if (BC_T_top == "temperature"):
-        bc_temp.append(bc_T_top)
+    # --- Top boundary ---
+    if (BC_heat_transfer[0][0] == "temp"):
+        bc_temp.append(DirichletBC(sCG2, BC_heat_transfer[0][1], boundary_parts, 1))
 
-    if (BC_T_bot == "temperature"):
-        bc_temp.append(bc_T_bot)
+    # --- Bottom boundary ---
+    if (BC_heat_transfer[1][0] == "temp"):
+        bc_temp.append(DirichletBC(sCG2, BC_heat_transfer[1][1], boundary_parts, 2))
 
-    if (BC_T_left == "temperature"):
-        bc_temp.append(bc_T_left)
+    # --- Left boundary ---
+    if (BC_heat_transfer[2][0] == "temp"):
+        bc_temp.append(DirichletBC(sCG2, BC_heat_transfer[2][1], boundary_parts, 3))
 
-    if (BC_T_right == "temperature"):
-        bc_temp.append(bc_T_right)
+    # --- Right boundary ---
+    if (BC_heat_transfer[3][0] == "temp"):
+        bc_temp.append(DirichletBC(sCG2, BC_heat_transfer[3][1], boundary_parts, 4))
     
     return bc_temp
 
@@ -32,54 +43,37 @@ class Point_Fixed_Pressure(SubDomain):
         return near(x[0], 0.0) and near(x[1], height)
 
 def apply_velocity_BC(V, boundary_parts, top_left):
+    """Applies the Dirichlet boundary conditions for the Stokes problem.
+
+    :param V: function space for the Stokes problem
+    :param boundary_parts:  how to describe that....
+    :param top_left:  coordinates of the point where to fix pressure if no boundary is free surface
+
+    :returns: A list of the Dirichlet BCs ( velocity) that will be given to the Stokes problem, see :func:`m_equations.Equations.equation_stokes`.
+
+    """
 
     bc_stokes = []
 
-    # --- Free slip conditions ---
-    bc_free_slip_top    = DirichletBC(V.sub(1).sub(1), Constant(0.0), boundary_parts, 1)
-    bc_free_slip_bot    = DirichletBC(V.sub(1).sub(1), Constant(0.0), boundary_parts, 2)
-    bc_free_slip_left   = DirichletBC(V.sub(1).sub(0), Constant(0.0), boundary_parts, 3)
-    bc_free_slip_right  = DirichletBC(V.sub(1).sub(0), Constant(0.0), boundary_parts, 4)
-
-    # --- No slip conditions ---
-    bc_no_slip_top      = DirichletBC(V.sub(1), Constant((0.0,0.0)), boundary_parts, 1)
-    bc_no_slip_bot      = DirichletBC(V.sub(1), Constant((0.0,0.0)), boundary_parts, 2)
-    bc_no_slip_left     = DirichletBC(V.sub(1), Constant((0.0,0.0)), boundary_parts, 3)
-    bc_no_slip_right    = DirichletBC(V.sub(1), Constant((0.0,0.0)), boundary_parts, 4)
-
-    # --- General velocity conditions ---
-    bc_velocity_top_x   = DirichletBC(V.sub(1).sub(0), velocity_top_x, boundary_parts,1)
-    bc_velocity_bot_x   = DirichletBC(V.sub(1).sub(0), velocity_bot_x, boundary_parts,2)
-    bc_velocity_left_x  = DirichletBC(V.sub(1).sub(0), velocity_left_x, boundary_parts,3)
-    bc_velocity_right_x = DirichletBC(V.sub(1).sub(0), velocity_right_x, boundary_parts,4)
-
-    bc_velocity_top_y   = DirichletBC(V.sub(1).sub(1), velocity_top_y, boundary_parts,1)
-    bc_velocity_bot_y   = DirichletBC(V.sub(1).sub(1), velocity_bot_y, boundary_parts,2)
-    bc_velocity_left_y  = DirichletBC(V.sub(1).sub(1), velocity_left_y, boundary_parts,3)
-    bc_velocity_right_y = DirichletBC(V.sub(1).sub(1), velocity_right_y, boundary_parts,4)
-
-    # --- Fixed pressure condition ---
-    bc_pres = DirichletBC(V.sub(0), Constant(0.0), top_left, method = "pointwise") 
-
     # --- Top boundary ---
-    if (BC_vel_top == "free_slip"):
-        bc_stokes.append(bc_free_slip_top)
+    if (BC_Stokes_problem[0][0] == "free_slip"):
+        bc_stokes.append(DirichletBC(V.sub(1).sub(1), Constant(0.0), boundary_parts, 1))
 
-    elif (BC_vel_top == "no_slip"):
-        bc_stokes.append(bc_no_slip_top)
+    elif (BC_Stokes_problem[0][0] == "no_slip"):
+        bc_stokes.append(DirichletBC(V.sub(1), Constant((0.0,0.0)), boundary_parts, 1))
 
-    elif (BC_vel_top == "free_surface"):
+    elif (BC_Stokes_problem[0][0] == "free_surface"):
         pass
 
-    elif (BC_vel_top == "velocity_x"):
-        bc_stokes.append(bc_velocity_top_x)
+    elif (BC_Stokes_problem[0][0] == "velocity_x"):
+        bc_stokes.append(DirichletBC(V.sub(1).sub(0), Constant(BC_Stokes_problem[0][1]), boundary_parts, 1))
 
-    elif (BC_vel_top == "velocity_y"):
-        bc_stokes.append(bc_velocity_top_y)
+    elif (BC_Stokes_problem[0][0] == "velocity_y"):
+        bc_stokes.append(DirichletBC(V.sub(1).sub(1), Constant(BC_Stokes_problem[0][1]), boundary_parts, 1))
 
-    elif (BC_vel_top == "velocity"):
-        bc_stokes.append(bc_velocity_top_x)
-        bc_stokes.append(bc_velocity_top_y)
+    elif (BC_Stokes_problem[0][0] == "velocity"):
+        bc_stokes.append(DirichletBC(V.sub(1).sub(0), Constant(BC_Stokes_problem[0][1]), boundary_parts, 1))
+        bc_stokes.append(DirichletBC(V.sub(1).sub(1), Constant(BC_Stokes_problem[0][2]), boundary_parts, 1))
 
     else:
         if (rank == 0):
@@ -87,24 +81,24 @@ def apply_velocity_BC(V, boundary_parts, top_left):
         exit()
 
     # --- Bottom boundary ---
-    if (BC_vel_bot == "free_slip"):
-        bc_stokes.append(bc_free_slip_bot)
+    if (BC_Stokes_problem[1][0] == "free_slip"):
+        bc_stokes.append(DirichletBC(V.sub(1).sub(1), Constant(0.0), boundary_parts, 2))
 
-    elif (BC_vel_bot == "no_slip"):
-        bc_stokes.append(bc_no_slip_bot)
+    elif (BC_Stokes_problem[1][0] == "no_slip"):
+        bc_stokes.append(DirichletBC(V.sub(1), Constant((0.0,0.0)), boundary_parts, 2))
 
-    elif (BC_vel_bot == "free_surface"):
+    elif (BC_Stokes_problem[1][0] == "free_surface"):
         pass
 
-    elif (BC_vel_bot == "velocity_x"):
-        bc_stokes.append(bc_velocity_bot_x)
+    elif (BC_Stokes_problem[1][0] == "velocity_x"):
+        bc_stokes.append(DirichletBC(V.sub(1).sub(0), Constant(BC_Stokes_problem[1][1]), boundary_parts, 2))
 
-    elif (BC_vel_bot == "velocity_y"):
-        bc_stokes.append(bc_velocity_bot_y)
+    elif (BC_Stokes_problem[1][0] == "velocity_y"):
+        bc_stokes.append(DirichletBC(V.sub(1).sub(1), Constant(BC_Stokes_problem[1][1]), boundary_parts, 2))
 
-    elif (BC_vel_bot == "velocity"):
-        bc_stokes.append(bc_velocity_bot_x)
-        bc_stokes.append(bc_velocity_bot_y)
+    elif (BC_Stokes_problem[1][0] == "velocity"):
+        bc_stokes.append(DirichletBC(V.sub(1).sub(0), Constant(BC_Stokes_problem[1][1]), boundary_parts, 2))
+        bc_stokes.append(DirichletBC(V.sub(1).sub(1), Constant(BC_Stokes_problem[1][2]), boundary_parts, 2))
 
     else:
         if (rank == 0):
@@ -112,24 +106,24 @@ def apply_velocity_BC(V, boundary_parts, top_left):
         exit()
     
     # --- Left boundary ---
-    if (BC_vel_left == "free_slip"):
-        bc_stokes.append(bc_free_slip_left)
+    if (BC_Stokes_problem[2][0] == "free_slip"):
+        bc_stokes.append(DirichletBC(V.sub(1).sub(0), Constant(0.0), boundary_parts, 3))
 
-    elif (BC_vel_left == "no_slip"):
-        bc_stokes.append(bc_no_slip_left)
+    elif (BC_Stokes_problem[2][0] == "no_slip"):
+        bc_stokes.append(DirichletBC(V.sub(1), Constant((0.0,0.0)), boundary_parts, 3))
 
-    elif (BC_vel_left == "free_surface"):
+    elif (BC_Stokes_problem[2][0] == "free_surface"):
         pass
 
-    elif (BC_vel_left == "velocity_x"):
-        bc_stokes.append(bc_velocity_left_x)
+    elif (BC_Stokes_problem[2][0] == "velocity_x"):
+        bc_stokes.append(DirichletBC(V.sub(1).sub(0), Constant(BC_Stokes_problem[2][1]), boundary_parts, 3))
 
-    elif (BC_vel_left == "velocity_y"):
-        bc_stokes.append(bc_velocity_left_y)
+    elif (BC_Stokes_problem[2][0] == "velocity_y"):
+        bc_stokes.append(DirichletBC(V.sub(1).sub(1), Constant(BC_Stokes_problem[2][1]), boundary_parts, 3))
 
-    elif (BC_vel_left == "velocity"):
-        bc_stokes.append(bc_velocity_left_x)
-        bc_stokes.append(bc_velocity_left_y)
+    elif (BC_Stokes_problem[2][0] == "velocity"):
+        bc_stokes.append(DirichletBC(V.sub(1).sub(0), Constant(BC_Stokes_problem[2][1]), boundary_parts, 3))
+        bc_stokes.append(DirichletBC(V.sub(1).sub(1), Constant(BC_Stokes_problem[2][2]), boundary_parts, 3))
 
     else:
         if (rank == 0):
@@ -137,32 +131,31 @@ def apply_velocity_BC(V, boundary_parts, top_left):
         exit()
 
     # --- Right boundary ---
-    if (BC_vel_right == "free_slip"):
-        bc_stokes.append(bc_free_slip_right)
+    if (BC_Stokes_problem[3][0] == "free_slip"):
+        bc_stokes.append(DirichletBC(V.sub(1).sub(0), Constant(0.0), boundary_parts, 4))
 
-    elif (BC_vel_right == "no_slip"):
-        bc_stokes.append(bc_no_slip_right)
+    elif (BC_Stokes_problem[3][0] == "no_slip"):
+        bc_stokes.append(DirichletBC(V.sub(1), Constant((0.0,0.0)), boundary_parts, 4))
 
-    elif (BC_vel_right == "free_surface"):
+    elif (BC_Stokes_problem[3][0] == "free_surface"):
         pass
 
-    elif (BC_vel_right == "velocity_x"):
-        bc_stokes.append(bc_velocity_right_x)
+    elif (BC_Stokes_problem[3][0] == "velocity_x"):
+        bc_stokes.append(DirichletBC(V.sub(1).sub(0), Constant(BC_Stokes_problem[3][1]), boundary_parts, 4))
 
-    elif (BC_vel_right == "velocity_y"):
-        bc_stokes.append(bc_velocity_right_y)
+    elif (BC_Stokes_problem[3][0] == "velocity_y"):
+        bc_stokes.append(DirichletBC(V.sub(1).sub(1), Constant(BC_Stokes_problem[3][1]), boundary_parts, 4))
 
-    elif (BC_vel_right == "velocity"):
-        print("appluing ")
-        bc_stokes.append(bc_velocity_right_x)
-        bc_stokes.append(bc_velocity_right_y)
+    elif (BC_Stokes_problem[3][0] == "velocity"):
+        bc_stokes.append(DirichletBC(V.sub(1).sub(0), Constant(BC_Stokes_problem[3][1]), boundary_parts, 4))
+        bc_stokes.append(DirichletBC(V.sub(1).sub(1), Constant(BC_Stokes_problem[3][2]), boundary_parts, 4))
 
     else:
         if (rank == 0):
             print("Right boundary condition undefined. Exiting.")
         exit()
     
-    if (BC_vel_top != "free_surface" and BC_vel_bot != "free_surface" and BC_vel_left != "free_surface" and BC_vel_right != "free_surface"):
-        bc_stokes.append(bc_pres)
+    if (BC_Stokes_problem[0][0] != "free_surface" and BC_Stokes_problem[1][0] != "free_surface"):
+        bc_stokes.append(DirichletBC(V.sub(0), Constant(0.0), top_left, method = "pointwise"))
 
     return bc_stokes

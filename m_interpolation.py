@@ -53,7 +53,7 @@ def composition_interpolation(mesh, tracers_in_cells, tracers, column, function)
 
             ranks.append(value_cell/weight_cell)
         else:
-            if (column == default_composition):
+            if (column == empty_cells_composition):
                 ranks.append(1.0)
             else:
                 ranks.append(0.0)

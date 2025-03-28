@@ -15,8 +15,6 @@ class MeshModule:
             self.refine_mesh()
             self.define_boundaries()
 
-        self.save_mesh()
-
         self.x = SpatialCoordinate(self.mesh)
         self.ds = Measure("ds",subdomain_data = self.boundary_parts)
 
@@ -26,7 +24,7 @@ class MeshModule:
 
         self.bound_mesh = BoundaryMesh(self.mesh, 'exterior')
 
-        if (BC_vel_top == "free_surface" or BC_vel_bot == "free_surface"):
+        if (BC_Stokes_problem[0][0] == "free_surface" or BC_Stokes_problem[1][0] == "free_surface"):
             self.moving_mesh = True
         else:
             self.moving_mesh = False
@@ -56,25 +54,6 @@ class MeshModule:
                     cell_markers[cell] = True
         
             self.mesh = refine(self.mesh, cell_markers)
-    
-    def save_mesh(self):
-        mesh_file = XDMFFile(comm, "data_"+name+"/HDF5/mesh.xdmf")
-        mesh_file.write(self.mesh)
-        mesh_file.close()
-
-        file = File("data_"+name+"/HDF5/subdomains.pvd")
-        file.write(self.boundary_parts)
-
-    def Save_Mesh(self, step_output):
-        mesh_file = HDF5File(comm, "data_" + name + "/HDF5/meshes/mesh_" + str(int(step_output - 1)) + ".h5", "w")
-        mesh_file.write(self.mesh, "/mesh")
-        mesh_file.close()
-
-    def Load_Mesh(self):
-        self.mesh = Mesh()
-        self.mesh_file = HDF5File(comm, "data_" + name + "/HDF5/meshes/mesh_" + str(int(reload_HDF5)) + ".h5", "r")
-        self.mesh_file.read(mesh, "/mesh", True)
-        self.mesh_file.close()
 
     def define_boundaries(self):
         self.boundary_parts = MeshFunction("size_t", self.mesh, self.mesh.topology().dim()-1, 0)
@@ -88,17 +67,6 @@ class MeshModule:
         bottom.mark(self.boundary_parts, 2)
         left.mark(self.boundary_parts, 3)
         right.mark(self.boundary_parts, 4)
-
-def output_timing(step, time_out):
-    
-    if (step == 1 or (output_frequency[0] == "steps" and step % output_frequency[1] == 0)\
-        or (output_frequency[0] == "time" and float(time_out) >= output_frequency[1])):
-        
-        value = True
-    else:
-        value = False
-
-    return value
 
 def count_nodes(bound_mesh):
     i_top = 0
@@ -114,6 +82,20 @@ def count_nodes(bound_mesh):
     return i_top, i_bot
 
 def detect_oscillations(mesh, bound_mesh, diff_coef, x_div_top):
+    """Goes through the top boundary nodes one by one from left to right monitoring the slope between individual nodes.
+
+    :param mesh: mesh
+    :param bound_mesh: boundary mesh
+    :param diff_coef:  the topography diffusion coefficient
+    :param x_div_top:  number of nodes at the top boundary (including both corner poitns)
+
+    :returns: The diffusion coefficient function on the mesh.
+
+    .. tip:: For extensional simulation the smoothing is optional, but for compressional simulations it is necessary.
+
+    .. warning:: In order to work properly, the nodes at the top boundary need to be **equidistant**.
+
+    """
     # Top boundary has to have equidistant nodes
     dx = length/x_div_top
     nmax = x_div_top-4

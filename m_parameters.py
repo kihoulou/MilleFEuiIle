@@ -28,7 +28,7 @@ size = MPI.size(comm)
 #----------------------------------------------------------------------
 
 # --- Name of the directory with results ---
-name = "ice_shell_extension_GK"
+name = "ice_shell_extension_3"
 """
 :var: Name of the directory with the results. The directory with the results will be named ``data_name``.
 
@@ -38,17 +38,18 @@ name = "ice_shell_extension_GK"
 :meta hide-value:
 """
 
-override_directory = False # Protection from overwriting the directory above
+# Protection from overwriting the directory above
+protect_directory = True
 """
-* **True**: Repeared run with the same ``name`` overwrites the data
-* **False**: Original ``name`` directory will be protected, attempted run creates a directory ``data_name_new``
+* **True**: Repeated run protects the original data by creating saving into a directory ``data_name_new`` instead
+* **False**: Repeated run with the same ``name`` overwrites the data
 
 :meta hide-value:
 """
 # --- In what units the time will be? ---
 # 1.0 - seconds or nondimensional, or yr, kyr or Myr
-time_units = 1.0
-"""Time units at which the output will be written.
+time_units = kyr
+"""The units of time at which the output will be written.
 
 :var: Use ``1.0`` for seconds or in case of non-dimensional problems, or ``yr``, ``kyr`` or ``Myr``
 
@@ -56,28 +57,37 @@ time_units = 1.0
 
 :meta hide-value:
 """
-time_units_string = " "
-"""
-:var: String representation of ``time_units`` up to the user. 
 
-:vartype: string
+# --- String representation of time_units ---
+time_units_string = "kyr"
+"""
+:var: String representation of ``time_units``, up to the user. 
+
+:vartype: string, e.g.  ``"s"``, ``"yr"``, ``"kyr"`` or ``"Myr"``
 
 :meta hide-value:
 """
 
-# --- Output method for Paraview, HDF5 and  tracers 
-output_frequency = ["steps", 1] # ["steps", 10] or ["time", 100*kyr]
-""" Frequency for the output to ParaView, HDF5 data and tracer files. The first time step is always saved, the
-last one if the simulation arrives at :math:`t_{end}` succesfully.
-
-:var:  
-   * ``["steps", 10]`` outputs the data every 10 steps
-   * ``["time", 100*kyr]`` outputs the data every 100 kyr
+# --- Output method for Paraview, HDF5 and  tracers ---
+output_frequency = ["steps", 1] # e.g. ["steps", 10] or ["time", 100*kyr]
+""" 
+:var: Frequency for the output to ParaView, HDF5 data and mesh, and tracer files. The first time step is always saved, the
+      last one if the simulation succesfully ends through the termination criteria.
 
 :vartype: list consisting of a string ``"steps"`` or ``"time"``, and an integer/float
+   For example::
+
+      output_frequency = ["steps", 10]
+
+   outputs the data every 10 steps, while::
+
+      output_frequency = ["time", 100*kyr]
+   
+   outputs the data every 100 kyr.
 
 :meta hide-value:
 """
+
 # --- Save tracers into files? ---
 save_tracers = False
 """
@@ -85,6 +95,7 @@ Whether to save tracers into files located at ``data_name/tracers``. Timing of t
 
 :meta hide-value:
 """
+
 # --- What properties to save? Must be one of the following (order does not matter):
 # rank              = to which process the tracer belongs
 # dev_stress_xx     = xx component of the deviatoric stress
@@ -99,7 +110,6 @@ Whether to save tracers into files located at ``data_name/tracers``. Timing of t
 # melt_fraction     = amount of partial melt on the tracer
 # origin            = 0 if the tracer is original, 1 if added later
 # id                = unique ID of the tracer
-
 Tracers_Output = ["composition_1", "rank", "composition_0"]
 """
 List of strings indicating which properties carried by the tracers will be saved, e.g.::
@@ -127,9 +137,9 @@ List of strings indicating which properties carried by the tracers will be saved
 
 :meta hide-value:
 """
+
 # --- Headers for the columns in the text file for tracers
 # --- Up to the user (order corredponding to "stat_output").
-
 Tracers_header = ["rank", "composition"]
 """
 List of headers for the properties specified in ``tracers_output``, e.g.::
@@ -151,6 +161,7 @@ Paraview_Output = ["velocity",\
                 "stress_dev_inv",\
                 "yield_stress",\
                 "yield_function",\
+                "temperature",\
                 "tracers",\
                 "viscosity"]
 
@@ -162,17 +173,17 @@ Paraview_Output = ["velocity",\
 # q_bot 	= Heat flux over the bottom boundary
 # time		= Duration of the simulation (hours)
 # timestep	= Duration of the time step (seconds)
-
 stat_output = ["vrms", "time", "timestep", "avg_h_bot"]
 
 # --- Headers for the columns in the text file
 # --- Up to the user (order corredponding to "stat_output").
-
 stat_header = ["v_rms (-)", "Time (h)", "dt (s)"]
 
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #------------------------- 2/ RELOADING OPTIONS -----------------------
 #----------------------------------------------------------------------
+
+# --- Name of the directory from which the data will be reloaded ---
 reload_name 		= "van_Keken"
 """
 :var: The directory from which the data will be reloaded when ``reloading_HDF5 = True``.
@@ -182,6 +193,7 @@ reload_name 		= "van_Keken"
 :meta hide-value:
 """
 
+# --- Whether or not to load HDF5 data from data_reload_name/HDF5/data.h5 --- 
 reload_HDF5 		= False
 """
 :var: Whether or not to load HDF5 data from ``data_reload_name/HDF5/data.h5``. 
@@ -191,7 +203,8 @@ reload_HDF5 		= False
 :meta hide-value:
 """
 
-reload_HDF5_step			= 12 # First column in data_timestamp.dat
+# ---  Time stamp of the HDF5 file which will be loaded ---
+reload_HDF5_step			= 12
 """
 :var: Time stamp of the HDF5 file which will be loaded when ``reloading_HDF5 = True``.
 
@@ -228,7 +241,7 @@ reload_tracers_step		= 120 # Second column in data_timestamp.dat
 :meta hide-value:
 """
 
-# --- Time step to reload (first column in data_timestamp.dat ---
+# --- Whether to reset time when reloading ---
 restart_time 	= False
 """
 Whether to reset time when ``reloading_HDF5 = True``.
@@ -245,7 +258,18 @@ Whether to reset time when ``reloading_HDF5 = True``.
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #------------------------- 3/ SIMULATION DURATION ---------------------
 #----------------------------------------------------------------------
-t_end = 1*Myr #200*Myr # s 
+
+# --- Criterion for ending the simulation, e.g. ["time", 1*Myr] or ["step", 1000] ---
+termination_condition = ["time", 1*Myr]
+""" Time or step criterion for ending the simulation naturally.
+
+:var:  
+   * ``["steps", 1000]`` exits the time loop after the 100th step
+   * ``["time", 100*kyr]`` exits the time loop as soon as 100 kyr is reached 
+
+
+:meta hide-value:
+"""
 
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #------------------------- 3/ TRACERS OPTIONS -------------------------
@@ -254,6 +278,16 @@ sm_thickness = 500.0	# m
 om_thickness = 500.0	# m
 
 integration_method = "RK4" # Euler, RK2, RK4
+""" Method for integration of the trajectories of Lagrangian tracers.
+
+:var:  
+   * ``"RK2"`` for the 2nd order Runge-Kutta scheme
+   * ``"RK4"`` for the 4nd order Runge-Kutta scheme
+
+:vartype: string
+
+:meta hide-value:
+"""
 
 tracers_per_cell = 20 
 
@@ -262,11 +296,28 @@ weight_tracers_by_ratio = False
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #------------------------ 3/ MESH GEOMETRY ----------------------------
 #----------------------------------------------------------------------
-height = 25e3 # m
-length = 50e3 # m
 
-loading_mesh = False
+# --- Mesh height ---
+height = 25e3 # m
+""" Height of the rectangular mesh.
+
+:vartype: float
+
+:meta hide-value:
 """
+
+# --- Mesh length ---
+length = 50e3 # m
+""" Length of the rectangular mesh.
+
+:vartype: float
+
+:meta hide-value:
+"""
+
+# --- Whether to read an external mesh ---
+loading_mesh = False
+""" Whether to read an external mesh.
 :var: 
    * **True** reads a mesh from file ``mesh_name``.
    * **False** creates a new mesh based on ``x_div``, ``z_div`` and ``triangle_types`` 
@@ -276,11 +327,38 @@ loading_mesh = False
 :meta hide-value:
 """
 
+# --- Mesh to be loaded ---
 mesh_name 	= "meshes/mesh_25x100km.xml"
+""" Mesh to be loaded.
+
+:var: path to a mesh in **xml** format, e.g. ``mesh_25x100km.xml``
+
+:vartype: string
+
+:meta hide-value:
+"""
 
 # --- Basic mesh resolution if not loading mesh ---
-z_div = 50
+z_div = 25
+""" Number of nodes in vertical direction.
+
+:vartype: integer
+
+:meta hide-value:
+"""
+
+# --- Number of nodes in horizontal direction ---
 x_div = int(z_div*(length/height)) # (keeps aspect ratio 1)
+""" Number of nodes in horizontal direction.
+
+:var: default ``int(z_div*(length/height))`` which keeps acpect ratio of the elements equal to 1
+
+:vartype: integer
+
+:meta hide-value:
+"""
+
+# --- Method of dividing basic squares into mesh triangle elements. ---
 triangle_types = "crossed" # crossed, left, right, left/right, right/left
 """
 Method of dividing basic squares into mesh triangle elements. 
@@ -299,18 +377,24 @@ Method of dividing basic squares into mesh triangle elements.
 # leave empty for no refinement ---
 refinement = [] #[0.0, length, height/2.0, height]
 """ 
-:var: Minimum and maximum *x*- and *y*-coordinates of a rectangle area of the mesh to be refined::
+:var: Minimum and maximum *x*- and *y*-coordinates of a rectangle area of the mesh to be refined, see :func:`m_mesh.MeshModule.refine_mesh`\ .
+
+:vartype: list of 4x *n* floats, where *n* is the number of refined areas
+
+.. hint:: 
+   In order to refine the upper half of the mesh: ::
 
       refinement = [0.0, length, height/2.0, height]
-
-   Repeating the sequence superposes the refinements. For example::
+   
+   By repeating the sequence, the areas of refinement can be superposed. For example ::
 
       refinement = [0.0, length, 0, height/2.0, 0.0, length, 0, height/4.0]
 
    gives first-level refinement in the bottom half domain and second-level one in the bottom quarter of the domain.
 
-:vartype: list of 4x *n* floats, where *n* is the number of refined areas
-   
+.. warning:: For tectonic simulations, the top boundary nodes need to be **equidistant** because of 
+   detecting and smoothing node oscillations, see :func:`m_mesh.detect_oscillations`\ .
+
 :meta hide-value:
 """
 
@@ -352,26 +436,36 @@ materials = [] #[["rectangle",  0.0, length, 0.0, height], ["rectangle",  ll, rr
 
 # --- If True, the cells without tracers will be assigned material "default_composition" ---
 # --- Applicable only if the material composition is the only tracer-requiring feature ---
-allow_empty_cells = False
+empty_cells_allowed = False
 """
-:var: Whether or not allow to have elements without tracers
+:var: Whether to allow elements without tracers. If ``True``, tracers will not be added
+      in :func:`m_tracers.Tracers.introduce_tracers` nor :func:`m_tracers.Tracers.add_tracers`\ .
 :vartype: boolean
 
+.. warning:: Use ``True`` only when **material composition** is the only tracer-requiring feature.
+
 :meta hide-value:
 """
 
-default_composition = 0
+empty_cells_composition = 0
 """
-:var: If ``allow_empty_cells = True`` this determines the composition of empty cells
+:var: If ``empty_cells_allowed = True``, this determines the composition of empty cells,
+      see :func:`m_interpolation.composition_interpolation`.
 :vartype: integer
 
 :meta hide-value:
 """
 
-empty_region = [["rectangle",  0, length, 20e3, height]] #  So far rectangle implemented
+empty_cells_region = [["rectangle",  0, length, 20e3, height]] #  So far rectangle implemented
 """
-:var: Specifies geometry of the region where the empty cells will be be given  ``default composition`` even without tracers inside.
-:vartype: integer
+:var: Specifies geometry of the region where the empty cells will be given  ``empty_cells_composition`` even without tracers inside,
+      see :func:`m_tracers.Tracers.introduce_tracers`\ .
+:vartype: list of lists consisting of the region shape and its dimensions.
+   For example ::
+
+      empty_cells_region = [["rectangle",  0, length, 20e3, height]]
+
+.. note:: Only ``"rectangle"`` type is implemented at this point.
 
 :meta hide-value:
 """
@@ -391,7 +485,7 @@ time_step_position = "stokes" #stokes (right after Stokes problem) or "end" (at 
 """
 
 time_step_strategy = "constant"
-""" Method for computing a new time step
+""" Specifies the method for computing a new time step, see :func:`m_timestep.time_step`\ .
 
 :var:
    
@@ -400,21 +494,35 @@ time_step_strategy = "constant"
 
 :vartype: string
 
+.. tip:: For tectonic simulations, a time step smaller than given by the CFL criterion needs to be used to ensure sharp faults.
+
 :meta hide-value:
 """
 
+# --- The CFL parameter ---
 cfl = 0.5
+""" 
+:var: The CFL parameter, determining the length of the adaptive time step, see :func:`m_timestep.time_step`\ .
+:vartype: float
+
+:meta hide-value:
+"""
+
+# ---  Maximum number of Stokes solver Picard iterations ---
 Picard_iter_max 	= 25
 """ 
-:var: Maximum number of Stokes solver Picard iterations in case of nonlinear rheology (stress-dependent viscosity, plasticity).
+:var: Maximum number of Stokes solver Picard iterations in case of nonlinear rheology (stress-dependent viscosity, plasticity),
+      see :func:`m_equations.Equations.solve_Stokes_problem`\ .
 :vartype: integer
 
 :meta hide-value:
 """
 
+# --- Minimum relative error in velocity field ---
 Picard_iter_error 	= 1e-3
 """ 
-:var: Minimum relative error in velocity field sufficient to exit the Stokes solver Picard iterations.
+:var: Minimum relative error in velocity field sufficient to exit the Stokes solver Picard iterations,
+      see :func:`m_equations.Equations.solve_Stokes_problem`\ .
 :vartype: float
 
 :meta hide-value:
@@ -423,10 +531,45 @@ Picard_iter_error 	= 1e-3
 error_type          = "maximum" # "maximum or integrated"
 
 # Boundary conditions for velocity (free_slip, no_slip, free surface, velocity, velocity_x, velocity_y)
-BC_vel_top 		= "free_surface" 
-BC_vel_bot 		= "velocity_y"
-BC_vel_left 	= "velocity_x"
-BC_vel_right 	= "velocity_x"
+BC_Stokes_problem = [["free_surface"],                # top boundary       (1)
+                     ["velocity", 0.0, +10e3/Myr],    # bottom boundary    (2)
+                     ["velocity_x", -10e3/Myr],       # left boundary      (3)
+                     ["velocity_x", +10e3/Myr]]       # right boundary     (4)
+"""
+:var: Boundary conditions for the Stokes problem :func:`m_equations.Equations.equation_Stokes` in the following order
+
+   * top boundary 
+      * ``["free_slip/no_slip/free surface"]``,
+      * ``["velocity_x/velocity_y", value]`` for specifying one component of the velocity,
+      * or ``["velocity", value_x, value_y]`` for specifying both components of the velocity
+   * bottom boundary 
+      * ``["free_slip/no_slip/free surface"]``,
+      * ``["velocity_x/velocity_y", value]`` for specifying one component of the velocity,
+      * or ``["velocity", value_x, value_y]`` for specifying both components of the velocity
+   * left boundary
+      * ``["free_slip/no_slip"]``,
+      * ``["velocity_x/velocity_y", value]`` for specifying one component of the velocity,
+      *  or ``["velocity", value_x, value_y]`` for specifying both components of the velocity
+   * right boundary
+      * ``["free_slip/no_slip"]``,
+      * ``["velocity_x/velocity_y", value]`` for specifying one component of the velocity,
+      * or ``["velocity", value_x, value_y]`` for specifying both components of the velocity
+
+:vartype: 
+   * list of four lists (one for each boundary)
+   * unit m s\ :math:`^{-1}` 
+
+.. hint:: 
+   For example, for a tectonic simulation with free surface at the top boundary, ouflow through the side boundaries by 10 km/Myr
+   and strictly vertical inflow through the bottom boundary at the same rate, the boundary condition will look as follows: ::
+
+      BC_Stokes_problem = [["free_surface"],          # top boundary       (1)
+                     ["velocity", 0.0, +10e3/Myr],    # bottom boundary    (2)
+                     ["velocity_x", -10e3/Myr],       # left boundary      (3)
+                     ["velocity_x", +10e3/Myr]]       # right boundary     (4)
+
+:meta hide-value:
+"""
 
 mesh_displacement_laplace = "full"  #"full_laplace" or "z_only"
 """ Determines whether full Laplace equation or only its *z*-part will 
@@ -440,23 +583,6 @@ be solved to obtain mesh displacement on the mesh between the top and bottom bou
 
 :meta hide-value:
 """
-
-# Influx boundary conditions - active only when "velocity" /_x /_y is selected above
-# Top boundary
-velocity_top_x = Constant(0.0)
-velocity_top_y = Constant(0.0)
-
-# Bottom boundary
-velocity_bot_x = Constant(0.0)
-velocity_bot_y = Constant(+10e3/Myr)
-
-# Left boundary
-velocity_left_x = Constant(-10e3/Myr)
-velocity_left_y = Constant(0.0)
-
-# Right boundary
-velocity_right_x = Constant(+10e3/Myr)
-velocity_right_y = Constant(0.0)
 
 # Method for correcting velocity field in case of multiple free surface conditions
 stokes_null = "boundary"
@@ -475,27 +601,57 @@ stokes_null = "boundary"
 
 # --- Solve heat transfer? ---
 solve_energy_problem = True
+"""
+:var: Whether to solve heat transfer :func:`m_equations.Equations.equation_heat`\ .
+
+:vartype: boolean
+
+:meta hide-value:
+"""
+
+# --- Whether the heat transfer should be solved with nonlinear solver ---
 nonlinear_heat_equation = False
+"""
+:var: Whether the heat transfer :func:`m_equations.Equations.equation_heat` should be solved with nonlinear solver.
 
-BC_T_top 	= "temperature" 	# temperature, heat_flux or radiation
-BC_T_bot 	= "temperature"		# temperature or heat_flux
-BC_T_left 	= "heat_flux"		# temperature or heat_flux
-BC_T_right 	= "heat_flux"		# temperature or heat_flux
+:vartype: boolean
 
-# --- Boundary temperatures ---
-T_top 	= 90.0	# K
-T_bot 	= 270.0	# K
-T_left 	= 0.0	# K
-T_right = 0.0	# K
+:meta hide-value:
+"""
+
+# --- Boundary condition for heat transfer equation ---
+BC_heat_transfer   = [["temp", 90.0],     # top boundary    (1)
+                     ["temp", 265.0],     # bottom boundary (2)
+                     ["heat_flux", 0.0],  # left boundary   (3)
+                     ["heat_flux", 0.0]]  # right boundary  (4)
+"""
+:var: Boundary conditions for heat transfer equation in the following order
+
+   * top boundary ``["temp/heat_flux/radiation", value]`` 
+   .. note:: If ``"radiation"`` boundary condition is selected, the ``value`` serves as an initial estimate of the top boudnary temperature for the nonlinear solver.
+   * bottom boundary ``["temp/heat_flux", value]``
+   * left boundary ``["temp/heat_flux", value]``
+   * right boundary ``["temp/heat_flux", value]`` 
+
+:vartype: list of four lists (one for each boundary)
+
+   * unit K for temperature
+   * unit W m\ :math:`^{-2}` for the heat flux
+
+.. hint:: 
+   For example, in order to prescribe temperature 90 K at the top boundary, 265 K at the bottom boundary and insulating side boundaries,
+   the boundary condition will look as follows: ::
+
+      BC_heat_transfer = [["temp", 90.0],    # top boundary    (1)
+                        ["temp", 265.0],     # bottom boundary (2)
+                        ["heat_flux", 0.0],  # left boundary   (3)
+                        ["heat_flux", 0.0]]  # right boundary  (4)
+
+:meta hide-value:
+"""
 
 # --- Reference temperature ---
 T_ref 	= 270.0 # K
-
-# --- Heat fluxes in the direction of the boundary normal vector ---
-bc_q_top 	= 0.0e-3	# W m^-2
-bc_q_bot 	= 0.0e-3	# W m^-2
-bc_q_left 	= 0.0e-3	# W m^-2
-bc_q_right 	= 0.0e-3	# W m^-2
 
 # --- Insolation parametes ---
 emis 	= 0.97         	# Ice emissivity
@@ -504,11 +660,35 @@ dist_AU = 5.2			# Object's distance from Sun in AU
 insolation = insol_1AU/dist_AU**2
 
 # --- Melting inside the shell ---
+# --- Whether generate partial melt if the temperature of the solid reaches T_melt ---
 internal_melting = False
+"""
+:var: Whether generate partial melt if the temperature of the solid reaches :math:`T_{melt}`\ .
+
+:vartype: boolean
+
+:meta hide-value:
+"""
+
+# --- Melting temperature of the solid ---
 T_melt = 270.0	# K
+"""
+:var: Melting temperature of the solid.
+
+:vartype: float, unit K
+
+:meta hide-value:
+"""
 
 # --- Tidal heating ---
 tidal_dissipation           = False
+"""
+:var: Whether there is a volumetric source term in the heat transfer equation.
+
+:vartype: boolean
+:meta hide-value:
+"""
+
 initial_tidal_dissipation   = False
 heating_model               = "Maxwell" # Maxwell, Andrade or none
 H_max = 4e-6 # W m^{-3}
@@ -518,11 +698,45 @@ alpha_and = 0.2
 
 # --- Find conductive initial condition ---
 init_cond_profile = True
+"""
+:var: Whether to find an initial conductive profile as an initial condition for the heat transfer problem.
+
+:vartype: boolean
+
+.. note:: If ``False``, then a linear temperature profile between the top and bottom temperature will be prescribed.
+
+:meta hide-value:
+"""
 
 # --- Cosine perturbation of initial temperature ---
 cos_perturbation = True
+"""
+:var: Whether to perturb the temperature initial condition by a function. See :func:`m_equations.Equations.thermal_perturbation`\ .
+
+:vartype: boolean
+
+:meta hide-value:
+"""
+
+# --- Thermal perturbation amplitude ---
 perturb_ampl 	= 2 # K
-perturb_freq 	= 1 # Number of cos waves in lateral direction
+"""
+:var: Thermal perturbation amplitude :math:`A` in :func:`m_equations.Equations.thermal_perturbation`\ .
+
+:vartype: float, unit K
+
+:meta hide-value:
+"""
+# --Number of half-cosine waves in lateral direction ---
+perturb_freq 	= 1 
+"""
+:var: Number :math:`N`\ of half-cosine waves in the thermal perturbation formula :func:`m_equations.Equations.thermal_perturbation`\ .
+
+:vartype: float, unit -
+
+:meta hide-value:
+"""
+
 #----------------------------------------------------------------------
 
 # --- Time scaling ---
@@ -548,21 +762,97 @@ dt_const = 0.5*kyr #0.5*kyr*time_scaling
 #---------------------------- 6/ RHEOLOGY -----------------------------
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 # === PHYSICAL PARAMETERS ===
+# --- Gravity acceleratuin ---
 g 		= 1.3				# m s^-2
-rho_s 	= 920.0 #1.0 	# kg m^-3
-rho_l 	= 1000.0 #2*Ra/(2.5e-5*1e3) - Ra*1.0		# kg m^-3
-rho_m 	= rho_l		# kg m^-3
+"""
+:var: Gravity acceleration.
+
+:vartype: float, unit m s\ :math:`^{-2}`
+
+:meta hide-value:
+"""
+
+# --- Density of the domain solid ---
+rho_s 	= 920.0 # kg/m3
+"""
+:var: Density of the domain solid.
+
+:vartype: float, unit kg m\ :math:`^{-3}`
+
+:meta hide-value:
+"""
+
+# --- Density of the liquid below the domain ---
+rho_l 	= 1000.0 # kg/m3
+"""
+:var: Density of the liquid below the domain (subsurface ocean).
+
+:vartype: float, unit kg m\ :math:`^{-3}`
+
+:meta hide-value:
+"""
+
+# --- Density of the melt produced by the solid ---
+rho_m 	= rho_l # kg/m3
+"""
+:var: Density of the melt produced by the solid.
+
+:vartype: float, unit kg m\ :math:`^{-3}`
+
+:meta hide-value:
+"""
+
 alpha_exp = 1.6e-4	# K^-1
 
 # === PHYSICAL INGREDIENTS ===
 # --- Rheology ---
 elasticity = False
+"""
+:var: Whether the material behaves as a Maxwell visco-elastic medium.
+
+:vartype: boolean
+
+:meta hide-value:
+"""
+
 plasticity = True
+"""
+:var: Whether the material yields when the yield stress is reached.
+
+:vartype: boolean
+
+:meta hide-value:
+"""
 
 # --- Phase transition at the bottom boundary ----
 phase_transition = False
-DAL_factor 	= 1e-2		# W/m3, strength of the phase transition
-Lt 			= 334.0e3	# J/kg, latent heat
+"""
+:var: Whether there is a phase transition at the ice-water boundary.
+
+:vartype: boolean
+
+:meta hide-value:
+"""
+
+# --- Strength of the phase transition at the ice-water boundary ---
+DAL_factor 	= 1e-2 # W/m3
+"""
+:var: Strength of the phase transition at the ice-water boundary due to the DAL effect
+
+:vartype: float, unit W m\ :math:`^{-3}`
+
+:meta hide-value:
+"""
+
+# --- Latent heat of the material ---
+Lt 			= 334.0e3 # J/kg
+"""
+:var: Latent heat of the material.
+
+:vartype: float, unit J kg\ :math:`^{-1}`
+
+:meta hide-value:
+"""
 
 # --- Adaptive topography diffusion and topography diffusion factor ---
 adaptive_smoothing = False
@@ -570,48 +860,119 @@ topo_diff = 1e-8*time_scaling
 
 # --- Rheological parameters ---
 # --- VISCOSITY ---
-viscosity_type = "GK_2001" # constant, temp-dep, GK_2001 (Goldsby and Kohlstedt, 2001) or composition
+viscosity_type = "temp-dep" # constant, temp-dep, GK_2001 (Goldsby and Kohlstedt, 2001) or composition
+"""
+:var: Defines which formula for ductile viscosity will be used, see :func:`m_rheology.eta_ductile`\ .
+
+:vartype: string
+
+   * ``"constant"`` for constant viscosity of value :math:`\\eta_0`\ . 
+   * ``"temp-dep"`` for temperature-dependent viscosity
+   * ``"GK_2001"`` for temperature and stress-dependent viscosity of ice-I
+   * ``"composition"`` for composition-dependent viscosity (used for selected benchmarks)
+
+:meta hide-value:
+"""
 
 # --- Parameters for constant / temperature-dependent viscosity ---
 eta_0 = 1e15	# Pa.s
+"""
+:var: 
+   * Constant viscosity for ``constant`` viscosity type. 
+   * Viscosity prefactor for ``temp-dep`` viscosity type. See :func:`m_rheology.eta_ductile`.
+
+:vartype: float, unit Pa s
+
+:meta hide-value:
+"""
+# --- Activation energy ---
 Q_activ = 60e3 	# J/mol
+"""
+:var: Activation energy for ``temp-dep`` viscosity type.  See :func:`m_rheology.eta_ductile`.
 
-# --- Parameters for nonlinear viscosity ---
+:vartype: float, unit J mol\ :math:`^{-1}`
+
+:meta hide-value:
+"""
+
+# --- Grain size ---
 d_grain = 1.0e-3
+"""
+:var: Constant grain size.  See :func:`m_rheology.eta_ductile`.
 
+:vartype: float, unit m
+
+:meta hide-value:
+"""
+
+# --- Upper cut-off viscosity ---
 eta_max = 1e23
-eta_min_plast = 1e-13 #eta_max/1e6
+"""
+:var: Upper cut-off value for viscoplastic viscosity :math:`\\eta_{vp}`\ .  See :func:`m_rheology.eta_ductile`.
+
+:vartype: float, unit Pa s
+
+:meta hide-value:
+"""
+
+# --- Lower cut-off value for plastic viscosity ---
+eta_min_plast = 1e13 #eta_max/1e6
+"""
+:var: Lower cut-off value for plastic viscosity :math:`\\eta_{p}`\ . See :func:`m_rheology.eta_eff`.
+
+:vartype: float, unit Pa s
+
+:meta hide-value:
+"""
 
 # --- Elasticity ---
+# --- Shear modulus ---
 shear_modulus = 3.52e9
+"""
+:var: Shear modulus.
+
+:vartype: float, unit Pa
+
+:meta hide-value:
+"""
 
 # If elasticity is off, we can compute the new viscosity directly from the strain rate (it will be faster)
 # However, the stress formula + VEP iterations would work too
 stress_iter_error = 1e-4
 
 # --- Plasticity ---
+# --- Angle of internal friction in degrees ---
 int_friction_angle = 16.0
 int_friction_angle2 = 0.0
 """
 :var: Angle of internal friction in degrees.
 
-:vartype: float
+:vartype: float, unit degrees
 
 :meta hide-value:
 """
 
-cohesion_strong, cohesion_weak = 1e6, 0.0
+# --- Cohesion of an undamaged material ---
+cohesion_strong = 1e6
 """
-:var: Cohesion of an undamaged and a fully damaged material, respectively.
+:var: Cohesion of an **undamaged** material. See :func:`m_rheology.cohesion`.
 
-
-:vartype: float, float
+:vartype: float, unit Pa
 
 :meta hide-value:
 """
 
+# --- Cohesion of a fully damaged material ---
+cohesion_weak = 0.0
+"""
+:var: Cohesion of a **fully damaged** material. See :func:`m_rheology.cohesion`.
 
-yield_stress_max, yield_stress_min = 1e7, 0.1
+:vartype: float, unit Pa
+
+:meta hide-value:
+"""
+
+yield_stress_max, yield_stress_min = 1e8, 0.1
 """
 :var: Upper and lower cut-off values for the yield stress, respectively.
 
@@ -620,34 +981,43 @@ yield_stress_max, yield_stress_min = 1e7, 0.1
 :meta hide-value:
 """
 
-
+# --- Value of the plastic strain at which the material starts to accumulate damage ---
 eps_strong = 0
 """
-Value of the plastic strain at which the material starts to accumulate damage.
+:var: Value of the plastic strain at which the material starts to accumulate damage. See :func:`m_rheology.cohesion`.
+
+:vartype: float, unit -
 
 :meta hide-value:
 """
 
+# --- Critical value of the plastic strain beyond which the material is considered as fully damaged ---
 eps_weak = 0.2
 """
-Critical value of the plastic strain beyond which the material is considered as fully damaged.
+:var: Critical value of the plastic strain beyond which the material is considered as fully damaged. See :func:`m_rheology.cohesion`.
+
+
+:vartype: float, unit -
 
 :meta hide-value:
 """
 
+# --- Whether the accumulated plastic strain decreases in time ---
 healing = False
 """
-:var: Whether the accumulated plastic strain decreases in time due to microscopic healing processes. 
-      See ``plastic_strain_integration`` in ``m_rheology`` module for more details.
+:var: Whether the accumulated plastic strain decays in time due to microscopic healing processes. 
+      See :func:`m_rheology.plastic_strain_integration`.
 
 :vartype: boolean
 
 :meta hide-value:
 """
 
-recovery_time = 300*kyr
+# --- Characteristic time scale for the microscopic healing processes ---
+healing_timescale = 300*kyr
 """
 :var: Characteristic time scale for the microscopic healing processes.
+      See :func:`m_rheology.plastic_strain_integration`.
 
 :vartype: float
 

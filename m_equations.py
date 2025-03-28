@@ -9,7 +9,7 @@ from m_mesh import *
 from m_interpolation import *
 
 class Equations:
-    def __init__(self, MeshClass, ElemClass, TracersClass, MeltingClass,):
+    def __init__(self, MeshClass, ElemClass, TracersClass, MeltingClass, FilesClass):
 
         self.sCG2   = ElemClass.sCG2
         self.sCG1   = ElemClass.sCG1
@@ -176,7 +176,7 @@ class Equations:
             self.pv = Function(self.V)
             self.p, self.v = split(self.pv)
 
-
+        self.name   = FilesClass.name
         self.v_k = ElemClass.v_k
         self.p_k = ElemClass.p_k
         self.v_mesh = ElemClass.v_mesh
@@ -192,29 +192,40 @@ class Equations:
 
         self.equation_Stokes(0 ,0)
 
-        self.equation_top_free_surface()
-        self.equation_bottom_free_surface()
+        self.equation_free_surface_top()
+        self.equation_free_surface_bottom()
         self.equation_mesh_displacement()
     
     def equation_heat_ini(self):
-        """ Defines the weak form of the stationary heat equation.
+        """ 
+        :var: Defines the weak form of the stationary heat transfer equation.
 
         .. math::
         
-            0 = \\int_\\Omega k(T, C)\\ \\nabla T \\cdot \\nabla \\hat{T}\\ \\textrm{d}\\Omega
+            0 = \\int_\\Omega k\\ (\\nabla T \\cdot \\nabla \\hat{T})\\ \\textrm{d}\\Omega
         
-        If ``BC_T_top = "radiation"``, the corresponding boundary condition is added
+        If ``BC_heat_transfer[0][0] = "radiation"``, the corresponding boundary condition is added
 
         .. math::
         
-            - \\int_{\\Gamma_{top}} (1 - A)I\\hat{T}\\ + T^4\\varepsilon\\sigma_{SB}\\hat{T}\\ \\textrm{d}\\Gamma_{top}
+            - \\int_{\\Gamma_{\\rm top}} I(1 - A)\\hat{T}\\ + T^4\\varepsilon\\sigma_{SB}\\hat{T}\\ \\textrm{d}\\Gamma_{\\rm top}
+
+        where
+
+        * :math:`I` is the insolation at the body's surface
+        * :math:`A` is the albedo of the body's surface
+        * :math:`\\varepsilon` is the body's surface emmisivity
+        * :math:`\\sigma_{SB}` is the Stefan-Boltzmann constant
+        .. note::
+
+            If ``BC_heat_transfer[0][0] = "radiation"``, nonlinear solver will be automatically used.
 
         """
         # --- Equation ---
         # if (nonlinear_heat_equation == True):
         eq_energy_ini =  k(self.Temp, self.composition)*inner(nabla_grad(self.Temp), nabla_grad(self.Temp_))*dx
 
-        if (BC_T_top == "radiation"):
+        if (BC_heat_transfer[0][0] == "radiation"):
             eq_energy_ini += - (1.0 - albedo)*insolation*self.Temp_*self.ds(1)\
                         + pow(self.Temp, 4)*emis*SB_const*self.Temp_*self.ds(1)
             
@@ -241,7 +252,8 @@ class Equations:
         #     self.solver_energy_ini  = LinearVariationalSolver(problem_energy_ini)
 
     def thermal_perturbation(self):
-        """ Defines the weak form of the stationary heat equation.
+        """ 
+        :var: Perturbs the initial temperature profile.
         
         :param perturb_ampl: amplitude of the thermal perturbation (:math:`A`\ )
         :param perturb_freq: spatial frequency of the thermal perturbation (:math:`f`\ )
@@ -256,19 +268,50 @@ class Equations:
         self.Temp.assign(self.Temp_k) 
 
     def equation_heat(self):
-        """ Defines the weak form of the time-dependent heat equation using the semi-implicit Crank-Nicolson scheme.
+        """ 
+        :var: Defines the weak form of the time-dependent heat transfer equation.
+
+        :returns:
 
         .. math::
         
-            0 = \\int_\\Omega \\rho_s c_p(T, C) \\frac{T - T^k}{\\Delta t}\\hat{T}
-            + 0.5(\\rho_s c_p(T, C)[(v - v_{mesh}) \\cdot T)]\\hat{T} 
-            + k(T, C)\\ \\nabla T \\cdot \\nabla \\hat{T})\\ \\textrm{d}\\Omega
+            \\begin{align}
+            0 = &\\int_\\Omega \\rho_s c_p \\frac{T - T^k}{\\Delta t}\\hat{T}\\\\
+            &+ 0.5[\\rho_s c_p((\\boldsymbol{v} - \\boldsymbol{v}_{\\rm mesh}) \\cdot T)\\ \\hat{T} + k\\ (\\nabla T \\cdot \\nabla \\hat{T})]\\\\
+            &+ 0.5[\\rho_s c_p((\\boldsymbol{v} - \\boldsymbol{v}_{\\rm mesh}) \\cdot T^k)\\ \\hat{T} + k\\ (\\nabla T^k \\cdot \\nabla \\hat{T})]\\ \\textrm{d}\\Omega\\\\
+            \\end{align}
         
-        If ``BC_T_top = "radiation"``, the corresponding boundary condition is added
+        where
+
+        * :math:`T` is the temperature trial function
+        * :math:`T^k` is the temperature function from the previous time step
+        * :math:`\\hat{T}` is the temperature test function
+        * :math:`\\boldsymbol{v}` is the velocity
+        * :math:`\\boldsymbol{v}_{\\rm mesh}` is the mesh velocity
+        * :math:`\\Delta t` is the time step length
+
+        If ``tidal_dissipation = True``, the corresponding volumetric heating term defined in :func:`m_rheology.tidal_heating` is added
 
         .. math::
         
-            - \\int_{\\Gamma_{top}} (1 - A)I\\hat{T}\\ + T^4\\varepsilon\\sigma_{SB}\\hat{T}\\ \\textrm{d}\\Gamma_{top}
+            - \\int_\\Omega H_{\\rm tidal}(\\eta)\\ \\hat{T}\\ \\textrm{d}\\Omega
+
+        In case of radiation boundary condition at the top boundary ``BC_T_top = "radiation"``, the corresponding boundary condition is added
+
+        .. math::
+        
+            - \\int_{\\Gamma_{\\rm top}} (1 - A)I\\hat{T}\\ + T^4\\varepsilon\\sigma_{SB}\\hat{T}\\ \\textrm{d}\\Gamma_{\\rm top}
+
+        where
+
+        * :math:`I` is the insolation at the body's surface (in :mod:`m_parameters`\ )
+        * :math:`A` is the albedo of the body's surface (in :mod:`m_parameters`\ )
+        * :math:`\\varepsilon` is the body's surface emmisivity (in :mod:`m_parameters`\ )
+        * :math:`\\sigma_{SB}` is the Stefan-Boltzmann constant (in :mod:`m_constants`\ )
+        
+        .. note::
+
+            If ``BC_heat_transfer[0][0] = "radiation"``, nonlinear solver will be automatically used.
 
         """
         if (nonlinear_heat_equation == True):
@@ -283,7 +326,7 @@ class Equations:
             if (tidal_dissipation == True):
                     eq_energy += - tidal_heating(self.visc)*self.Temp_*dx
 
-            if (BC_T_top == "radiation"):
+            if (BC_heat_transfer[0][0] == "radiation"):
                 eq_energy += - (1.0 - albedo)*insolation*self.Temp_*self.ds(1)\
                             + pow(self.Temp, 4)*emis*SB_const*self.Temp_*self.ds(1)
 
@@ -315,6 +358,48 @@ class Equations:
             self.solver_energy  = LinearVariationalSolver(problem_energy)
 
     def equation_Stokes(self, step, Picard_iter):
+        """ 
+        :var: Defines the weak form of the Stokes problem
+
+        :returns:
+
+        Weak form of the continuity equation 
+
+        .. math::
+        
+            0 = \\int_\\Omega \\nabla\\cdot \\boldsymbol{v}\\ \\hat{p}\\ \\textrm{d}\\Omega    
+
+        Weak form of the momentum equation if ``elasticity = False``
+
+        .. math::
+        
+            0 = \\int_\\Omega \\hat{p}\\nabla\\cdot \\hat{\\boldsymbol{v}} - \\rho g (\\boldsymbol{e}_z \\cdot \\hat{\\boldsymbol{v}})
+            -\\eta\\ (\\nabla \\boldsymbol{v} + \\nabla^T \\boldsymbol{v}): \\nabla^T \\hat{\\boldsymbol{v}}\\ \\textrm{d}\\Omega\\\\    
+
+        Weak form of the momentum equation if ``elasticity = True``
+
+        .. math::
+        
+            0 = \\int_\\Omega \\hat{p}\\nabla\\cdot \\hat{\\boldsymbol{v}} - \\rho g (\\boldsymbol{e}_z \\cdot \\hat{\\boldsymbol{v}})
+            - Z\\eta\\ (\\nabla \\boldsymbol{v} + \\nabla^T \\boldsymbol{v}): \\nabla^T \\hat{\\boldsymbol{v}}
+            - (1-Z) (\\boldsymbol{\\sigma} : \\nabla^T \\hat{\\boldsymbol{v}})\\ \\textrm{d}\\Omega\\\\    
+
+        In case of a free surface condition at the top boundary ``BC_Stokes_problem[0][0] = "free_surface"``, the 'drunken sailor' stabilization term
+        is added 
+
+        .. math::
+
+            - \\int_{\\Gamma_{\\rm top}} \\rho_s g\\lambda\\Delta t (\\boldsymbol{v} \\cdot \\boldsymbol{n})(\\boldsymbol{e}_z \\cdot \\hat{\\boldsymbol{v}}) \\ \\textrm{d}\\Gamma_{\\rm top}
+
+        In case of a free surface condition at the bottom boundary ``BC_Stokes_problem[1][0] = "free_surface"``, the hydrostatic pressure and the 'drunken sailor' stabilization term
+        are added 
+
+        .. math::
+
+            + \\int_{\\Gamma_{\\rm bot}} (h_{\\rm bot}\\rho_l - h\\rho_s)(\\boldsymbol{n} \\cdot \\hat{\\boldsymbol{v}}) + (\\rho_l - \\rho_s) g\\lambda\\Delta t [(\\boldsymbol{v} + \\boldsymbol{u})
+            \\cdot \\boldsymbol{n}](\\boldsymbol{e}_z \\cdot \\hat{\\boldsymbol{v}}) \\ \\textrm{d}\\Gamma_{\\rm bot}
+
+        """
         eq_cont = div(self._v)*self.p_*dx
 
         if (elasticity == False):
@@ -338,19 +423,43 @@ class Equations:
                 - (1.0 - z(self.visc, self.dt))*inner(self.stress_dev_tensor, nabla_grad(self.v_).T))*dx
         
         # --- Top surface "drunken sailor" stabilization ---
-        if (BC_vel_top == "free_surface"): 
+        if (BC_Stokes_problem[0][0] == "free_surface"): 
             eq_momentum += -rho_s*g*self._lambda*self.dt*dot(self._v, self.normal)*dot(self.e_z, self.v_)*self.ds(1)
             
         # --- Hydrostatic pressure and bottom surface "drunken sailor"---
-        if (BC_vel_bot == "free_surface" or phase_transition == True): 
+        if (BC_Stokes_problem[1][0] == "free_surface" or phase_transition == True): 
             eq_momentum +=  dot(self.normal, self.v_)*(self.h_bot*rho_l - height*rho_s)*g*self.ds(2)\
             + (rho_l - rho_s)*g*self._lambda*self.dt*dot(self._v + self.u, self.normal)*dot(self.e_z, self.v_)*self.ds(2)
              
         problem_stokes = LinearVariationalProblem(lhs(eq_cont + eq_momentum),rhs(eq_cont + eq_momentum), self.pv, self.bc_stokes)
         self.solver_stokes = LinearVariationalSolver(problem_stokes)
 
-    def equation_top_free_surface(self):
-            # --- Top free surface equation ---
+    def equation_free_surface_top(self):
+        """ 
+        :var: Defines the weak form, ``LinearVariationalProblem`` and ``LinearVariationalSolver`` for the top surface evolution equation.
+        :returns: 
+
+        .. math::
+            \\begin{align}
+            0 = &\\int_\\Omega \\frac{\\partial h_{\\rm top}}{\\partial z} \\frac{\\partial \\hat{h}_{\\rm top}}{\partial z}\\ \\textrm{d}\\Omega\\\\
+            &- \\int_{\\Gamma_{\\rm top}} \\frac{\\partial h_{\\rm top}}{\\partial z} \\hat{h}_{\\rm top}\\ \\textrm{d}\\Gamma_{\\rm top}\\\\
+            &- \\int_{\\Gamma_{\\rm top}} \\left[h_{\\rm top} - h_{\\rm top}^k - \\Delta t \\left(\\frac{\\partial h_{\\rm top}}{\\partial x} v_x - v_z \\right)\\right]
+            \\left(\\frac{\\partial \\hat{h}_{\\rm top}}{\\partial z} - \\frac{\\hat{h}_{\\rm top}}{\\gamma h_e} \\right)\\ \\textrm{d}\\Gamma_{\\rm top}
+            \\end{align}
+
+        where
+
+        * :math:`h_{\\rm top}` is the top topography trial function
+        * :math:`h_{\\rm top}^k` is the top topography function from the previous time step
+        * :math:`\\hat{h}_{\\rm top}` is the top topography test function
+        * :math:`v_x` and :math:`v_z` are the horizontal and vertical components of the velocity
+        * :math:`\\Delta t` is the time step length
+        * :math:`\\gamma` is a stabilization parameter
+        * :math:`h_e` is the element size at the top boundary
+
+        """
+
+        # --- Top free surface equation ---
         eq_fs_top = (self._h_top.dx(1)*self.h_top_.dx(1))*dx\
             - (self._h_top.dx(1)*self.h_top_)*self.ds(1)\
             - ((self._h_top - self.h_top_k + self.dt*(self._h_top.dx(0)*self.v_k[0] - self.v_k[1]))\
@@ -361,7 +470,31 @@ class Equations:
         free_surface_top = LinearVariationalProblem(lhs(eq_fs_top), rhs(eq_fs_top), self.h_top, bc_fs_top)
         self.solver_free_surface_top = LinearVariationalSolver(free_surface_top)
 
-    def equation_bottom_free_surface(self):
+    def equation_free_surface_bottom(self):
+        """ 
+        :var: Defines the weak form, ``LinearVariationalProblem`` and ``LinearVariationalSolver`` for the bottom surface evolution equation.
+        :returns: 
+
+        .. math::
+            \\begin{align}
+            0 = &\\int_\\Omega \\frac{\\partial h_{\\rm bot}}{\\partial z} \\frac{\\partial \\hat{h}_{\\rm bot}}{\partial z}\\ \\textrm{d}\\Omega\\\\
+            &- \\int_{\\Gamma_{\\rm bot}} \\frac{\\partial h_{\\rm bot}}{\\partial z} \\hat{h}_{\\rm bot}\\ \\textrm{d}\\Gamma_{\\rm bot}\\\\
+            &- \\int_{\\Gamma_{\\rm bot}} \\left[h_{\\rm bot} - h_{\\rm bot}^k - \\Delta t \\left(\\frac{\\partial h_{\\rm bot}}{\\partial x} (v_x + u_x) - (v_z + u_z) \\right)\\right]
+            \\left(\\frac{\\partial \\hat{h}_{\\rm bot}}{\\partial z} - \\frac{\\hat{h}_{\\rm bot}}{\\gamma h_e} \\right)\\ \\textrm{d}\\Gamma_{\\rm bot}
+            \\end{align}
+
+        where
+
+        * :math:`h_{\\rm bot}` is the bottom topography trial function
+        * :math:`h_{\\rm bot}^k` is the bottom topography function from the previous time step
+        * :math:`\\hat{h}_{\\rm bot}` is the bottom topography test function
+        * :math:`v_x` and :math:`v_z` are the horizontal and vertical components of the velocity
+        * :math:`u_x` and :math:`u_z` are the horizontal and vertical components of the phase change velocity
+        * :math:`\\Delta t` is the time step length
+        * :math:`\\gamma` is a stabilization parameter
+        * :math:`h_e` is the element size at the bottom boundary
+
+        """
 
         # --- Bottom free surface equation ---
         eq_fs_bot = (self._h_bot.dx(1))*(self.h_bot_.dx(1))*dx\
@@ -384,6 +517,29 @@ class Equations:
     #     solver_surf_diff = LinearVariationalSolver(problem_surf_diff)
 
     def equation_mesh_displacement(self):
+        """ 
+        :var: Defines the weak form, ``LinearVariationalProblem`` and ``LinearVariationalSolver`` for mesh displacement distribution equation.
+        :returns: 
+
+        If ``mesh_displacement_laplace = "full"`` then
+
+        .. math::
+        
+            0 = \\int_\\Omega \\nabla h_2 \\cdot \\nabla \\hat{h}_2\\ \\textrm{d}\\Omega
+
+        If ``mesh_displacement_laplace = "z-only"`` then
+
+        .. math::
+        
+            0 = \\int_\\Omega \\frac{\\partial h_2}{\\partial z}\\frac{\\partial \\hat{h}_2}{\\partial z} \\ \\textrm{d}\\Omega
+        
+        where
+
+        * :math:`h_2` is the mesh displacement trial function
+        * :math:`\\hat{h}_2` is the mesh displacement test function
+
+        """
+
         # --- Harmonics mesh displacement distribution ---
         if (mesh_displacement_laplace == "full"):
             eq_surf_move = dot(nabla_grad(self._h2), nabla_grad(self.h2_))*dx
@@ -449,11 +605,14 @@ class Equations:
         self.q_ice.assign(project(-k(self.Temp, self.composition)*nabla_grad(self.Temp), self.vCG1))
 
     def solve_Stokes_problem(self, step, FilesClass):
+        """ Solves the Stokes problem.
+        
+        """
         # self.heating.assign(project(tidal_heating(self.visc), self.sDG0))
 
         # --- If there is the phase transition, estimate first phase change velocity
         #     as it is in the stabilization term ---
-        if (BC_vel_bot == "free_surface" and phase_transition == True):
+        if (BC_Stokes_problem[1][0] == "free_surface" and phase_transition == True):
             self.compute_u()
         
         Picard_iter = 0
@@ -476,7 +635,7 @@ class Equations:
                 self.p_out, self.v_out = self.pv.split(True)
         
 
-            if (BC_vel_top == "free_surface" and BC_vel_bot == "free_surface"):
+            if (BC_Stokes_problem[0][0] == "free_surface" and BC_Stokes_problem[1][0] == "free_surface"):
 
                 if (stokes_null == "volume"):
                     self.v_aver.assign(assemble(self.v_out[1]*dx)/assemble(self.unit_scalar*dx))
@@ -501,7 +660,7 @@ class Equations:
                 if (rank == 0):
                     print("\n\tPicard iteration %d. Error = %6.3E\n" % (Picard_iter, v_error))
 
-                    file = open("data_"+name+"/picard_iter.dat","a")
+                    file = open("data_" + self.name + "/picard_iter.dat","a")
                     file.write(("%.5E\t"+"%.5E"+"\n")%(step + Picard_iter/Picard_iter_max, v_error))    
                     file.close() 
                 
@@ -522,7 +681,9 @@ class Equations:
             self.dt.assign(time_step(self.mesh, self.v_k, self.v_mesh, H_max, self.composition))        
 
         if (plasticity == True):
-            self.stress_dev_inv.assign(project(2.0*self.visc*strain_rate_II(self.v_out), self.sDG0))
+            # --- Estimate the viscous stress ---
+            get_new_stress(self.mesh, self.Temp, self.xm, self.stress_dev_inv, self.strain_rate_inv, self.composition, step, Picard_iter)
+
             self.yield_stress.assign(project(sigma_yield(self.p_k, self.plastic_strain, self.composition), self.sDG0)) 
             self.yield_function.assign(project(self.stress_dev_inv - self.yield_stress, self.sDG0))
 
@@ -548,12 +709,19 @@ class Equations:
             print("Done.")
 
     def update_viscosity(self, step, Picard_iter):
-        """ Updates the viscosity fuction """
+        """ 
+        :var: Updates the viscosity fuction 
+        """
+
         self.visc.assign(project(eta_eff(self.p_k, self.Temp, self.strain_rate_inv,\
                                         self.stress_dev_inv, self.xm, self.composition, self.plastic_strain,\
                                         step, Picard_iter, self.stress_dev_inv_k, self.dt, self.sr_min), self.sDG0))
 
     def compute_u(self):
+        """ 
+        :var: Updates the heat fluxes :math:`\\boldsymbol{q}_{\\rm ice}`  and :math:`\\boldsymbol{q}_{\\rm ocean}` and computes
+              new phase transition velocity :math:`\\boldsymbol{u}`\ .
+        """
         self.q_ice.assign(project(-k(self.Temp, self.composition)*nabla_grad(self.Temp), self.vCG1))
         self.q_ice_aver.assign(assemble(sqrt(dot(self.q_ice, self.q_ice))*self.ds(2))/assemble(self.unit_scalar*self.ds(2)))
         self.q_water.assign(project((self.q_ice_aver - DAL_factor*self.h_bot)*self.e_z, self.vCG1))
@@ -561,22 +729,22 @@ class Equations:
 
     def solve_topography_evolution(self):
         # --- Compute the top topography evolution ---
-        if (BC_vel_top == "free_surface"):
+        if (BC_Stokes_problem[0][0] == "free_surface"):
             self.solver_free_surface_top.solve()
 
         # --- Upwards-facing normal vector to the bottom boundary ---
         self.n_bot.assign(project((self.e_z - self.e_x*dot(nabla_grad(self.h_bot), self.e_x))/sqrt(1.0 + dot(nabla_grad(self.h_bot), self.e_x)**2), self.vCG1))
 
         # --- Compute the velocity of the phase change ---
-        if (BC_vel_bot == "free_surface" and phase_transition == True):
+        if (BC_Stokes_problem[1][0] == "free_surface" and phase_transition == True):
             self.compute_u()
 
         # --- Compute the bottom topography evolution ---
-        if (BC_vel_bot == "free_surface" or phase_transition == True):
+        if (BC_Stokes_problem[1][0] == "free_surface" or phase_transition == True):
             self.solver_free_surface_bot.solve()
 
         # --- Compute the mesh displecement distribution ---
-        if (BC_vel_top == "free_surface" or BC_vel_bot == "free_surface"):    
+        if (BC_Stokes_problem[0][0] == "free_surface" or BC_Stokes_problem[1][0] == "free_surface"):    
             self.h2_top.assign(self.h_top - self.h_top_k)
             self.h2_bot.assign(self.h_bot - self.h_bot_k)
 

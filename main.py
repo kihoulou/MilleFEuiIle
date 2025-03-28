@@ -48,28 +48,29 @@ MPI.barrier(comm)
 # --- Import classes ---
 MeshClass       = MeshModule()
 ElemClass       = Elements(MeshClass)
-TracersClass    = Tracers(MeshClass, ElemClass)
+FilesClass      = SaveFiles(MeshClass, ElemClass)
+TracersClass    = Tracers(MeshClass, ElemClass, FilesClass)
 MeltingClass    = Melting(MeshClass, ElemClass, TracersClass)
 
-FilesClass      = SaveFiles(MeshClass, ElemClass)
-EqClass         = Equations(MeshClass, ElemClass, TracersClass, MeltingClass)
+EqClass         = Equations(MeshClass, ElemClass, TracersClass, MeltingClass, FilesClass)
 
 exit()
-# --- Save the source code ---
-if (rank == 0):
-    os.system("cp  main.py data_" + name + "/source_code")
-    os.system("cp  m_*.py data_" + name + "/source_code")
 
 t = Constant(0.0)
 step = 0
+
+if (termination_condition[0] == "time"):
+    t_end = termination_condition[1]
+else:
+    step_end = termination_condition[1]
 
 if (output_frequency[1] == "time"):
     time_output  = np.linspace(0, t_end, int(t_end/output_frequency[1] + 1))
 else:
     time_output  = None
-step_output = 0
 
-        
+step_output = 0
+    
 if (reload_HDF5 == True):
     FilesClass.Load_HDF5(t, EqClass.dt, EqClass.Temp_k)
     EqClass.Temp.assign(EqClass.Temp_k)
@@ -77,7 +78,7 @@ if (reload_HDF5 == True):
 else:
     EqClass.top_length.assign(assemble(EqClass.unit_scalar*MeshClass.ds(1)))
     if (solve_energy_problem == True):
-        EqClass.Temp.assign(project(Expression("Tb - x[1]/h*(Tb-Ts)", Tb=T_bot, Ts=T_top, h=height, degree=1), ElemClass.sCG2))             
+        EqClass.Temp.assign(project(Expression("Tb - x[1]/h*(Tb-Ts)", Tb=BC_heat_transfer[1][1], Ts=BC_heat_transfer[0][1], h=height, degree=1), ElemClass.sCG2))             
         if (init_cond_profile == True):
             EqClass.solve_initial_heat_equation()
         
@@ -102,7 +103,9 @@ for i in range(len(materials)):
 # 6/ update tracer-carried functions
 # 7/ save data
 
-while (float(t) < t_end):
+while ((termination_condition[0] == "time" and float(t) < t_end)
+       or (termination_condition[0] == "step" and step < step_end)):
+    
     # --- Solve Stokes problem ---
     EqClass.solve_Stokes_problem(step, FilesClass)
 

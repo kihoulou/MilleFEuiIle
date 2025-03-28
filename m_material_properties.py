@@ -4,6 +4,18 @@ import os
 from m_parameters import *
 
 def density(Temp, composition, xm):
+        """Evaluates the density :math:`\\rho`\ . 
+
+        :param Temp: temperature (:math:`T`\ )
+        :param composition: material composition (:math:`C`\ )
+        :param xm: melt fraction (:math:`\chi`\ )
+
+        :returns:
+           * For ice :math:`\\rho = (1 - \\chi)\\rho_i(T) + \\chi\\rho_w`
+           * Another user-defined function of temperature, composition and melt fraction. 
+             Formulas used in the benchmarks are predefined and commented.
+
+        """
         # Density of ice following Rottger et al. (1994) and Feistel and Wagner (2006)
         a0 = 128.2147
         a3 = -1.3152e-6
@@ -41,9 +53,25 @@ def density(Temp, composition, xm):
         # return 2700.0
         
 def k(Temp, composition):
+        """Evaluates the thermal conductivity :math:`k`\ . 
+
+        :param Temp: temperature (:math:`T`\ )
+        :param composition: material composition (:math:`C`\ )
+
+        :returns: A user-defined function of temperature and composition.
+
+        """
         return 2.3 #567.0/Temp
 
 def cp(Temp, composition):
+        """Evaluates the specific heat capacity at constant pressure :math:`c_p`\ . 
+
+        :param Temp: temperature (:math:`T`\ )
+        :param composition: material composition (:math:`C`\ )
+
+        :returns: A user-defined function of temperature and composition.
+
+        """
         return 185.0 + 7.037*Temp
 
 # def shear_modulus(composition):

@@ -10,6 +10,16 @@ rank = MPI.rank(comm)
 size = MPI.size(comm)
 
 def Output_Timing(step, step_output, t, time_output):
+    """Determines whether to save the data in the current time step.
+
+    :param step: order number of the current step in the time loop (increases by 1 with every time step)
+    :param step_output: order number of the output (increases by 1 with every output)
+    :param t: time
+    :param time_output: list of time values at which the data will be saved.
+
+    :returns: ``True`` or ``False`` and an updated value of the ``step_output`` parameter.
+
+    """
     
     if (step == 1\
         or (output_frequency[0] == "steps" and step % output_frequency[1] == 0)\
@@ -23,8 +33,20 @@ def Output_Timing(step, step_output, t, time_output):
     return step_output, value
 
 def time_step(mesh, v, v_mesh, H_max, composition):
+    """Determines the length of the next time step :math:`\\Delta t`\ .
+
+    :param mesh: computational mesh
+    :param v: material velocity (:math:`v`\ )
+    :param v_mesh: mesh displacement velocity (:math:`v_{mesh}`\ )
+    :param H_max: peak tidal heating
+    :param composition: material composition
+
+    :returns: ahoj
+    """
+    
 
     if (time_step_strategy == "constant"):
+        """Returns a constant time step. """
         return dt_const
     
     if (time_step_strategy == "domain"):

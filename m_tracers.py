@@ -7,7 +7,7 @@ rank = MPI.rank(comm)
 size = MPI.size(comm)
 
 class Tracers:
-    def __init__(self, MeshClass, ElemClass):        
+    def __init__(self, MeshClass, ElemClass, FilesClass):        
         self.mesh = MeshClass.mesh
         self.moving_mesh = MeshClass.moving_mesh
         
@@ -23,6 +23,8 @@ class Tracers:
         self.composition        = ElemClass.composition
         self.height_fraction    = ElemClass.height_fraction
         self.mesh_ranks    = ElemClass.mesh_ranks
+
+        self.name = FilesClass.name
 
         # --- Determine whether to use tracers or not ---
         self.use_tracers = False
@@ -57,7 +59,7 @@ class Tracers:
                 self.load_tracers()
 
     def save_tracers(self, step):
-        file = open("data_"+name+"/tracers/step_" + str(step) + ".dat","a")
+        file = open("data_" + self.name + "/tracers/step_" + str(step) + ".dat","a")
         self.save_header_tracer(file)
         for j in range (0, len(self.tracers)): 
             if (j not in self.vacancy):
@@ -122,8 +124,8 @@ class Tracers:
 
             # --- If the cell lays in a region that should be without tracers, skip the rest ---
             skip_cell = False
-            if (allow_empty_cells == True):
-                for empty in empty_region:
+            if (empty_cells_allowed == True):
+                for empty in empty_cells_region:
                     if (empty[0] == "rectangle"):
                             if ((empty[1] <= centroid.x() <= empty[2]) and (empty[3] <= centroid.y() <= empty[4])):
                                 skip_cell = True
@@ -609,7 +611,7 @@ class Tracers:
         case = MPI.sum(comm, case)
 
         if (rank == 0):
-            file = open("data_" + name + "/empty_cells.dat", "a")
+            file = open("data_" + self.name + "/empty_cells.dat", "a")
             file.write(("%.5E\t" + 2*"%d\t" + "\n")%(float(t)/time_units, step, case))
             file.close()
             
@@ -629,8 +631,8 @@ class Tracers:
                     skip_cell = True
 
             # Empty cell case
-            if (allow_empty_cells == True):
-                for empty in empty_region:
+            if (empty_cells_allowed == True):
+                for empty in empty_cells_region:
                     if (empty[0] == "rectangle"):
                             if ((empty[1] <= centroid.x() <= empty[2]) and (empty[3] <= centroid.y() <= empty[4])):
                                 skip_cell = True
@@ -640,7 +642,7 @@ class Tracers:
 
             # --- If the cell is empty (and is not supposed to be), save the info into a file ---
             if (len(self.tracers_in_cells[j]) == 0):
-                file = open("data_" + name + "/empty_cells.dat", "a")
+                file = open("data_" + self.name + "/empty_cells.dat", "a")
                 file.write((5*"\t" + 2*"%d\t" + 2*"%.3E\t" + "\n")%(j, rank, centroid.x(), centroid.y()))
                 file.close()
 

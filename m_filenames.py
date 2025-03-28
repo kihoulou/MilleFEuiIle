@@ -10,7 +10,7 @@ class SaveFiles:
 
         self.name = name
         if (Path("data_" + name).is_dir() == True):
-            if (override_directory == True):
+            if (protect_directory == False):
                     if (rank == 0):
                         os.system("rm data_" + name + "/HDF5/*")
                         os.system("rm data_" + name + "/paraview/*.xdmf")
@@ -28,6 +28,11 @@ class SaveFiles:
         for dir in directories:
             Path("data_" + self.name + "/" + dir).mkdir(parents = True, exist_ok = True)
 
+        # --- Save the source code ---
+        if (rank == 0):
+            os.system("cp  main.py data_" + name + "/source_code")
+            os.system("cp  m_*.py data_" + name + "/source_code")
+            
         self.sDG0 = ElemClass.sDG0
         self.Temp = ElemClass.Temp
         self.v_k = ElemClass.v_k
@@ -55,13 +60,14 @@ class SaveFiles:
         self.eta_v = ElemClass.eta_v
 
         self.mesh = MeshClass.mesh
-        self.Save_Mesh = MeshClass.Save_Mesh
+        self.boundary_parts = MeshClass.boundary_parts
+        self.save_mesh()
 
         self.Paraview_Dict = {}
         self.Function_Dict = {}
 
         # --- Initialize the text files ---
-        file = open("data_" + name + "/statistics.dat","w")
+        file = open("data_" + self.name + "/statistics.dat","w")
 
         if (time_units == 1.0):
             file.write((2*"%s")%("Time (-)\t\t", "Step\t"))
@@ -74,20 +80,20 @@ class SaveFiles:
         file.write("\n")
         file.close()
 
-        file = open("data_" + name + "/empty_cells.dat", "w")
+        file = open("data_" + self.name + "/empty_cells.dat", "w")
         file.close()
 
         # --- Initialize the HDF5 files ---
         self.data_file = {}
-        self.data_file['data'] = HDF5File(comm, "data_" + name + "/HDF5/data.h5", "w")
+        self.data_file['data'] = HDF5File(comm, "data_" + self.name + "/HDF5/data.h5", "w")
 
-        stat_hdf5 = open("data_"+name+"/HDF5/data_timestamp.dat", 'w')
+        stat_hdf5 = open("data_" + self.name + "/HDF5/data_timestamp.dat", 'w')
         stat_hdf5.write((4*"%s\t"+"\n")%("# HDF5", "step", "time step\t", "time"))    
         stat_hdf5.close()
 
         # --- Initialize Paraview files and fill dictionaries ---
         for i in range(len(Paraview_Output)):
-            self.Paraview_Dict[Paraview_Output[i]] = XDMFFile(comm,"data_" + name + "/paraview/" + Paraview_Output[i] + ".xdmf")
+            self.Paraview_Dict[Paraview_Output[i]] = XDMFFile(comm,"data_" + self.name + "/paraview/" + Paraview_Output[i] + ".xdmf")
             self.Paraview_Dict[Paraview_Output[i]].parameters["flush_output"] = True
             self.Paraview_Dict[Paraview_Output[i]].parameters["rewrite_function_mesh"] = True
 
@@ -165,7 +171,7 @@ class SaveFiles:
     
     def write_statistic(self, t, step, stat_output, **kwargs):
         
-        file = open("data_" + name + "/statistics.dat", "a")
+        file = open("data_" + self.name + "/statistics.dat", "a")
         if (rank == 0):
             file.write(("%.5E\t\t" + "%d\t\t")%(float(t)/time_units, step))
 
@@ -214,7 +220,7 @@ class SaveFiles:
         self.data_file['data'].flush()
 
         if (rank == 0):
-            stat_hdf5 = open("data_"+name+"/HDF5/data_timestamp.dat", 'a')
+            stat_hdf5 = open("data_" + self.name + "/HDF5/data_timestamp.dat", 'a')
             stat_hdf5.write((2*"%d\t\t"+2*"%.5E\t\t"+"\n")%(step_output - 1, step, float(dt)/time_units, float(t)/time_units))
             stat_hdf5.close()
 
@@ -244,3 +250,22 @@ class SaveFiles:
             t.assign(float(sline[3])*time_units)
 
         file_time.close()
+
+    def save_mesh(self):
+        mesh_file = XDMFFile(comm, "data_" + self.name + "/HDF5/mesh.xdmf")
+        mesh_file.write(self.mesh)
+        mesh_file.close()
+
+        file = File("data_" + self.name + "/HDF5/subdomains.pvd")
+        file.write(self.boundary_parts)
+
+    def Save_Mesh(self, step_output):
+        mesh_file = HDF5File(comm, "data_" + self.name + "/HDF5/meshes/mesh_" + str(int(step_output - 1)) + ".h5", "w")
+        mesh_file.write(self.mesh, "/mesh")
+        mesh_file.close()
+
+    def Load_Mesh(self):
+        self.mesh = Mesh()
+        self.mesh_file = HDF5File(comm, "data_" + self.name + "/HDF5/meshes/mesh_" + str(int(reload_HDF5)) + ".h5", "r")
+        self.mesh_file.read(mesh, "/mesh", True)
+        self.mesh_file.close()
