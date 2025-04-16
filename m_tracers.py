@@ -187,10 +187,8 @@ class Tracers:
             for k in range(0, lim + 1):
                 for l in range(0, lim + 1):
 
-                    # Move it slightly away from the diagonal
-                    eps = length/1e7
-                    x_pos = origin_x + sign*k*dx + eps
-                    y_pos = origin_y - sign*l*dz - eps
+                    x_pos = origin_x + sign*k*dx + dx/2.0
+                    y_pos = origin_y - sign*l*dz - dz/2.0
 
                     if (Cell(self.mesh, j).contains(Point(x_pos, y_pos)) == True):
 

@@ -31,18 +31,18 @@ def density(Temp, composition, xm):
         # return -1*composition[0] 
 
         # --- Shear bands benchmark ---
-        # return rho_s
+        return rho_s
 
-        # --- Ice with melt ---
-        return (1.0-xm)*rho_s*mm/VV + xm*rho_m
+        # # --- Ice with melt ---
+        # return (1.0-xm)*rho_s*mm/VV + xm*rho_m
 
-        # --- Ice ---
-        if (len(materials) == 0):
-                # With melt
-                return (1.0-xm)*rho_s*mm/VV + xm*rho_m
-        else:
-                # With salt and melt
-                return ((1.0-xm)*rho_s*mm/VV + xm*rho_m)*(composition[0] + 1.005*composition[1])
+        # # --- Ice ---
+        # if (len(materials) == 0):
+        #         # With melt
+        #         return (1.0-xm)*rho_s*mm/VV + xm*rho_m
+        # else:
+        #         # With salt and melt
+        #         return ((1.0-xm)*rho_s*mm/VV + xm*rho_m)*(composition[0] + 1.005*composition[1])
 
         # return rho_s*(1.0-alpha_exp*(Temp-T_ref)) + xm*rho_s*(1.0-rho_s/rho_l) # Tobie et al. (2003)
         # return (1.0-(xm+5e-2))*rho_s*(1.0-alpha_exp*(Temp-T_ref)) + (xm+5e-2)*rho_m # Klara PhD. (2015)
@@ -61,7 +61,7 @@ def k(Temp, composition):
         :returns: A user-defined function of temperature and composition.
 
         """
-        return 2.3 #567.0/Temp
+        return 567.0/Temp
 
 def cp(Temp, composition):
         """Evaluates the specific heat capacity at constant pressure :math:`c_p`\ . 

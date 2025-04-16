@@ -96,11 +96,11 @@ def sigma_yield(p_k, plastic_strain, composition):
     # angle = int_friction_angle*(np.pi/180.0)
     # value = p_k*sin(angle) + cohesion(plastic_strain)*cos(angle)
 
-    # angle = (int_friction_angle*composition[0] + int_friction_angle2*composition[1])*(np.pi/180.0)
-    # value = p_k*sin(angle) + cohesion(plastic_strain)*cos(angle)
+    angle = (int_friction_angle*composition[0] + int_friction_angle2*composition[1])*(np.pi/180.0)
+    value = p_k*sin(angle) + cohesion(plastic_strain)*cos(angle)
 
-    friction_coef = 0.6
-    value = (cohesion(plastic_strain) + friction_coef*(p_k))*cos(atan(friction_coef))
+    # friction_coef = 0.6
+    # value = (cohesion(plastic_strain) + friction_coef*(p_k))*cos(atan(friction_coef))
 
     return conditional(lt(value, yield_stress_min), yield_stress_min, conditional(gt(value, yield_stress_max), yield_stress_max, value))
 
@@ -369,19 +369,14 @@ def eta_eff(p_k, Temp, strain_rate, stress, xm, composition, plastic_strain, ste
 
     # --- Ductile viscosity ---
     eta_v = eta_ductile(Temp, strain_rate, stress, xm, composition, step, Picard_iter, eval_type)
-            
-    # return conditional(lt(eta_p, eta_v), eta_p, eta_v)
-    return conditional(lt(eta_p, eta_min_plast), eta_min_plast, conditional(lt(eta_p, eta_v), eta_p, eta_v))
-    # eta_vp =  1.0/(1.0/eta_v + 1.0/eta_p + 1.0/eta_max)
-    # return conditional(lt(eta_vp, eta_min_plast), eta_min_plast, eta_vp)
 
-    # if (plasticity == True):
-    #     if (step == 0 and Picard_iter == 0):
-    #         return conditional(lt(eta_v, eta_max), eta_v, eta_max)
-    #     else:
-    #         return conditional(lt(eta_p, eta_min_plast), eta_min_plast, conditional(lt(eta_p, eta_v), eta_p, eta_v))
-    # else:
-    #     return conditional(lt(eta_v, eta_max), eta_v, eta_max)
+    if (plasticity == True):
+        if (step == 0 and Picard_iter == 0):
+            return conditional(lt(eta_v, eta_max), eta_v, eta_max)
+        else:
+            return conditional(lt(eta_p, eta_min_plast), eta_min_plast, conditional(lt(eta_p, eta_v), eta_p, eta_v))
+    else:
+        return conditional(lt(eta_v, eta_max), eta_v, eta_max)
 
 def eta(Q, A, n, m, Temp, strain_rate_inv, stress_inv):
     # See Gerya (2009) chapter 6.2 for derivation of prefactors
