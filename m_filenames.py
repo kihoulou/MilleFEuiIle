@@ -56,8 +56,12 @@ class SaveFiles:
         self.plastic_strain = ElemClass.plastic_strain
         self.yield_stress = ElemClass.yield_stress
         self.stress_dev_inv = ElemClass.stress_dev_inv
+        self.stress_dev_inv_k = ElemClass.stress_dev_inv_k
         self.yield_function = ElemClass.yield_function
         self.eta_v = ElemClass.eta_v
+        self.density = ElemClass.density
+        self.z_function = ElemClass.z_function
+        self.shear_modulus = ElemClass.shear_modulus
 
         self.mesh = MeshClass.mesh
         self.boundary_parts = MeshClass.boundary_parts
@@ -72,7 +76,7 @@ class SaveFiles:
         if (time_units == 1.0):
             file.write((2*"%s")%("Time (-)\t\t", "Step\t"))
         else:
-            file.write((2*"%s")%("Time ("+str(time_units)+")\t\t", "Step\t"))
+            file.write((2*"%s")%("Time (" + time_units_string + ")\t\t", "Step\t"))
 
         for arg in stat_header:
             file.write(("%s\t\t")%(arg))
@@ -162,12 +166,24 @@ class SaveFiles:
 
             if (Paraview_Output[i] == "stress_dev_inv"):
                 self.Function_Dict[Paraview_Output[i]] = self.stress_dev_inv
+            
+            if (Paraview_Output[i] == "stress_dev_inv_k"):
+                self.Function_Dict[Paraview_Output[i]] = self.stress_dev_inv_k
 
             if (Paraview_Output[i] == "yield_function"):
                 self.Function_Dict[Paraview_Output[i]] = self.yield_function
 
             if (Paraview_Output[i] == "eta_v"):
                 self.Function_Dict[Paraview_Output[i]] = self.eta_v
+
+            if (Paraview_Output[i] == "density"):
+                self.Function_Dict[Paraview_Output[i]] = self.density
+
+            if (Paraview_Output[i] == "z_function"):
+                self.Function_Dict[Paraview_Output[i]] = self.z_function
+
+            if (Paraview_Output[i] == "shear_modulus"):
+                self.Function_Dict[Paraview_Output[i]] = self.shear_modulus
     
     def write_statistic(self, t, step, stat_output, **kwargs):
         
@@ -194,6 +210,11 @@ class SaveFiles:
             if (arg == "avg_h_bot"):
                 if (rank == 0):
                     file.write(("%.5E\t\t")%(kwargs[arg]))
+
+            if (arg == "h_top_max"):
+                value = MPI.max(self.mesh.mpi_comm(), kwargs[arg].vector().max()) 
+                if (rank == 0):
+                    file.write(("%.5E\t\t")%(value))
 
             if (arg == "time"):
                 value = kwargs["time"]

@@ -3,7 +3,7 @@ import numpy
 import os 
 from m_parameters import *
 
-def density(Temp, composition, xm):
+def rho(Temp, composition, xm):
         """Evaluates the density :math:`\\rho`\ . 
 
         :param Temp: temperature (:math:`T`\ )
@@ -31,8 +31,10 @@ def density(Temp, composition, xm):
         # return -1*composition[0] 
 
         # --- Shear bands benchmark ---
-        return rho_s
+        # return rho_s
 
+        # --- Rising plume benchmark ---
+        return rho_mantle*composition[0] + rho_lid*composition[1] + rho_plume*composition[2]
         # # --- Ice with melt ---
         # return (1.0-xm)*rho_s*mm/VV + xm*rho_m
 
@@ -73,9 +75,3 @@ def cp(Temp, composition):
 
         """
         return 185.0 + 7.037*Temp
-
-# def shear_modulus(composition):
-#     # --- Rising plume benchmark ---
-#     # return G_mantle**composition[0] * G_lid**composition[1] * G_plume**composition[2]
-
-#     return 5e10

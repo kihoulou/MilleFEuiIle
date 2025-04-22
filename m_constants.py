@@ -1,4 +1,6 @@
-"""Useful physical constants."""
+"""
+Useful physical constants.
+"""
 
 # Time related constants
 yr  = 3600.0*24*365.25

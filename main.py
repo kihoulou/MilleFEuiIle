@@ -19,7 +19,7 @@ from m_constants import *
 from m_parameters import *
 from m_interpolation import *
 from m_material_properties import *
-from m_boudnary_conditions import *
+from m_boundary_conditions import *
 
 comm = MPI.comm_world
 rank = MPI.rank(comm)
@@ -45,6 +45,9 @@ if (rank == 0):
 
 MPI.barrier(comm)
 
+t = Constant(0.0)
+step = 0
+
 # --- Import classes ---
 MeshClass       = MeshModule()
 ElemClass       = Elements(MeshClass)
@@ -52,19 +55,15 @@ FilesClass      = SaveFiles(MeshClass, ElemClass)
 TracersClass    = Tracers(MeshClass, ElemClass, FilesClass)
 MeltingClass    = Melting(MeshClass, ElemClass, TracersClass)
 
-EqClass         = Equations(MeshClass, ElemClass, TracersClass, MeltingClass, FilesClass)
+EqClass         = Equations(MeshClass, ElemClass, TracersClass, MeltingClass, FilesClass, t)
 
-exit()
-
-t = Constant(0.0)
-step = 0
 
 if (termination_condition[0] == "time"):
     t_end = termination_condition[1]
 else:
     step_end = termination_condition[1]
 
-if (output_frequency[1] == "time"):
+if (output_frequency[0] == "time"):
     time_output  = np.linspace(0, t_end, int(t_end/output_frequency[1] + 1))
 else:
     time_output  = None
@@ -160,6 +159,7 @@ while ((termination_condition[0] == "time" and float(t) < t_end)
     # --- Update stress ---
     if (elasticity == True):
         EqClass.update_stress()
+        EqClass.rotate_and_interpolate_stress()
 
     # --- Postprocessing ---
     EqClass.top_length.assign(assemble(EqClass.unit_scalar*MeshClass.ds(1)))
@@ -180,7 +180,7 @@ while ((termination_condition[0] == "time" and float(t) < t_end)
 
     code_now        = time.time()
     total_time      = (code_now - code_start)/3600.0
-    timestep_time   = (code_now - code_now_k)/3600.0
+    timestep_time   = (code_now - code_now_k)
     code_now_k      = time.time()
 
     FilesClass.write_statistic(t, step, stat_output,\
@@ -188,6 +188,7 @@ while ((termination_condition[0] == "time" and float(t) < t_end)
                             q_top       = EqClass.q_top,\
                             v           = EqClass.v_k,\
                             avg_h_bot   = EqClass.h_bot_aver,\
+                            h_top_max   = EqClass.h_top,\
                             time        = total_time,\
                             timestep    = timestep_time)
     

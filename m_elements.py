@@ -67,6 +67,7 @@ class Elements:
         self.surface_material   = Function(self.sDG0)
         self.h_top              = Function(self.sDG0)
         self.mesh_ranks         = Function(self.sDG0)
+        self.density            = Function(self.sDG0)
 
         self.stress_dev_inv      = Function(self.sDG0)
         self.stress_dev_inv_k     = Function(self.sDG0)
@@ -78,6 +79,7 @@ class Elements:
         self.stress_dev_xx     = Function(self.sDG0)
         self.stress_dev_xz      = Function(self.sDG0)
         self.z_function          = Function(self.sDG0)
+        self.shear_modulus      = Function(self.sDG0)
 
         self.strain_rate_tensor = Function(self.tDG0)
         self.stress_dev_tensor = Function(self.tDG0)
