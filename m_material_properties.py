@@ -34,9 +34,10 @@ def rho(Temp, composition, xm):
         # return rho_s
 
         # --- Rising plume benchmark ---
-        return rho_mantle*composition[0] + rho_lid*composition[1] + rho_plume*composition[2]
+        # return rho_mantle*composition[0] + rho_lid*composition[1] + rho_plume*composition[2]
+
         # # --- Ice with melt ---
-        # return (1.0-xm)*rho_s*mm/VV + xm*rho_m
+        return (1.0-xm)*rho_s*mm/VV + xm*rho_m
 
         # # --- Ice ---
         # if (len(materials) == 0):

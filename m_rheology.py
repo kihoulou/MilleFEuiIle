@@ -51,8 +51,8 @@ def strain_rate_II(v):
 
     return sqrt(inner(sym(nabla_grad(v)), sym(nabla_grad(v))) / 2.0)
 
-def max_function(a,b):
-    return (a+b)/2.0+abs(a-b)/2.0
+def max_function(a, b):
+    return (a + b)/2.0 + abs(a - b)/2.0
 
 # --- Plasticity ---
 def cohesion(plastic_strain):
@@ -96,11 +96,11 @@ def sigma_yield(p_k, plastic_strain, composition):
     # angle = int_friction_angle*(np.pi/180.0)
     # value = p_k*sin(angle) + cohesion(plastic_strain)*cos(angle)
 
-    angle = (int_friction_angle*composition[0] + int_friction_angle2*composition[1])*(np.pi/180.0)
-    value = p_k*sin(angle) + cohesion(plastic_strain)*cos(angle)
+    # angle = (int_friction_angle*composition[0] + int_friction_angle2*composition[1])*(np.pi/180.0)
+    # value = p_k*sin(angle) + cohesion(plastic_strain)*cos(angle)
 
-    # friction_coef = 0.6
-    # value = (cohesion(plastic_strain) + friction_coef*(p_k))*cos(atan(friction_coef))
+    friction_coef = 0.6
+    value = (cohesion(plastic_strain) + friction_coef*(p_k))*cos(atan(friction_coef))
 
     return conditional(lt(value, yield_stress_min), yield_stress_min, conditional(gt(value, yield_stress_max), yield_stress_max, value))
 
@@ -121,7 +121,7 @@ def plastic_strain_integration(mesh, tracers_in_cells, tracers, dt, yield_functi
                 tracers[tracer_no][6] = tracers[tracer_no][6]/(1.0 + float(dt)/healing_timescale)
 
 # --- Elasticity ---
-def z(visc, dt):
+def z(visc, shear_modulus, dt):
     """Computes the viscoelastic parameter :math:`Z`\ . 
 
     :param visc: viscosity (:math:`\\eta`\ )
@@ -132,13 +132,13 @@ def z(visc, dt):
     """
     return dt/(dt + visc/shear_modulus)
 
-def get_new_stress(mesh, Temp, xm, stress_invariant, strain_rate_invariant, composition, step, Picard_iter):
+def get_new_stress(mesh, Temp, xm, stress_dev_inv, stress_dev_inv_k, strain_rate_invariant, composition, shear_modulus, step, Picard_iter, dt):
     """Evaluates the deviatoric stress invariant assuming fully ductile viscosity. 
 
     :param mesh: computational domain
     :param Temp: temperature
     :param xm: melt fraction
-    :param stress_invariant: second invariant of the deviatoric part of the Cauchy stress tensor
+    :param stress_dev_inv: second invariant of the deviatoric part of the Cauchy stress tensor
     :param strain_rate_invariant: second invariant of the strain rate tensor
 
     :returns:
@@ -151,70 +151,70 @@ def get_new_stress(mesh, Temp, xm, stress_invariant, strain_rate_invariant, comp
     eval_type = "local"
     for j in range(mesh.num_cells()):
         centroid = Cell(mesh, j).midpoint()
-        temp_cell = Temp(Point(centroid.x(),centroid.y()))
-        eps_cell = strain_rate_invariant(Point(centroid.x(),centroid.y()))
-        tau_cell = stress_invariant(Point(centroid.x(),centroid.y()))
-        xm_cell = xm(Point(centroid.x(),centroid.y()))
         
+        temp_cell = Temp(Point(centroid.x(), centroid.y()))
+        sigma_II_cell = stress_dev_inv(Point(centroid.x(), centroid.y()))
+        eps_II_cell = strain_rate_invariant(Point(centroid.x(), centroid.y()))
+        
+        
+        xm_cell = xm(Point(centroid.x(), centroid.y()))
         comp_cell = []
         for i in range (len(composition)):
-            comp_cell.append(composition[i](Point(centroid.x(),centroid.y())))
+            comp_cell.append(composition[i](Point(centroid.x(), centroid.y())))
+        
+        visc_cell = eta_ductile(temp_cell, eps_II_cell, sigma_II_cell, xm_cell, comp_cell, step, Picard_iter, eval_type)
+        
+        if (elasticity == True):
+            sigma_II_k_cell = stress_dev_inv_k(Point(centroid.x(), centroid.y()))
+            shear_mod_cell = shear_modulus(Point(centroid.x(), centroid.y()))
+            z_cell = z(visc_cell, shear_mod_cell, dt)
 
-        visc_cell = eta_ductile(temp_cell, eps_cell, tau_cell, xm_cell, comp_cell, step, Picard_iter, eval_type)
+            new_stress = 2.0*z_cell*visc_cell*eps_II_cell + (1.0 - z_cell)*sigma_II_k_cell
+        else:
+            new_stress = 2.0*visc_cell*eps_II_cell
 
-        new_stress = 2.0*visc_cell*eps_cell
         ranks.append(new_stress)
         
     ranks = numpy.array(ranks)                                                            
-    stress_invariant.vector().set_local(ranks)
+    stress_dev_inv.vector().set_local(ranks)
 
-def get_new_stress_iter(mesh, Temp, xm, stress_dev_inv, stress_dev_inv_k, strain_rate_inv, step, iter, dt):
+def get_new_stress_iter(mesh, Temp, xm, stress_dev_inv, stress_dev_inv_k, strain_rate_inv, composition, shear_modulus, step, Picard_iter, dt):
     ranks = []
     eval_type = "local"
 
     for j in range(mesh.num_cells()):
         centroid    = Cell(mesh, j).midpoint()
-        temp_cell   = Temp(Point(centroid.x(),centroid.y()))
+
+        temp_cell       = Temp(Point(centroid.x(), centroid.y()))
+        sigma_II_cell   = stress_dev_inv(Point(centroid.x(), centroid.y()))
+        sigma_II_k_cell = stress_dev_inv_k(Point(centroid.x(), centroid.y()))
+        eps_II_cell     = strain_rate_inv(Point(centroid.x(), centroid.y()))
+
+        xm_cell = xm(Point(centroid.x(),centroid.y()))
+        sm_cell = shear_modulus(Point(centroid.x(),centroid.y()))
+
+        comp_cell = []
+        for i in range (len(composition)):
+            comp_cell.append(composition[i](Point(centroid.x(), centroid.y())))
+
+        visc_cell = eta_ductile(temp_cell, eps_II_cell, sigma_II_cell, xm_cell, comp_cell, step, Picard_iter, eval_type)
+
+        stress_l = sigma_II_k_cell
+        stress_r = sigma_II_k_cell
         
-        stress_dev_inv_cell    = stress_dev_inv(Point(centroid.x(),centroid.y()))
-        stress_dev_inv_k_cell  = stress_dev_inv_k(Point(centroid.x(),centroid.y()))
-        strain_rate_inv_cell    = strain_rate_inv(Point(centroid.x(),centroid.y()))
-
-        xm_cell     = xm(Point(centroid.x(),centroid.y()))
-
-        # --- First estimate of viscosity from previous stress ---
-        if (step == 0 or (step == 1 and iter == 0) and (reload_HDF5 == False or reload_tracers == False)):
-            visc_cell = 1.0/(1.0/eta_diff(temp_cell)  +  1.0/eta_max)*exp(-45.0*xm_cell)
-        else:
-            visc_cell = 1.0/(1.0/eta_diff(temp_cell)\
-                            + 1.0/eta_disl(temp_cell, strain_rate_inv_cell, stress_dev_inv_cell, eval_type)\
-                            + 1.0/(eta_BS(temp_cell, strain_rate_inv_cell, stress_dev_inv_cell)\
-                                + eta_GBS(temp_cell, strain_rate_inv_cell, stress_dev_inv_cell, eval_type))\
-                            + 1.0/eta_max)*exp(-45.0*xm_cell)
-
-        stress_l = stress_dev_inv_k_cell
-        stress_r = stress_dev_inv_k_cell
-
-        z_cell = float(dt)/(float(dt) + visc_cell/shear_modulus)
-        new_stress = 2.0*z_cell*visc_cell*strain_rate_inv_cell + (1.0-z_cell)*stress_dev_inv_k_cell
-
-        if (new_stress < stress_dev_inv_cell):
+        z_cell = float(dt)/(float(dt) + visc_cell/sm_cell)
+        
+        new_stress = 2.0*z_cell*visc_cell*eps_II_cell + (1.0 - z_cell)*sigma_II_k_cell
+        
+        if (new_stress < sigma_II_k_cell):
             stress_l = new_stress
-        if (new_stress > stress_dev_inv_cell):
+        if (new_stress > sigma_II_k_cell):
             stress_r = new_stress
 
-        # --- Second estimate of viscosity from the new stress ---
-        if (step == 0 or (step == 1 and iter == 0)):
-            visc_cell = 1.0/(1.0/eta_diff(temp_cell)  +  1.0/eta_max)*exp(-45.0*xm_cell)
-        else:
-            visc_cell = 1.0/(1.0/eta_diff(temp_cell)\
-                        + 1.0/eta_disl(temp_cell, strain_rate_inv_cell, new_stress, eval_type)\
-                        + 1.0/(eta_BS(temp_cell, strain_rate_inv_cell, new_stress,)\
-                               + eta_GBS(temp_cell, strain_rate_inv_cell, new_stress, eval_type))\
-                         + 1.0/eta_max)*exp(-45.0*xm_cell)
+        visc_cell = eta_ductile(temp_cell, eps_II_cell, new_stress, xm_cell, comp_cell, step, Picard_iter, eval_type)
 
-        z_cell = float(dt)/(float(dt) + visc_cell/shear_modulus)
-        new_stress = 2.0*z_cell*visc_cell*strain_rate_inv_cell + (1.0-z_cell)*stress_dev_inv_k_cell
+        z_cell = float(dt)/(float(dt) + visc_cell/sm_cell)
+        new_stress = 2.0*z_cell*visc_cell*eps_II_cell + (1.0-z_cell)*sigma_II_k_cell
 
         if (new_stress < stress_l):
             stress_l = new_stress
@@ -224,21 +224,13 @@ def get_new_stress_iter(mesh, Temp, xm, stress_dev_inv, stress_dev_inv_k, strain
         # --- We have left and right boundary, let's iterate ---
         error = 1
         k = 0
-        # for k in range(0,iter_max):
+
         while (error > stress_iter_error and k < 50):
             stress_c = (stress_l + stress_r)/2.0
+            visc_cell = eta_ductile(temp_cell, eps_II_cell, stress_c, xm_cell, comp_cell, step, Picard_iter, eval_type)
 
-            if (step == 0 or (step == 1 and iter == 0)):
-                visc_cell = 1.0/(1.0/eta_diff(temp_cell)  +  1.0/eta_max)*exp(-45.0*xm_cell)
-            else:
-                visc_cell = 1.0/(1.0/eta_diff(temp_cell)\
-                            + 1.0/eta_disl(temp_cell, strain_rate_inv_cell, stress_c, eval_type)\
-                            + 1.0/(eta_BS(temp_cell, strain_rate_inv_cell, stress_c)\
-                                   + eta_GBS(temp_cell, strain_rate_inv_cell, stress_c, eval_type))\
-                            + 1.0/eta_max)*exp(-45.0*xm_cell)
-
-            z_cell = float(dt)/(float(dt) + visc_cell/shear_modulus)
-            new_stress = 2.0*z_cell*visc_cell*strain_rate_inv_cell + (1.0-z_cell)*stress_dev_inv_k_cell
+            z_cell = float(dt)/(float(dt) + visc_cell/sm_cell)
+            new_stress = 2.0*z_cell*visc_cell*eps_II_cell + (1.0 - z_cell)*sigma_II_k_cell
 
             # Criteria based only on the invariant
             if (new_stress < stress_c):
@@ -256,37 +248,43 @@ def get_new_stress_iter(mesh, Temp, xm, stress_dev_inv, stress_dev_inv_k, strain
     ranks = numpy.array(ranks)
     stress_dev_inv.vector().set_local(ranks)
 
-def get_mechanisms(mesh,Temp,stress_invariant,old_stress_invariant,strain_rate_invariant,mechanisms,p_k, yield_stress, dt, sr_min):
-    ranks = []
-    eval_type = "local"
+# def get_mechanisms(mesh,Temp,stress_invariant,old_stress_invariant,strain_rate_invariant,mechanisms,p_k, yield_stress, dt, sr_min):
+#     ranks = []
+#     eval_type = "local"
 
-    for j in range(mesh.num_cells()):
-        centroid = Cell(mesh, j).midpoint()
+#     for j in range(mesh.num_cells()):
+#         centroid = Cell(mesh, j).midpoint()
 
-        temp_cell = Temp(Point(centroid.x(),centroid.y()))
-        eps_cell = strain_rate_invariant(Point(centroid.x(),centroid.y()))
-        tau_cell = stress_invariant(Point(centroid.x(),centroid.y()))
-        tau_old_cell = old_stress_invariant(Point(centroid.x(),centroid.y()))
-        p_cell = p_k(Point(centroid.x(),centroid.y()))
-        ys_cell = yield_stress(Point(centroid.x(),centroid.y()))
+#         temp_cell = Temp(Point(centroid.x(),centroid.y()))
+#         eps_cell = strain_rate_invariant(Point(centroid.x(),centroid.y()))
+#         tau_cell = stress_invariant(Point(centroid.x(),centroid.y()))
+#         tau_old_cell = old_stress_invariant(Point(centroid.x(),centroid.y()))
+#         p_cell = p_k(Point(centroid.x(),centroid.y()))
+#         ys_cell = yield_stress(Point(centroid.x(),centroid.y()))
 
-        visc_diff = eta_diff(temp_cell)
-        visc_disl = eta_disl(temp_cell, eps_cell, tau_cell, eval_type)
-        visc_GBS_BS = eta_GBS(temp_cell, eps_cell, tau_cell,eval_type) + eta_BS(temp_cell, eps_cell, tau_cell, p_cell)
+#         visc_diff = eta_diff(temp_cell)
+#         visc_disl = eta_disl(temp_cell, eps_cell, tau_cell, eval_type)
+#         visc_GBS_BS = eta_GBS(temp_cell, eps_cell, tau_cell,eval_type) + eta_BS(temp_cell, eps_cell, tau_cell, p_cell)
         
-        if (plasticity==True):
-            visc_plast = 0.5*ys_cell/max_function(eps_cell - (ys_cell - tau_old_cell)/(2.0*shear_modulus*float(dt)), float(sr_min)*1e-6)
-            array_mech = [[1.0, visc_diff],[2.0, visc_GBS_BS],[3.0, visc_disl],[4.0, visc_plast],[5.0, eta_max]]
-        else:
-            array_mech = [[1.0, visc_diff],[2.0, visc_GBS_BS],[3.0, visc_disl],[4.0, eta_max]]
+#         if (plasticity==True):
+#             visc_plast = 0.5*ys_cell/max_function(eps_cell - (ys_cell - tau_old_cell)/(2.0*shear_modulus*float(dt)), float(sr_min)*1e-6)
+#             array_mech = [[1.0, visc_diff],[2.0, visc_GBS_BS],[3.0, visc_disl],[4.0, visc_plast],[5.0, eta_max]]
+#         else:
+#             array_mech = [[1.0, visc_diff],[2.0, visc_GBS_BS],[3.0, visc_disl],[4.0, eta_max]]
 
-        array_mech.sort(key=lambda x: x[1])
+#         array_mech.sort(key=lambda x: x[1])
 
-        ranks.append(array_mech[0][0])
+#         ranks.append(array_mech[0][0])
     
-    ranks = numpy.array(ranks)
-    mechanisms.vector().set_local(ranks)
+#     ranks = numpy.array(ranks)
+#     mechanisms.vector().set_local(ranks)
 
+def G(composition):
+    # --- Rising plume benchmark ---
+    # return G_mantle**composition[0] * G_lid**composition[1] * G_plume**composition[2]
+
+    # --- Ice shell ---
+    return 3.52e9
 
 def eta_ductile(Temp, strain_rate, stress, xm, composition, step, Picard_iter, eval_type):
     """Evaluates the ductile viscosity based on the ``viscosity_type`` choice in ``m_parameters`` module. 
@@ -336,11 +334,16 @@ def eta_ductile(Temp, strain_rate, stress, xm, composition, step, Picard_iter, e
                     + 1.0/eta_max)*exp(-45.0*xm)
             
     if (viscosity_type == "composition"):
-        eta_v = 1e5**composition[0]*1.0**composition[1]
+        # --- Shear bands benchmark ---
+        # eta_v = 1e5**composition[0]*1.0**composition[1]
+
+        # --- Rising plume benchmark ---
+        # eta_v = eta_mantle**composition[0] * eta_lid**composition[1] * eta_plume**composition[2]
+        pass
 
     return eta_v
 
-def eta_eff(p_k, Temp, strain_rate, stress, xm, composition, plastic_strain, step, Picard_iter, stress_dev_inv_k, dt, sr_min):
+def eta_eff(p_k, Temp, strain_rate, stress, xm, composition, plastic_strain, step, Picard_iter, stress_dev_inv_k, shear_modulus, dt, sr_min):
     """Evaluates the 'visco-plastic' viscosity :math:`\\eta_{vp}`\ . 
 
     :param mesh: computational domain
@@ -359,33 +362,41 @@ def eta_eff(p_k, Temp, strain_rate, stress, xm, composition, plastic_strain, ste
     
     eval_type = "mesh"
 
-    # --- Plastic viscosity ---
-    if (plasticity == True):
-        if (elasticity == False):
-            eta_p = 0.5*sigma_yield(p_k, plastic_strain, composition)/strain_rate
-        else:
-            eta_p = 0.5*sigma_yield(p_k, plastic_strain, composition)/max_function(strain_rate\
-            - (sigma_yield(p_k, plastic_strain, composition) - stress_dev_inv_k)/(2.0*shear_modulus*dt), sr_min*1e-6)
-
     # --- Ductile viscosity ---
     eta_v = eta_ductile(Temp, strain_rate, stress, xm, composition, step, Picard_iter, eval_type)
 
     if (plasticity == True):
+
         if (step == 0 and Picard_iter == 0):
+            # --- Visco-(elasto)-plastic rheology in the very first time step ---
             return conditional(lt(eta_v, eta_max), eta_v, eta_max)
+
         else:
+            
+            # --- Plastic viscosity ---
+            if (elasticity == False or (elasticity == True and step == 0)):
+                eta_p = 0.5*sigma_yield(p_k, plastic_strain, composition)/strain_rate
+                
+            else:
+                eta_p = 0.5*sigma_yield(p_k, plastic_strain, composition)/max_function(strain_rate\
+                - (sigma_yield(p_k, plastic_strain, composition) - stress_dev_inv_k)/(2.0*shear_modulus*dt), sr_min*1e-6)
+
+            # --- Visco-(elasto)-plastic rheology after the very first time step ---
             return conditional(lt(eta_p, eta_min_plast), eta_min_plast, conditional(lt(eta_p, eta_v), eta_p, eta_v))
+
     else:
+        # --- Viscous rheology only ---
         return conditional(lt(eta_v, eta_max), eta_v, eta_max)
 
 def eta(Q, A, n, m, Temp, strain_rate_inv, stress_inv):
     # See Gerya (2009) chapter 6.2 for derivation of prefactors
     # The correction applies also to diffusion creep, see the function below and eq. (6.8b) in Gerya (2009)
-    # if (viscosity_from == "strain_rate"):
+
+    # --- Strain rate-based formula ---
     if (elasticity == False):
         return 1.0/(3.0**((n+1)/(2.0*n))*2.0**((n-1.0)/n))*A**(-1.0/n)*d_grain**(m/n)*strain_rate_inv**((1.0-n)/n)*exp(Q/(n*R_gas*Temp))
         
-    # if (viscosity_from == "stress"):
+    # --- Stress-based formula ---
     if (elasticity == True):
         return 1.0/(3.0**((n+1)/2.0))*A**(-1.0)*d_grain**m*stress_inv**(1.0-n)*exp(Q/(R_gas*Temp))
 

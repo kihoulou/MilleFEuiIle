@@ -140,49 +140,49 @@ def stress_interpolation(mesh, tracers_in_cells, tracers, stress_tensor):
             ranks.append(0.0)
             
         # --- Linear averaging of the stress ---
-        t_xx = 0.0
-        t_xz = 0.0
+        # t_xx = 0.0
+        # t_xz = 0.0
 
-        if (len(tracers_in_cells[j])!=0):
-            for i in range(0,len(tracers_in_cells[j])):
-                tracer_no = tracers_in_cells[j][i]
-
-                t_xx += tracers[tracer_no][5]
-                t_xz += tracers[tracer_no][6]
-                weight_cell += 1.0 
-
-            ranks.append(t_xx/weight_cell)
-            ranks.append(t_xz/weight_cell)
-            ranks.append(t_xz/weight_cell)
-            ranks.append(-t_xx/weight_cell)
-
-        # --- Quasi-geometric averaging of the stress ---
-        # t_xx_pos = 0.0
-        # t_xx_neg = 0.0
-
-        # t_xz_pos = 0.0
-        # t_xz_neg = 0.0
-        
         # if (len(tracers_in_cells[j])!=0):
         #     for i in range(0,len(tracers_in_cells[j])):
         #         tracer_no = tracers_in_cells[j][i]
-                
-        #         if (tracers[tracer_no][5] > 0.0):
-        #             t_xx_pos += ln(tracers[tracer_no][5])/ln(10.0)
-        #         elif (tracers[tracer_no][5] < 0.0):
-        #             t_xx_neg += ln(-tracers[tracer_no][5])/ln(10.0)
-                
-        #         if (tracers[tracer_no][6] > 0.0):
-        #             t_xz_pos += ln(tracers[tracer_no][6])/ln(10.0)
-        #         elif (tracers[tracer_no][6] < 0.0):
-        #             t_xz_neg += ln(-tracers[tracer_no][6])/ln(10.0)
 
+        #         t_xx += tracers[tracer_no][4]
+        #         t_xz += tracers[tracer_no][5]
         #         weight_cell += 1.0 
 
-        #     ranks.append(0.5*(10**(t_xx_pos/weight_cell) - 10**(t_xx_neg/weight_cell)))
-        #     ranks.append(0.5*(10**(t_xz_pos/weight_cell) - 10**(t_xz_neg/weight_cell)))
-        #     ranks.append(0.5*(10**(t_xz_pos/weight_cell) - 10**(t_xz_neg/weight_cell)))
-        #     ranks.append(-0.5*(10**(t_xx_pos/weight_cell) - 10**(t_xx_neg/weight_cell)))
+        #     ranks.append(t_xx/weight_cell)
+        #     ranks.append(t_xz/weight_cell)
+        #     ranks.append(t_xz/weight_cell)
+        #     ranks.append(-t_xx/weight_cell)
+
+        # --- Quasi-geometric averaging of the stress ---
+        t_xx_pos = 0.0
+        t_xx_neg = 0.0
+
+        t_xz_pos = 0.0
+        t_xz_neg = 0.0
+        
+        if (len(tracers_in_cells[j])!=0):
+            for i in range(0,len(tracers_in_cells[j])):
+                tracer_no = tracers_in_cells[j][i]
+                
+                if (tracers[tracer_no][4] > 0.0):
+                    t_xx_pos += ln(tracers[tracer_no][4])/ln(10.0)
+                elif (tracers[tracer_no][4] < 0.0):
+                    t_xx_neg += ln(-tracers[tracer_no][4])/ln(10.0)
+                
+                if (tracers[tracer_no][5] > 0.0):
+                    t_xz_pos += ln(tracers[tracer_no][5])/ln(10.0)
+                elif (tracers[tracer_no][5] < 0.0):
+                    t_xz_neg += ln(-tracers[tracer_no][5])/ln(10.0)
+
+                weight_cell += 1.0 
+
+            ranks.append(0.5*(10**(t_xx_pos/weight_cell) - 10**(t_xx_neg/weight_cell)))
+            ranks.append(0.5*(10**(t_xz_pos/weight_cell) - 10**(t_xz_neg/weight_cell)))
+            ranks.append(0.5*(10**(t_xz_pos/weight_cell) - 10**(t_xz_neg/weight_cell)))
+            ranks.append(-0.5*(10**(t_xx_pos/weight_cell) - 10**(t_xx_neg/weight_cell)))
 
     ranks = numpy.array(ranks) 
     stress_tensor.vector().set_local(ranks)
@@ -202,8 +202,8 @@ def stress_update(mesh, tracers_in_cells, tracers, visc, strain_rate_tensor, z_f
             e_xz = strain_rate_tensor(Point(px, pz))[1]
             e_zz = strain_rate_tensor(Point(px, pz))[3]
 
-            tracers[tracer_no][5]  += z_tracer*(2*visc_tracer*e_xx - tracers[tracer_no][5])
-            tracers[tracer_no][6]  += z_tracer*(2*visc_tracer*e_xz - tracers[tracer_no][6])
+            tracers[tracer_no][4]  += z_tracer*(2*visc_tracer*e_xx - tracers[tracer_no][4])
+            tracers[tracer_no][5]  += z_tracer*(2*visc_tracer*e_xz - tracers[tracer_no][5])
  
 def stress_reduction(mesh, tracers_in_cells, tracers, yield_function, yield_stress, stress_invariant):
     for j in range(mesh.num_cells()):
@@ -219,8 +219,8 @@ def stress_reduction(mesh, tracers_in_cells, tracers, yield_function, yield_stre
                 yield_stress_tracer = yield_stress(Point(px,py))
                 stress_invariant_tracer = stress_invariant(Point(px,py))
 
+                tracers[tracer_no][4]  = tracers[tracer_no][4]*yield_stress_tracer/stress_invariant_tracer
                 tracers[tracer_no][5]  = tracers[tracer_no][5]*yield_stress_tracer/stress_invariant_tracer
-                tracers[tracer_no][6]  = tracers[tracer_no][6]*yield_stress_tracer/stress_invariant_tracer
 
 def stress_rotation(mesh, tracers_in_cells, tracers, vorticity_tensor, dt):
     for j in range(mesh.num_cells()):
@@ -230,11 +230,11 @@ def stress_rotation(mesh, tracers_in_cells, tracers, vorticity_tensor, dt):
             px = tracers[tracer_no][0]
             pz = tracers[tracer_no][1]
 
-            t_xx = tracers[tracer_no][5]
-            t_xz = tracers[tracer_no][6]
+            t_xx = tracers[tracer_no][4]
+            t_xz = tracers[tracer_no][5]
 
             W_xz = vorticity_tensor(Point(px,pz))[1]
 
             # t_old = t - dt*(t.W - W.t) 
-            tracers[tracer_no][5] += - float(dt)*(2*t_xz*W_xz)
-            tracers[tracer_no][6] += + float(dt)*(2*t_xx*W_xz)
+            tracers[tracer_no][4] += - float(dt)*(2*t_xz*W_xz)
+            tracers[tracer_no][5] += + float(dt)*(2*t_xx*W_xz)

@@ -616,13 +616,14 @@ class Equations:
         # --- After the tracers are advected (from the previous loop) ---
         # scalar_interpolation(self.mesh, self.tracers_in_cells, self.tracers, 6, "ARITM", self.plastic_strain)
 
-        # if (step == 0):
+        if (elasticity == True):
+            self.shear_modulus.assign(project(G(self.composition), self.sDG0))
+
         self.update_viscosity(step, Picard_iter)
 
         if (elasticity == True):
-            self.shear_modulus.assign(project(G(self.composition), self.sDG0))
             self.z_function.assign(project(z(self.visc, self.shear_modulus, self.dt), self.sDG0))
-        
+
         # --- Picard iterations of Stokes solver ---  
         while (Picard_iter < Picard_iter_max and v_error > Picard_iter_error):
 
@@ -668,7 +669,15 @@ class Equations:
                 self.p_k.assign(self.p_out)
                 self.v_k.assign(self.v_out)
 
+                
+
+                if (elasticity == True and viscosity_type == "GK_2001"):
+                    get_new_stress_iter(self.mesh, self.Temp, self.xm, self.stress_dev_inv,\
+                                        self.stress_dev_inv_k, self.strain_rate_inv, self.composition,\
+                                        self.shear_modulus, step, Picard_iter, self.dt)
+
                 Picard_iter += 1
+                
                 self.update_viscosity(step, Picard_iter)
                 if (elasticity == True):
                     self.z_function.assign(project(z(self.visc, self.shear_modulus, self.dt), self.sDG0))
@@ -687,7 +696,9 @@ class Equations:
             self.dt.assign(time_step(self.mesh, self.v_k, self.v_mesh, H_max, self.composition, self.Temp, self.unit_scalar, self.t))        
 
         # --- Estimate the visco-elastic stress ---
-        get_new_stress(self.mesh, self.Temp, self.xm, self.stress_dev_inv, self.stress_dev_inv_k, self.strain_rate_inv, self.composition, self.shear_modulus, step, Picard_iter, self.dt)
+        get_new_stress(self.mesh, self.Temp, self.xm, self.stress_dev_inv,\
+                    self.stress_dev_inv_k, self.strain_rate_inv, self.composition,\
+                    self.shear_modulus, step, Picard_iter, self.dt)
 
         if (plasticity == True):
             self.yield_stress.assign(project(sigma_yield(self.p_k, self.plastic_strain, self.composition), self.sDG0)) 
@@ -695,10 +706,6 @@ class Equations:
 
             # --- Integrate plastic strain on tracers ---
             plastic_strain_integration(self.mesh, self.tracers_in_cells, self.tracers, self.dt, self.yield_function, self.strain_rate_inv)
-        
-        # if (elasticity == True):
-        #     self.update_stress()
-            
             
     def update_stress(self):
         # --- Update stress on tracers ---
@@ -724,6 +731,7 @@ class Equations:
         """ 
         :var: Updates the viscosity fuction 
         """
+        self.sr_min.assign(MPI.min(comm, self.strain_rate_inv.vector().min()))
 
         self.visc.assign(project(eta_eff(self.p_k, self.Temp, self.strain_rate_inv,\
                                         self.stress_dev_inv, self.xm, self.composition, self.plastic_strain,\

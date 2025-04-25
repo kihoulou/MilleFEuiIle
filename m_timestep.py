@@ -32,7 +32,7 @@ def Output_Timing(step, step_output, t, time_output):
 
     return step_output, value
 
-def time_step(mesh, v, v_mesh, H_max, composition):
+def time_step(mesh, v, v_mesh, H_max, composition, Temp, unit_scalar, t):
     """Determines the length of the next time step :math:`\\Delta t`\ .
 
     :param mesh: computational mesh
@@ -46,7 +46,9 @@ def time_step(mesh, v, v_mesh, H_max, composition):
     
 
     if (time_step_strategy == "constant"):
-        """Returns a constant time step. """
+        """
+        Returns a constant time step. 
+        """
         return dt_const
     
     if (time_step_strategy == "domain"):
@@ -65,22 +67,33 @@ def time_step(mesh, v, v_mesh, H_max, composition):
 
         # --- Convective time step ---
         dt_conv = cfl*x_min/v_max
-        dt_list.append(dt_conv)
+        # dt_list.append(dt_conv)
+
+        # --- Time-scaled time step ---
+        if (scaled_time_step == True):
+            # Useful for problems with logaritmic time evolution, such as benchmark Patocka et al. (2017)
+            dt_time = float(t)/time_step_scaling
+            dt_list.append(dt_time)
+
+        # --- Fixed maximum time step ---
+        # if (maximum_time_step == True):
+        #     dt_list.append(dt_max)
 
         # --- Conductive time step ---
         if (solve_energy_problem == True):
-            dt_cond = cfl*x_min**2*rho_s*cp((T_bot+T_top)/2.0, composition)/k((T_bot+T_top)/2.0 , composition)
+            temp_aver = assemble(Temp*dx)/assemble(unit_scalar*dx)
+            dt_cond = cfl*x_min**2*rho_s*cp(temp_aver, composition)/k(temp_aver, composition)
             dt_list.append(dt_cond)
 
         # --- Mesh displacement time step ---
-        if (BC_vel_bot == "free_surface" or BC_vel_top == "free_surface"):
+        if (BC_Stokes_problem[0][0] == "free_surface" or BC_Stokes_problem[1][0] == "free_surface"):
             v_max_mesh = MPI.max(mesh.mpi_comm(), np.abs(v_mesh.vector().get_local()).max()) 
             dt_mesh = cfl*(height/1e3)/(v_max_mesh + 1e-15)
             dt_list.append(dt_mesh)
         
         # --- Internal heating time step ---
         if (tidal_dissipation == True):
-            dt_H = cfl*rho_s*cp(T_bot, composition)*dT_max/H_max
+            dt_H = cfl*rho_s*cp(temp_aver, composition)*dT_max/H_max
             dt_list.append(dt_H)
 
         return min(dt_list)

@@ -57,7 +57,6 @@ MeltingClass    = Melting(MeshClass, ElemClass, TracersClass)
 
 EqClass         = Equations(MeshClass, ElemClass, TracersClass, MeltingClass, FilesClass, t)
 
-
 if (termination_condition[0] == "time"):
     t_end = termination_condition[1]
 else:

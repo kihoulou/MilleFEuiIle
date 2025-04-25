@@ -28,7 +28,7 @@ size = MPI.size(comm)
 #----------------------------------------------------------------------
 
 # --- Name of the directory with results ---
-name = "ice_shell_VEP"
+name = "cut-off"+str(int(sys.argv[1]))
 """
 :var: Name of the directory with the results. The directory with the results will be named ``data_name``.
 
@@ -69,7 +69,7 @@ time_units_string = "Myr"
 """
 
 # --- Output method for Paraview, HDF5 and  tracers ---
-output_frequency = ["steps", 1] # e.g. ["steps", 10] or ["time", 100*kyr]
+output_frequency = ["time", 100*kyr] # e.g. ["steps", 10] or ["time", 100*kyr]
 """ 
 :var: Frequency for the output to ParaView, HDF5 data and mesh, and tracer files. The first time step is always saved, the
       last one if the simulation succesfully ends through the termination criteria.
@@ -260,7 +260,7 @@ Whether to reset time when ``reloading_HDF5 = True``.
 #----------------------------------------------------------------------
 
 # --- Criterion for ending the simulation, e.g. ["time", 1*Myr] or ["step", 1000] ---
-termination_condition = ["time", 2*Myr]
+termination_condition = ["time", 1*Myr]
 """ Time or step criterion for ending the simulation naturally.
 
 :var:  
@@ -751,7 +751,7 @@ dT_max = 4.0
 # "cell" computes timestep in each cell and chooses the minimal
 
 # "constant" prescribes a constant timestep
-dt_const = 5*kyr
+dt_const = 1.0*kyr
 
 maximum_time_step = True
 time_step_scaling = 25 # dt = t / time_step_scaling
@@ -807,11 +807,7 @@ alpha_exp = 1.6e-4	# K^-1
 
 # === PHYSICAL INGREDIENTS ===
 # --- Rheology ---
-if (str(sys.argv[1]) == "V"):
-   elasticity = False
-
-if (str(sys.argv[1]) == "VE"):
-   elasticity = True
+elasticity = True
 """
 :var: Whether the material behaves as a Maxwell visco-elastic medium.
 
@@ -911,7 +907,7 @@ d_grain = 1.0e-3
 """
 
 # --- Upper cut-off viscosity ---
-eta_max = 1e23
+eta_max = 10.0**int(sys.argv[1])
 """
 :var: Upper cut-off value for viscoplastic viscosity :math:`\\eta_{vp}`\ .  See :func:`m_rheology.eta_ductile`.
 
