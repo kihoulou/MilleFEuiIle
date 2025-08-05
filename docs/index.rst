@@ -3,12 +3,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-MilleFEuiIle  documentation
-=============================
+.. MilleFEuiIle  documentation
+.. =============================
 
-.. image:: _static/mf.png
+.. .. image:: _static/mf.png
 
-Welcome to the *MilleFEuiIle*'s documentation!
+.. Welcome to the *MilleFEuiIle*'s documentation!
 
 The scope of *MilleFEuiIle*
 ----------------------------
@@ -26,6 +26,8 @@ evolution of ice shells of icy bodies. Combining finite element method and Lagra
 * long-term tectonic deformation with visco-elasto-plastic rheology
 * melt generation and transport inside the ice shell (using Rayleigh-Taylor approximation)
 
+|
+
 Installation and running
 -------------------------
 
@@ -36,10 +38,13 @@ For running, simply type into the command line::
 
    mpirun -n 6 main.py > log.out 2> log_e.out&
 
-.. Pre- and post-process scripts
-.. ~~~~~~~~~~~~~~~~~~~~~~~~~
+|
 
-.. something something
+Visualization
+-------------------------
+For visualization of the mesh data, use `Paraview <https://www.paraview.org/>`_ or build on the demo matplotlib scripts in :ref:`demos`.
+
+|
 
 Support
 --------------------------
@@ -48,10 +53,13 @@ This page was last updated on |today| and is still under development.
 
 With any questions or issues, please contact me at `kihoulou@karel.troja.cuni.cz <mailto:kihoulou@karel.troja.cuni.cz>`_\ .
 
+|
+
+Explore
+--------------------------
 .. toctree::
    :maxdepth: 2
    :includehidden:
 
    demos
-   support
    modules

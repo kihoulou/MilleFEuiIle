@@ -25,6 +25,8 @@ extensions = ["sphinx.ext.autodoc"]
 
 master_doc = "index"
 
+# # Prevents the TOC to order alphabetically
+# autodoc_member_order = 'bysource'
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
