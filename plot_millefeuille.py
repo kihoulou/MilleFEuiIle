@@ -73,7 +73,7 @@ def plot_scalar(ax, fig, function, mesh, labels, x_range, z_range, font_size):
     cbar.ax.set_yticklabels(c_label, fontsize = font_size)  
     cbar.set_label(c_label_text, fontsize = font_size)   
    
-def plot_streamlines(ax, v, points):
+def compute_streamlines(ax, v, points):
     print("Computing streamlines...")
 
     # --- Forward ---
@@ -142,3 +142,26 @@ def plot_streamlines(ax, v, points):
         ax.plot(trajectory_x, trajectory_y, c = "white", linewidth = "0.5", alpha=0.4)
 
 
+def load_tracers(ax, name, i):
+    print("Plotting tracers...")
+    xx = []
+    yy = []
+    comp_0 = []
+    comp_1 = []
+
+    infile = open("data_"+name+"/tracers/step_"+str(i)+".dat", "r") 
+    lines = infile.readlines() 
+
+    header = True
+    for line in lines:
+        sline = line.split("\t")
+
+        if (header==True):
+            header = False
+            continue
+        
+        if (float(sline[3]) == 1.0):
+            xx.append(float(sline[0]))
+            yy.append(float(sline[1])) 
+
+    ax.scatter(xx, yy,  c = "black", marker=",", s = 1.0, alpha=0.01) 

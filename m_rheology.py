@@ -93,14 +93,14 @@ def sigma_yield(p_k, plastic_strain, composition):
 
     """
 
-    # angle = int_friction_angle*(np.pi/180.0)
-    # value = p_k*sin(angle) + cohesion(plastic_strain)*cos(angle)
+    angle = int_friction_angle*(np.pi/180.0)
+    value = p_k*sin(angle) + cohesion(plastic_strain)*cos(angle)
 
     # angle = (int_friction_angle*composition[0] + int_friction_angle2*composition[1])*(np.pi/180.0)
     # value = p_k*sin(angle) + cohesion(plastic_strain)*cos(angle)
 
-    friction_coef = 0.6
-    value = (cohesion(plastic_strain) + friction_coef*(p_k))*cos(atan(friction_coef))
+    # friction_coef = 0.6
+    # value = (cohesion(plastic_strain) + friction_coef*(p_k))*cos(atan(friction_coef))
 
     return conditional(lt(value, yield_stress_min), yield_stress_min, conditional(gt(value, yield_stress_max), yield_stress_max, value))
 
@@ -328,6 +328,10 @@ def eta_ductile(Temp, strain_rate, stress, xm, composition, step, Picard_iter, e
         if (step == 0 and Picard_iter == 0):
             eta_v =  1.0/(1.0/eta_diff(Temp) + 1.0/eta_max)*exp(-45.0*xm) 
         else:               
+            # eta_v = 1.0/(1.0/eta_diff(Temp)\
+            #         + 1.0/eta_disl(Temp, strain_rate, stress, eval_type)\
+            #         + 1.0/eta_max)*exp(-45.0*xm)
+            
             eta_v = 1.0/(1.0/eta_diff(Temp)\
                     + 1.0/eta_disl(Temp, strain_rate, stress, eval_type)\
                     + 1.0/(eta_GBS(Temp, strain_rate, stress, eval_type) + eta_BS(Temp, strain_rate, stress))\
@@ -382,7 +386,10 @@ def eta_eff(p_k, Temp, strain_rate, stress, xm, composition, plastic_strain, ste
                 - (sigma_yield(p_k, plastic_strain, composition) - stress_dev_inv_k)/(2.0*shear_modulus*dt), sr_min*1e-6)
 
             # --- Visco-(elasto)-plastic rheology after the very first time step ---
-            return conditional(lt(eta_p, eta_min_plast), eta_min_plast, conditional(lt(eta_p, eta_v), eta_p, eta_v))
+            # return conditional(lt(eta_p, eta_min_plast), eta_min_plast, conditional(lt(eta_p, eta_v), eta_p, eta_v))
+
+            # This creates sharper faults ?
+            return 1.0/(1.0/eta_v + 1.0/(eta_p + eta_min_plast) + 1.0/eta_max)
 
     else:
         # --- Viscous rheology only ---
@@ -401,18 +408,26 @@ def eta(Q, A, n, m, Temp, strain_rate_inv, stress_inv):
         return 1.0/(3.0**((n+1)/2.0))*A**(-1.0)*d_grain**m*stress_inv**(1.0-n)*exp(Q/(R_gas*Temp))
 
 def eta_diff(Temp):
-    V_m = 1.97e-5           #m^3
-    D_0v = 9.10e-4          #m^2 s^-1
-    D_0b = 6.4e-4           #m^2 s^-1
-    Q_v = 59.4e3            #J mol^-1
-    Q_b = 49.0e3            #J mol^-1
-    delta= 9.04e-10         #m
+    # V_m = 1.97e-5           #m^3
+    # D_0v = 9.10e-4          #m^2 s^-1
+    # D_0b = 6.4e-4           #m^2 s^-1
+    # Q_v = 59.4e3            #J mol^-1
+    # Q_b = 49.0e3            #J mol^-1
+    # delta= 9.04e-10         #m
 
-    D_v = D_0v*exp(-Q_v/(R_gas*Temp))
-    D_b = D_0b*exp(-Q_b/(R_gas*Temp))
+    # D_v = D_0v*exp(-Q_v/(R_gas*Temp))
+    # D_b = D_0b*exp(-Q_b/(R_gas*Temp))
 
-    # 3/2 come from the scaling between diff. stress, see Eq. (6.8b) in Gerya (2009)
-    return 1.0/(2*(3.0/2.0*14)*V_m)*R_gas*Temp*d_grain**2/(D_v + np.pi*delta*D_b/d_grain)
+    # # 3/2 come from the scaling between diff. stress, see Eq. (6.8b) in Gerya (2009)
+    # return 1.0/(2*(3.0/2.0*14)*V_m)*R_gas*Temp*d_grain**2/(D_v + np.pi*delta*D_b/d_grain)
+
+    Q=60e3          #J/mol
+    A=1.0e-4        #Pa^{-2.4} s^{-1}
+    n=1.0
+    p=0.0           # -
+
+    A1 = A#*3**((n+1)/2.0)/2.0
+    return 0.5*A**(-1/n)*exp(Q/(n*R_gas*Temp))
 
 def eta_disl(Temp, strain_rate_II, stress_II, eval_type):
     """Computes the viscosity resulting from the dislocation creep :math:`\\eta_{disl}`\ . 
