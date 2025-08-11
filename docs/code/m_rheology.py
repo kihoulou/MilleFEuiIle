@@ -28,6 +28,7 @@ def strain_rate_II(v):
     return sqrt(inner(sym(nabla_grad(v)), sym(nabla_grad(v))) / 2.0)
 
 def max_function(a, b):
+
     return (a + b)/2.0 + abs(a - b)/2.0
 
 # --- Plasticity ---
@@ -38,14 +39,14 @@ def cohesion(plastic_strain):
 
 def sigma_yield(p_k, plastic_strain, composition):
 
-    # angle = int_friction_angle*(np.pi/180.0)
-    # value = p_k*sin(angle) + cohesion(plastic_strain)*cos(angle)
+    angle = int_friction_angle*(np.pi/180.0)
+    value = p_k*sin(angle) + cohesion(plastic_strain)*cos(angle)
 
     # angle = (int_friction_angle*composition[0] + int_friction_angle2*composition[1])*(np.pi/180.0)
     # value = p_k*sin(angle) + cohesion(plastic_strain)*cos(angle)
 
-    friction_coef = 0.6
-    value = (cohesion(plastic_strain) + friction_coef*(p_k))*cos(atan(friction_coef))
+    # friction_coef = 0.6
+    # value = (cohesion(plastic_strain) + friction_coef*(p_k))*cos(atan(friction_coef))
 
     return conditional(lt(value, yield_stress_min), yield_stress_min, conditional(gt(value, yield_stress_max), yield_stress_max, value))
 
@@ -103,6 +104,7 @@ def get_new_stress(mesh, Temp, xm, stress_dev_inv, stress_dev_inv_k, strain_rate
     stress_dev_inv.vector().set_local(ranks)
 
 def get_new_stress_iter(mesh, Temp, xm, stress_dev_inv, stress_dev_inv_k, strain_rate_inv, composition, shear_modulus, step, Picard_iter, dt):
+
     ranks = []
     eval_type = "local"
 
@@ -204,6 +206,7 @@ def get_new_stress_iter(mesh, Temp, xm, stress_dev_inv, stress_dev_inv_k, strain
 #     mechanisms.vector().set_local(ranks)
 
 def G(composition):
+
     # --- Rising plume benchmark ---
     # return G_mantle**composition[0] * G_lid**composition[1] * G_plume**composition[2]
 
@@ -223,14 +226,14 @@ def eta_ductile(Temp, strain_rate, stress, xm, composition, step, Picard_iter, e
         if (step == 0 and Picard_iter == 0):
             eta_v =  1.0/(1.0/eta_diff(Temp) + 1.0/eta_max)*exp(-45.0*xm) 
         else:               
-            eta_v = 1.0/(1.0/eta_diff(Temp)\
-                    + 1.0/eta_disl(Temp, strain_rate, stress, eval_type)\
-                    + 1.0/eta_max)*exp(-45.0*xm)
-            
             # eta_v = 1.0/(1.0/eta_diff(Temp)\
             #         + 1.0/eta_disl(Temp, strain_rate, stress, eval_type)\
-            #         + 1.0/(eta_GBS(Temp, strain_rate, stress, eval_type) + eta_BS(Temp, strain_rate, stress))\
             #         + 1.0/eta_max)*exp(-45.0*xm)
+            
+            eta_v = 1.0/(1.0/eta_diff(Temp)\
+                    + 1.0/eta_disl(Temp, strain_rate, stress, eval_type)\
+                    + 1.0/(eta_GBS(Temp, strain_rate, stress, eval_type) + eta_BS(Temp, strain_rate, stress))\
+                    + 1.0/eta_max)*exp(-45.0*xm)
             
     if (viscosity_type == "composition"):
         # --- Shear bands benchmark ---
@@ -268,11 +271,15 @@ def eta_eff(p_k, Temp, strain_rate, stress, xm, composition, plastic_strain, ste
             # --- Visco-(elasto)-plastic rheology after the very first time step ---
             return conditional(lt(eta_p, eta_min_plast), eta_min_plast, conditional(lt(eta_p, eta_v), eta_p, eta_v))
 
+            # This creates sharper faults ?
+            # return 1.0/(1.0/eta_v + 1.0/(eta_p + eta_min_plast) + 1.0/eta_max)
+
     else:
         # --- Viscous rheology only ---
         return conditional(lt(eta_v, eta_max), eta_v, eta_max)
 
 def eta(Q, A, n, m, Temp, strain_rate_inv, stress_inv):
+
     # See Gerya (2009) chapter 6.2 for derivation of prefactors
     # The correction applies also to diffusion creep, see the function below and eq. (6.8b) in Gerya (2009)
 
@@ -323,6 +330,7 @@ def eta_disl(Temp, strain_rate_II, stress_II, eval_type):
             return eta(Q_below, A_below, n, p, Temp, strain_rate_II, stress_II)
 
 def eta_GBS(Temp, strain_rate_II, stress_II, eval_type):
+    
     n = 1.8           # -
     p = 1.4           # -
     T_crit = 255      # K
@@ -347,9 +355,10 @@ def eta_GBS(Temp, strain_rate_II, stress_II, eval_type):
             return eta(Q_below, A_below, n, p, Temp, strain_rate_II, stress_II)    
 
 def eta_BS(Temp, strain_rate_II, stress_II):
-        Q = 60e3          #J/mol
-        A = 2.2e-7        #Pa^{-2.4} s^{-1}
-        n = 2.4           # -
-        p = 0.0           # -
 
-        return eta(Q, A, n, p, Temp, strain_rate_II, stress_II)
+    Q = 60e3          #J/mol
+    A = 2.2e-7        #Pa^{-2.4} s^{-1}
+    n = 2.4           # -
+    p = 0.0           # -
+
+    return eta(Q, A, n, p, Temp, strain_rate_II, stress_II)

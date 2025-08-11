@@ -7,12 +7,12 @@
 <meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
 <meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>MilleFEuiIle documentation</title>
-<meta content="MilleFEuiIle documentation" property="og:title"/>
-<meta content="MilleFEuiIle documentation" name="twitter:title"/>
+<title>The scope of MilleFEuiIle | MilleFEuiIle  documentation</title>
+<meta content="The scope of MilleFEuiIle | MilleFEuiIle  documentation" property="og:title"/>
+<meta content="The scope of MilleFEuiIle | MilleFEuiIle  documentation" name="twitter:title"/>
 <link href="_static/pygments.css?v=e72c8e07" rel="stylesheet" type="text/css"/>
 <link href="_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
-<link href="_static/custom.css?v=ed219b08" rel="stylesheet" type="text/css"/>
+<link href="_static/custom.css?v=a3a74d27" rel="stylesheet" type="text/css"/>
 <link href="_static/mf.png" rel="icon"/>
 <link href="search.html" rel="search" title="Search"/>
 <link href="genindex.html" rel="index" title="Index"/>
@@ -75,10 +75,13 @@
 <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
 <ul>
 <li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="demos.html"><strong>Demos</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
-<li class="toctree-l2"><a class="reference internal" href="thermalconvection.html">Thermal convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermalconvection.html">1. Thermal convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermalconvectionphase.html">2. Thermal convection with phase transition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermalcompconvection.html">3. Thermo-compositional convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="melting.html">4. Thermal convection with melting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tectonics.html">5. Tectonic extension</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 <li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="modules.html"><strong>MilleFEuille modules</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
 <li class="toctree-l2"><a class="reference internal" href="m_boundary_conditions.html">m_boundary_conditions.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_check.html">m_check.py</a></li>
@@ -96,6 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="m_rheology.html">m_rheology.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_timestep.html">m_timestep.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_tracers.html">m_tracers.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main.py</a></li>
 </ul>
 </li>
 </ul>
@@ -111,12 +115,8 @@
 <main class="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
 <div class="w-full min-w-0 mx-auto">
 <div id="content" role="main">
-<section id="millefeuiile-documentation">
-<h1>MilleFEuiIle  documentation<a class="headerlink" href="#millefeuiile-documentation" title="Link to this heading"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h1>
-<img alt="_images/mf.png" src="_images/mf.png"/>
-<p>Welcome to the <em>MilleFEuiIle</em>’s documentation!</p>
 <section id="the-scope-of-millefeuiile">
-<h2>The scope of <em>MilleFEuiIle</em><a class="headerlink" href="#the-scope-of-millefeuiile" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#the-scope-of-millefeuiile'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
+<h1>The scope of <em>MilleFEuiIle</em><a class="headerlink" href="#the-scope-of-millefeuiile" title="Link to this heading"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h1>
 <p><em>MilleFEuiIle</em> [mil·fœj], a short for <strong>M</strong>ulti-<strong>I</strong>nstrumenta<strong>L</strong> <strong>L</strong>agrangian-<strong>E</strong>ulerian <strong>FE</strong>niCS-<strong>U</strong>sing
 <strong>I</strong>ce-<strong>I</strong> <strong>L</strong>ayer <strong>E</strong>xplorer, is a computational code built
 upon the open-source finite-element python library FEniCS, developed to solve thermo-mechanical
@@ -129,55 +129,244 @@ evolution of ice shells of icy bodies. Combining finite element method and Lagra
 <li><p>long-term tectonic deformation with visco-elasto-plastic rheology</p></li>
 <li><p>melt generation and transport inside the ice shell (using Rayleigh-Taylor approximation)</p></li>
 </ul>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
 </section>
 <section id="installation-and-running">
-<h2>Installation and running<a class="headerlink" href="#installation-and-running" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#installation-and-running'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
+<h1>Installation and running<a class="headerlink" href="#installation-and-running" title="Link to this heading"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h1>
 <p>You can download the most recent version <a class="reference download internal" download="" href="_downloads/998a2ab0d7597164d7ad48f223b53466/MilleFEuiIle.zip"><code class="xref download docutils literal notranslate"><span class="pre">here</span></code></a>.</p>
 <p>For running, simply type into the command line:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">mpirun</span> <span class="o">-</span><span class="n">n</span> <span class="mi">6</span> <span class="n">main</span><span class="o">.</span><span class="n">py</span> <span class="o">&gt;</span> <span class="n">log</span><span class="o">.</span><span class="n">out</span> <span class="mi">2</span><span class="o">&gt;</span> <span class="n">log_e</span><span class="o">.</span><span class="n">out</span><span class="o">&amp;</span>
 </span></code></pre></div>
 </div>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+</section>
+<section id="visualization">
+<h1>Visualization<a class="headerlink" href="#visualization" title="Link to this heading"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h1>
+<p>For visualization of the mesh data, use <a class="reference external" href="https://www.paraview.org/">Paraview</a> or build on the demo matplotlib scripts in <a class="reference internal" href="demos.html#demos"><span class="std std-ref">Demos</span></a>.</p>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
 </section>
 <section id="support">
-<h2>Support<a class="headerlink" href="#support" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#support'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
-<p>This page was last updated on Aug 01, 2025 and is still under development.</p>
+<h1>Support<a class="headerlink" href="#support" title="Link to this heading"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h1>
+<p>Information on the methodology and the benchmarks can be found in my <a class="reference external" href="https://geo.mff.cuni.cz/theses/2025-Kihoulou-PhD.pdf">dissertation thesis.</a>
+This page was last updated on Aug 11, 2025 and is still under development.</p>
 <p>With any questions or issues, please contact me at <a class="reference external" href="mailto:kihoulou%40karel.troja.cuni.cz">kihoulou<span>@</span>karel<span>.</span>troja<span>.</span>cuni<span>.</span>cz</a>.</p>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+</section>
+<section id="explore">
+<h1>Explore<a class="headerlink" href="#explore" title="Link to this heading"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="demos.html"><strong>Demos</strong></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="thermalconvection.html">Thermal convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermalconvection.html">1. Thermal convection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="thermalconvection.html#parameter-file-line-by-line">Parameter file line by line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thermalconvection.html#download">Download</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermalconvectionphase.html">2. Thermal convection with phase transition</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="thermalconvectionphase.html#parameter-file">Parameter file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thermalconvectionphase.html#visualization-of-streamlines">Visualization of streamlines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thermalconvectionphase.html#download">Download</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="thermalcompconvection.html">3. Thermo-compositional convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="melting.html">4. Thermal convection with melting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tectonics.html">5. Tectonic extension</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html"><strong>MilleFEuille modules</strong></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="m_boundary_conditions.html">m_boundary_conditions.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="m_check.html">m_check.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_boundary_conditions.html">m_boundary_conditions.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="m_boundary_conditions.html#m_boundary_conditions.Point_Fixed_Pressure"><code class="docutils literal notranslate"><span class="pre">Point_Fixed_Pressure</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_boundary_conditions.html#m_boundary_conditions.apply_temperature_BC"><code class="docutils literal notranslate"><span class="pre">apply_temperature_BC()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_boundary_conditions.html#m_boundary_conditions.apply_velocity_BC"><code class="docutils literal notranslate"><span class="pre">apply_velocity_BC()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="m_check.html">m_check.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="m_check.html#m_check.check_input_parameters"><code class="docutils literal notranslate"><span class="pre">check_input_parameters()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="m_constants.html">m_constants.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="m_elements.html">m_elements.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="m_equations.html">m_equations.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="m_filenames.html">m_filenames.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="m_interpolation.html">m_interpolation.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="m_incompatibility.html">m_incompatibility.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="m_material_properties.html">m_material_properties.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="m_melting.html">m_melting.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="m_mesh.html">m_mesh.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="m_parameters.html">m_parameters.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="m_postproc.html">m_postproc.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="m_rheology.html">m_rheology.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="m_timestep.html">m_timestep.py</a></li>
-<li class="toctree-l2"><a class="reference internal" href="m_tracers.html">m_tracers.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_elements.html">m_elements.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="m_elements.html#m_elements.Elements"><code class="docutils literal notranslate"><span class="pre">Elements</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="m_equations.html">m_equations.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="m_equations.html#m_equations.Equations"><code class="docutils literal notranslate"><span class="pre">Equations</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="m_filenames.html">m_filenames.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="m_filenames.html#m_filenames.SaveFiles"><code class="docutils literal notranslate"><span class="pre">SaveFiles</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="m_interpolation.html">m_interpolation.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="m_interpolation.html#m_interpolation.composition_interpolation"><code class="docutils literal notranslate"><span class="pre">composition_interpolation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_interpolation.html#m_interpolation.melt_interpolation"><code class="docutils literal notranslate"><span class="pre">melt_interpolation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_interpolation.html#m_interpolation.scalar_interpolation"><code class="docutils literal notranslate"><span class="pre">scalar_interpolation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_interpolation.html#m_interpolation.stress_interpolation"><code class="docutils literal notranslate"><span class="pre">stress_interpolation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_interpolation.html#m_interpolation.stress_reduction"><code class="docutils literal notranslate"><span class="pre">stress_reduction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_interpolation.html#m_interpolation.stress_rotation"><code class="docutils literal notranslate"><span class="pre">stress_rotation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_interpolation.html#m_interpolation.stress_update"><code class="docutils literal notranslate"><span class="pre">stress_update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_interpolation.html#m_interpolation.tracer_count_interpolation"><code class="docutils literal notranslate"><span class="pre">tracer_count_interpolation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_interpolation.html#m_interpolation.tracer_counting"><code class="docutils literal notranslate"><span class="pre">tracer_counting()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="m_incompatibility.html">m_incompatibility.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="m_incompatibility.html#m_incompatibility.override_parameters"><code class="docutils literal notranslate"><span class="pre">override_parameters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="m_material_properties.html">m_material_properties.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="m_material_properties.html#m_material_properties.cp"><code class="docutils literal notranslate"><span class="pre">cp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_material_properties.html#m_material_properties.k"><code class="docutils literal notranslate"><span class="pre">k()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_material_properties.html#m_material_properties.rho"><code class="docutils literal notranslate"><span class="pre">rho()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="m_melting.html">m_melting.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="m_melting.html#m_melting.Melting"><code class="docutils literal notranslate"><span class="pre">Melting</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="m_mesh.html">m_mesh.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="m_mesh.html#m_mesh.MeshModule"><code class="docutils literal notranslate"><span class="pre">MeshModule</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_mesh.html#m_mesh.count_nodes"><code class="docutils literal notranslate"><span class="pre">count_nodes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_mesh.html#m_mesh.detect_oscillations"><code class="docutils literal notranslate"><span class="pre">detect_oscillations()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html">m_parameters.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.BC_Stokes_problem"><code class="docutils literal notranslate"><span class="pre">BC_Stokes_problem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.BC_heat_transfer"><code class="docutils literal notranslate"><span class="pre">BC_heat_transfer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.DAL_factor"><code class="docutils literal notranslate"><span class="pre">DAL_factor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.G_ice"><code class="docutils literal notranslate"><span class="pre">G_ice</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.Lt"><code class="docutils literal notranslate"><span class="pre">Lt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.Picard_iter_error"><code class="docutils literal notranslate"><span class="pre">Picard_iter_error</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.Picard_iter_max"><code class="docutils literal notranslate"><span class="pre">Picard_iter_max</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.Q_activ"><code class="docutils literal notranslate"><span class="pre">Q_activ</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.T_melt"><code class="docutils literal notranslate"><span class="pre">T_melt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.Tracers_Output"><code class="docutils literal notranslate"><span class="pre">Tracers_Output</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.Tracers_header"><code class="docutils literal notranslate"><span class="pre">Tracers_header</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.cfl"><code class="docutils literal notranslate"><span class="pre">cfl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.cohesion_strong"><code class="docutils literal notranslate"><span class="pre">cohesion_strong</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.cohesion_weak"><code class="docutils literal notranslate"><span class="pre">cohesion_weak</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.cos_perturbation"><code class="docutils literal notranslate"><span class="pre">cos_perturbation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.d_grain"><code class="docutils literal notranslate"><span class="pre">d_grain</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.elasticity"><code class="docutils literal notranslate"><span class="pre">elasticity</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.empty_cells_allowed"><code class="docutils literal notranslate"><span class="pre">empty_cells_allowed</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.empty_cells_composition"><code class="docutils literal notranslate"><span class="pre">empty_cells_composition</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.empty_cells_region"><code class="docutils literal notranslate"><span class="pre">empty_cells_region</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.eps_strong"><code class="docutils literal notranslate"><span class="pre">eps_strong</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.eps_weak"><code class="docutils literal notranslate"><span class="pre">eps_weak</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.eta_0"><code class="docutils literal notranslate"><span class="pre">eta_0</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.eta_max"><code class="docutils literal notranslate"><span class="pre">eta_max</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.eta_min_plast"><code class="docutils literal notranslate"><span class="pre">eta_min_plast</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.g"><code class="docutils literal notranslate"><span class="pre">g</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.healing"><code class="docutils literal notranslate"><span class="pre">healing</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.healing_timescale"><code class="docutils literal notranslate"><span class="pre">healing_timescale</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.height"><code class="docutils literal notranslate"><span class="pre">height</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.init_cond_profile"><code class="docutils literal notranslate"><span class="pre">init_cond_profile</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.int_friction_angle2"><code class="docutils literal notranslate"><span class="pre">int_friction_angle2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.integration_method"><code class="docutils literal notranslate"><span class="pre">integration_method</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.interface"><code class="docutils literal notranslate"><span class="pre">interface()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.internal_melting"><code class="docutils literal notranslate"><span class="pre">internal_melting</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.length"><code class="docutils literal notranslate"><span class="pre">length</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.loading_mesh"><code class="docutils literal notranslate"><span class="pre">loading_mesh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.mesh_displacement_laplace"><code class="docutils literal notranslate"><span class="pre">mesh_displacement_laplace</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.mesh_name"><code class="docutils literal notranslate"><span class="pre">mesh_name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.name"><code class="docutils literal notranslate"><span class="pre">name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.nonlinear_heat_equation"><code class="docutils literal notranslate"><span class="pre">nonlinear_heat_equation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.output_frequency"><code class="docutils literal notranslate"><span class="pre">output_frequency</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.perturb_ampl"><code class="docutils literal notranslate"><span class="pre">perturb_ampl</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.perturb_freq"><code class="docutils literal notranslate"><span class="pre">perturb_freq</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.phase_transition"><code class="docutils literal notranslate"><span class="pre">phase_transition</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.plasticity"><code class="docutils literal notranslate"><span class="pre">plasticity</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.protect_directory"><code class="docutils literal notranslate"><span class="pre">protect_directory</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.refinement"><code class="docutils literal notranslate"><span class="pre">refinement</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.reload_HDF5"><code class="docutils literal notranslate"><span class="pre">reload_HDF5</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.reload_HDF5_functions"><code class="docutils literal notranslate"><span class="pre">reload_HDF5_functions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.reload_HDF5_step"><code class="docutils literal notranslate"><span class="pre">reload_HDF5_step</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.reload_name"><code class="docutils literal notranslate"><span class="pre">reload_name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.reload_tracers"><code class="docutils literal notranslate"><span class="pre">reload_tracers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.reload_tracers_step"><code class="docutils literal notranslate"><span class="pre">reload_tracers_step</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.restart_time"><code class="docutils literal notranslate"><span class="pre">restart_time</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.rho_l"><code class="docutils literal notranslate"><span class="pre">rho_l</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.rho_m"><code class="docutils literal notranslate"><span class="pre">rho_m</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.rho_s"><code class="docutils literal notranslate"><span class="pre">rho_s</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.save_tracers"><code class="docutils literal notranslate"><span class="pre">save_tracers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.solve_energy_problem"><code class="docutils literal notranslate"><span class="pre">solve_energy_problem</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.stokes_null"><code class="docutils literal notranslate"><span class="pre">stokes_null</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.termination_condition"><code class="docutils literal notranslate"><span class="pre">termination_condition</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.tidal_dissipation"><code class="docutils literal notranslate"><span class="pre">tidal_dissipation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.time_step_position"><code class="docutils literal notranslate"><span class="pre">time_step_position</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.time_step_strategy"><code class="docutils literal notranslate"><span class="pre">time_step_strategy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.time_units"><code class="docutils literal notranslate"><span class="pre">time_units</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.time_units_string"><code class="docutils literal notranslate"><span class="pre">time_units_string</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.triangle_types"><code class="docutils literal notranslate"><span class="pre">triangle_types</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.viscosity_type"><code class="docutils literal notranslate"><span class="pre">viscosity_type</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.x_div"><code class="docutils literal notranslate"><span class="pre">x_div</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.yield_stress_max"><code class="docutils literal notranslate"><span class="pre">yield_stress_max</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.yield_stress_min"><code class="docutils literal notranslate"><span class="pre">yield_stress_min</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.z_div"><code class="docutils literal notranslate"><span class="pre">z_div</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="m_postproc.html">m_postproc.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="m_postproc.html#m_postproc.closest_point_interpolation"><code class="docutils literal notranslate"><span class="pre">closest_point_interpolation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_postproc.html#m_postproc.entrainment"><code class="docutils literal notranslate"><span class="pre">entrainment()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_postproc.html#m_postproc.melt_height"><code class="docutils literal notranslate"><span class="pre">melt_height()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_postproc.html#m_postproc.nusselt"><code class="docutils literal notranslate"><span class="pre">nusselt()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_postproc.html#m_postproc.rms_vel"><code class="docutils literal notranslate"><span class="pre">rms_vel()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="m_rheology.html">m_rheology.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="m_rheology.html#m_rheology.G"><code class="docutils literal notranslate"><span class="pre">G()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_rheology.html#m_rheology.cohesion"><code class="docutils literal notranslate"><span class="pre">cohesion()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_rheology.html#m_rheology.eta"><code class="docutils literal notranslate"><span class="pre">eta()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_rheology.html#m_rheology.eta_BS"><code class="docutils literal notranslate"><span class="pre">eta_BS()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_rheology.html#m_rheology.eta_GBS"><code class="docutils literal notranslate"><span class="pre">eta_GBS()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_rheology.html#m_rheology.eta_diff"><code class="docutils literal notranslate"><span class="pre">eta_diff()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_rheology.html#m_rheology.eta_disl"><code class="docutils literal notranslate"><span class="pre">eta_disl()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_rheology.html#m_rheology.eta_ductile"><code class="docutils literal notranslate"><span class="pre">eta_ductile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_rheology.html#m_rheology.eta_eff"><code class="docutils literal notranslate"><span class="pre">eta_eff()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_rheology.html#m_rheology.get_new_stress"><code class="docutils literal notranslate"><span class="pre">get_new_stress()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_rheology.html#m_rheology.get_new_stress_iter"><code class="docutils literal notranslate"><span class="pre">get_new_stress_iter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_rheology.html#m_rheology.max_function"><code class="docutils literal notranslate"><span class="pre">max_function()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_rheology.html#m_rheology.plastic_strain_integration"><code class="docutils literal notranslate"><span class="pre">plastic_strain_integration()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_rheology.html#m_rheology.sigma_yield"><code class="docutils literal notranslate"><span class="pre">sigma_yield()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_rheology.html#m_rheology.strain_rate_II"><code class="docutils literal notranslate"><span class="pre">strain_rate_II()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_rheology.html#m_rheology.tensor_2nd_invariant"><code class="docutils literal notranslate"><span class="pre">tensor_2nd_invariant()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_rheology.html#m_rheology.tidal_heating"><code class="docutils literal notranslate"><span class="pre">tidal_heating()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_rheology.html#m_rheology.z"><code class="docutils literal notranslate"><span class="pre">z()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="m_timestep.html">m_timestep.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="m_timestep.html#m_timestep.Output_Timing"><code class="docutils literal notranslate"><span class="pre">Output_Timing()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_timestep.html#m_timestep.time_step"><code class="docutils literal notranslate"><span class="pre">time_step()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="m_tracers.html">m_tracers.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="m_tracers.html#m_tracers.Tracers"><code class="docutils literal notranslate"><span class="pre">Tracers</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="main.html#main.run_code"><code class="docutils literal notranslate"><span class="pre">run_code()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </div>
 </section>
-</section>
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
-<li><a :data-current="activeSection === '#the-scope-of-millefeuiile'" class="reference internal" href="#the-scope-of-millefeuiile">The scope of <em>MilleFEuiIle</em></a></li>
+<li></li>
 <li><a :data-current="activeSection === '#installation-and-running'" class="reference internal" href="#installation-and-running">Installation and running</a></li>
+<li><a :data-current="activeSection === '#visualization'" class="reference internal" href="#visualization">Visualization</a></li>
 <li><a :data-current="activeSection === '#support'" class="reference internal" href="#support">Support</a></li>
+<li><a :data-current="activeSection === '#explore'" class="reference internal" href="#explore">Explore</a></li>
 </ul>
 </div>
 </aside>

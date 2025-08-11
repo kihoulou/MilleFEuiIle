@@ -7,6 +7,7 @@ rank = MPI.rank(comm)
 size = MPI.size(comm)
 
 class Tracers:
+
     def __init__(self, MeshClass, ElemClass, FilesClass):        
         self.mesh = MeshClass.mesh
         self.moving_mesh = MeshClass.moving_mesh
@@ -59,10 +60,16 @@ class Tracers:
                 self.load_tracers()
 
     def save_tracers(self, step):
+        
         file = open("data_" + self.name + "/tracers/step_" + str(step) + ".dat","a")
-        self.save_header_tracer(file)
+        if (rank == 0):
+            self.save_header_tracer(file)
+        file.close()
+
+        MPI.barrier(comm)
         for j in range (0, len(self.tracers)): 
             if (j not in self.vacancy):
+                file = open("data_" + self.name + "/tracers/step_" + str(step) + ".dat","a")
                 self.save_indiv_tracer(file, j,\
                             rank            = self.tracers[j][3],\
                             dev_stress_xx   = self.tracers[j][4],\
@@ -75,9 +82,10 @@ class Tracers:
                             melt_fraction   = self.tracers[j][11][0],\
                             origin          = self.tracers[j][12],\
                             id              = self.tracers[j][13])
-        file.close()
+                file.close()
     
     def save_header_tracer(self, file):
+
         file.write((2*"%s\t\t")%("x_pos (m)", "y_pos (m)"))   
 
         for arg in Tracers_header:
@@ -85,6 +93,7 @@ class Tracers:
         file.write("\n")
 
     def save_indiv_tracer(self, file, j, **kwargs):
+
         file.write((2*"%.7E\t")%(self.tracers[j][0], self.tracers[j][1]))   
 
         for arg in Tracers_Output:
@@ -96,8 +105,10 @@ class Tracers:
                     else:
                         file.write(("%.5E\t")%(kwargs[key]))
         file.write("\n")
+        
 
     def rank_interpolation(self):
+
         ranks = []
         for j in range(self.mesh.num_cells()):
             ranks.append(rank)
@@ -106,6 +117,7 @@ class Tracers:
         self.mesh_ranks.vector().set_local(ranks)   
 
     def tracer_count_interpolation(self):
+
         ranks = []
         for j in range(self.mesh.num_cells()):
             ranks.append(len(self.tracers_in_cells[j]))
@@ -114,6 +126,7 @@ class Tracers:
         self.number_of_tracers.vector().set_local(ranks)
 
     def introduce_tracers(self):
+
         tracer_no = 0
 
         for j in range(self.mesh.num_cells()):
@@ -278,8 +291,8 @@ class Tracers:
                         tracer_no +=1   
 
     def load_tracers(self):
-        # infile = open("data_"+reload_name+"/tracers/step_"+str(reload_step)+".dat", "r") 
-        infile = open("step_3000_new.dat", "r") 
+
+        infile = open("data_"+reload_name+"/tracers/step_"+str(reload_tracers_step)+".dat", "r") 
         lines = infile.readlines() 
         tracer_no=0
 
@@ -521,6 +534,7 @@ class Tracers:
             print(" ")
 
     def check_tracers(self):
+
         # --- Check number of tracers in cells ---
         TiC_sum = 0
 
@@ -539,6 +553,7 @@ class Tracers:
             print("\tNumber of tracers in cells =", int(TiC_sum))
             
     def delete_and_find(self):
+
         if (rank == 0):
             print("")
             print("\tSorting moving tracers...")

@@ -1,3 +1,10 @@
+/* Color of python function headers */
 .pre {
     color: rgb(0, 51, 153)
+  }
+
+/* Size of the logo in the top panel */
+.container.flex.items-center.h-14 img {
+    width: 80px;
+    height: auto
   }

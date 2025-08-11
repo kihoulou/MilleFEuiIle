@@ -44,7 +44,7 @@ def rho(Temp, composition, xm):
         # return 2700.0
         
 def k(Temp, composition):
-        return 2.5 #567.0/Temp
+        return 567.0/Temp
 
 def cp(Temp, composition):
-        return 2100.0 #185.0 + 7.037*Temp
+        return 185.0 + 7.037*Temp

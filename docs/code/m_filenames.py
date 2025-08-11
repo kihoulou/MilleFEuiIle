@@ -13,6 +13,8 @@ class SaveFiles:
             if (protect_directory == False):
                     if (rank == 0):
                         os.system("rm data_" + name + "/HDF5/*")
+                        os.system("rm data_" + name + "/img/*")
+                        os.system("rm data_" + name + "/anim/*")
                         os.system("rm data_" + name + "/paraview/*.xdmf")
                         os.system("rm data_" + name + "/paraview/*.h5")
                         os.system("rm data_" + name + "/source_code/*.py")
@@ -24,7 +26,7 @@ class SaveFiles:
                     print("\nWarning:\nName collision detected. New directory name is", str("data_" + self.name), ".\n")
 
         MPI.barrier(comm)
-        directories = ["HDF5", "tracers", "paraview", "source_code"]
+        directories = ["HDF5", "anim", "img", "tracers", "paraview", "source_code"]
         for dir in directories:
             Path("data_" + self.name + "/" + dir).mkdir(parents = True, exist_ok = True)
 

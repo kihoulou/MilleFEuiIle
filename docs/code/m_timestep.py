@@ -44,7 +44,7 @@ def time_step(mesh, v, v_mesh, H_max, composition, Temp, unit_scalar, t):
 
         # --- Convective time step ---
         dt_conv = cfl*x_min/v_max
-        # dt_list.append(dt_conv)
+        dt_list.append(dt_conv)
 
         # --- Time-scaled time step ---
         if (scaled_time_step == True):

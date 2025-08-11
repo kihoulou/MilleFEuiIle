@@ -22,8 +22,11 @@ from m_interpolation import *
 from m_material_properties import *
 from m_boundary_conditions import *
 
-if __name__ == "__main__":
-    
+def run_code():
+    """Runs the main time loop.
+
+    """
+
     comm = MPI.comm_world
     rank = MPI.rank(comm)
     size = MPI.size(comm)
@@ -196,3 +199,6 @@ if __name__ == "__main__":
         
     FilesClass.Save_Paraview(t)
     FilesClass.Save_HDF5(step_output, step, EqClass.dt, t)
+
+if __name__ == "__main__":
+    run_code()

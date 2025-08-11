@@ -11,10 +11,6 @@ comm = MPI.comm_world
 rank = MPI.rank(comm)
 size = MPI.size(comm)
 
-def Max(a, b): return (a+b+abs(a-b))/2.0
-
-def Min(a, b): return (a+b-abs(a-b))/2.0
-
 def tracer_counting(mesh, tracers_in_cells, tracers):
     n1 = 0.0
     n2 = 0.0
@@ -140,49 +136,49 @@ def stress_interpolation(mesh, tracers_in_cells, tracers, stress_tensor):
             ranks.append(0.0)
             
         # --- Linear averaging of the stress ---
-        # t_xx = 0.0
-        # t_xz = 0.0
+        t_xx = 0.0
+        t_xz = 0.0
 
-        # if (len(tracers_in_cells[j])!=0):
-        #     for i in range(0,len(tracers_in_cells[j])):
-        #         tracer_no = tracers_in_cells[j][i]
-
-        #         t_xx += tracers[tracer_no][4]
-        #         t_xz += tracers[tracer_no][5]
-        #         weight_cell += 1.0 
-
-        #     ranks.append(t_xx/weight_cell)
-        #     ranks.append(t_xz/weight_cell)
-        #     ranks.append(t_xz/weight_cell)
-        #     ranks.append(-t_xx/weight_cell)
-
-        # --- Quasi-geometric averaging of the stress ---
-        t_xx_pos = 0.0
-        t_xx_neg = 0.0
-
-        t_xz_pos = 0.0
-        t_xz_neg = 0.0
-        
         if (len(tracers_in_cells[j])!=0):
             for i in range(0,len(tracers_in_cells[j])):
                 tracer_no = tracers_in_cells[j][i]
-                
-                if (tracers[tracer_no][4] > 0.0):
-                    t_xx_pos += ln(tracers[tracer_no][4])/ln(10.0)
-                elif (tracers[tracer_no][4] < 0.0):
-                    t_xx_neg += ln(-tracers[tracer_no][4])/ln(10.0)
-                
-                if (tracers[tracer_no][5] > 0.0):
-                    t_xz_pos += ln(tracers[tracer_no][5])/ln(10.0)
-                elif (tracers[tracer_no][5] < 0.0):
-                    t_xz_neg += ln(-tracers[tracer_no][5])/ln(10.0)
 
+                t_xx += tracers[tracer_no][4]
+                t_xz += tracers[tracer_no][5]
                 weight_cell += 1.0 
 
-            ranks.append(0.5*(10**(t_xx_pos/weight_cell) - 10**(t_xx_neg/weight_cell)))
-            ranks.append(0.5*(10**(t_xz_pos/weight_cell) - 10**(t_xz_neg/weight_cell)))
-            ranks.append(0.5*(10**(t_xz_pos/weight_cell) - 10**(t_xz_neg/weight_cell)))
-            ranks.append(-0.5*(10**(t_xx_pos/weight_cell) - 10**(t_xx_neg/weight_cell)))
+            ranks.append(t_xx/weight_cell)
+            ranks.append(t_xz/weight_cell)
+            ranks.append(t_xz/weight_cell)
+            ranks.append(-t_xx/weight_cell)
+
+        # --- Quasi-geometric averaging of the stress ---
+        # t_xx_pos = 0.0
+        # t_xx_neg = 0.0
+
+        # t_xz_pos = 0.0
+        # t_xz_neg = 0.0
+        
+        # if (len(tracers_in_cells[j])!=0):
+        #     for i in range(0,len(tracers_in_cells[j])):
+        #         tracer_no = tracers_in_cells[j][i]
+                
+        #         if (tracers[tracer_no][4] > 0.0):
+        #             t_xx_pos += ln(tracers[tracer_no][4])/ln(10.0)
+        #         elif (tracers[tracer_no][4] < 0.0):
+        #             t_xx_neg += ln(-tracers[tracer_no][4])/ln(10.0)
+                
+        #         if (tracers[tracer_no][5] > 0.0):
+        #             t_xz_pos += ln(tracers[tracer_no][5])/ln(10.0)
+        #         elif (tracers[tracer_no][5] < 0.0):
+        #             t_xz_neg += ln(-tracers[tracer_no][5])/ln(10.0)
+
+        #         weight_cell += 1.0 
+
+        #     ranks.append(0.5*(10**(t_xx_pos/weight_cell) - 10**(t_xx_neg/weight_cell)))
+        #     ranks.append(0.5*(10**(t_xz_pos/weight_cell) - 10**(t_xz_neg/weight_cell)))
+        #     ranks.append(0.5*(10**(t_xz_pos/weight_cell) - 10**(t_xz_neg/weight_cell)))
+        #     ranks.append(-0.5*(10**(t_xx_pos/weight_cell) - 10**(t_xx_neg/weight_cell)))
 
     ranks = numpy.array(ranks) 
     stress_tensor.vector().set_local(ranks)

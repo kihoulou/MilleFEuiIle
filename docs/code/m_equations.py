@@ -473,8 +473,6 @@ class Equations:
                 self.p_k.assign(self.p_out)
                 self.v_k.assign(self.v_out)
 
-                
-
                 if (elasticity == True and viscosity_type == "GK_2001"):
                     get_new_stress_iter(self.mesh, self.Temp, self.xm, self.stress_dev_inv,\
                                         self.stress_dev_inv_k, self.strain_rate_inv, self.composition,\
@@ -559,7 +557,7 @@ class Equations:
             self.compute_u()
 
         # --- Compute the bottom topography evolution ---
-        if (BC_Stokes_problem[1][0] == "free_surface" or phase_transition == True):
+        if (BC_Stokes_problem[1][0] == "free_surface"):
             self.solver_free_surface_bot.solve()
 
         # --- Compute the mesh displecement distribution ---

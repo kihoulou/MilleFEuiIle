@@ -1,16 +1,55 @@
 from dolfin import *
 from m_parameters import *
      
+
 # Root-mean-square velocity
 def rms_vel(v):
-        return sqrt(assemble(dot(v,v)*dx)/(height*length)) 
+    """ Returns the root mean square velocity.
+
+    :param v: velocity
+
+    :var h: domain height
+    :var l: domain length
+
+    :returns: 
+        .. math::
+            v_{RMS} = \\frac{1}{hl}\\sqrt{\\int_\\Omega \\boldsymbol{v}\\cdot\\boldsymbol{v}\\ \\textrm{d}x}
+    """
+    return sqrt(assemble(dot(v,v)*dx))/(height*length) 
 
 # Nusselt number
 def nusselt(q_cond_top, q_top):
-        return q_top/q_cond_top
+    """ Returns the Nusselt number.
+
+    :param q_top: current normal heat flux through the top boundary
+    :param q_cond_top: normal heat flux through the top boundary calculated for the conductive profile
+    at the beginning of the simulation
+
+    :returns: 
+        .. math::
+            Nu = \\frac{q_{top}}{q_{top}^{cond}}
+
+    """
+        
+    return q_top/q_cond_top
 
 # For van Keken (1997)
 def entrainment(comp_1):
+    """ Returns the entrainment for the .
+
+    :param q_top: current normal heat flux through the top boundary
+    :param q_cond_top: normal heat flux through the top boundary calculated for the conductive profile
+    at the beginning of the simulation
+
+    :returns: 
+        .. math::
+            Nu = \\frac{q_{top}}{q_{top}^{cond}}
+
+    """
+
+    d_b = 0.2
+    d_e = 0.2
+
     phi = Expression("0.0 + 1.0*(x[1] > d_e)", d_e = d_e, degree=1)
     return 1.0/(length*d_b)*assemble(phi*(comp_1)*dx)
 

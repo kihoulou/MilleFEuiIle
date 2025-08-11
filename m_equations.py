@@ -219,6 +219,7 @@ class Equations:
         * :math:`A` is the albedo of the body's surface
         * :math:`\\varepsilon` is the body's surface emmisivity
         * :math:`\\sigma_{SB}` is the Stefan-Boltzmann constant
+
         .. note::
 
             If ``BC_heat_transfer[0][0] = "radiation"``, nonlinear solver will be automatically used.
@@ -262,9 +263,9 @@ class Equations:
         :param perturb_freq: spatial frequency of the thermal perturbation (:math:`f`\ )
 
         :returns:
-        .. math::
-        
-            T^\\prime = T - A\\sin\\left(\\frac{\\pi y}{h}\\right) \\cdot\\cos\\left(\\frac{2\\pi fx}{l}\\right)
+            .. math::
+            
+                T^\\prime = T - A\\sin\\left(\\frac{\\pi y}{h}\\right) \\cdot\\cos\\left(\\frac{2\\pi fx}{l}\\right)
 
         """
         self.Temp_k.assign(project(Expression("Temp - pa*sin(pi*x[1]/h)*cos(2*pf*pi*x[0]/l)", Temp = self.Temp, l=length, h=height, pa=perturb_ampl, pf=perturb_freq, degree=1), self.sCG2)) 

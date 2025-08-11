@@ -36,6 +36,15 @@ def tidal_heating(visc):
     return H_value
 
 def tensor_2nd_invariant(tensor):
+    """Computes the second invariant of a tensor. 
+
+    :param A: any tensor
+
+    :returns:
+        .. math::
+            \\dot{A}_{II} = \\sqrt{\\frac{ \\dot{\\boldsymbol{A}} : \\dot{\\boldsymbol{A}}}{2}}
+
+    """
     return sqrt(0.5*inner(tensor, tensor))
 
 def strain_rate_II(v):
@@ -44,14 +53,25 @@ def strain_rate_II(v):
     :param v: velocity
 
     :returns:
-    .. math::
-       \\dot{\\varepsilon}_{II} = \\sqrt{\\frac{ \\dot{\\varepsilon} : \\dot{\\varepsilon}}{2}}
+        .. math::
+            \\dot{\\varepsilon}_{II} = \\sqrt{\\frac{ \\dot{\\boldsymbol{\\varepsilon}} : \\dot{\\boldsymbol{\\varepsilon}}}{2}}
 
     """
 
     return sqrt(inner(sym(nabla_grad(v)), sym(nabla_grad(v))) / 2.0)
 
 def max_function(a, b):
+    """Numerical implementation of the maximum of two values. Extends the python ``max()`` to functions on the mesh.
+
+    :param a: value or function on the mesh
+    :param b: value or function on the mesh
+
+    :returns:
+        .. math::
+            \\text{max}(a,b) = \\frac{a + b}{2} + \\frac{\\text{abs}(a + b)}{2}
+
+    """
+
     return (a + b)/2.0 + abs(a - b)/2.0
 
 # --- Plasticity ---
@@ -105,6 +125,22 @@ def sigma_yield(p_k, plastic_strain, composition):
     return conditional(lt(value, yield_stress_min), yield_stress_min, conditional(gt(value, yield_stress_max), yield_stress_max, value))
 
 def plastic_strain_integration(mesh, tracers_in_cells, tracers, dt, yield_function, strain_rate):
+    """Performs integration and healing of the plastic strain :math:`\\varepsilon_p` on markers. 
+
+    :param yield_function: yield function (:math:`F = \\sigma_{II} - \\sigma_Y`\ )
+    :param dt: time step length (:math:`\\Delta t`\ )
+    :param strain_rate: second invariant of the strain rate tensor (:math:`\dot{\\varepsilon}_{II}`\ )
+    :param healing_timescale: healing time scale of the material (see ``healing_timescale`` in ``m_parameters.py``)
+
+    :returns:
+       .. math::
+
+           \\varepsilon_p = \\begin{cases}
+           \\dfrac{\\varepsilon_p^k + \\Delta t \\dot{\\varepsilon}_{II}}{1 + \\Delta t / \\tau} &\\text{if } F = 0\\\\
+           \\dfrac{\\varepsilon_p^k}{1 + \\Delta t / \\tau} & \\text{if } F < 0\\\\
+           \\end{cases}
+
+    """
     for j in range(mesh.num_cells()):
         for i in range(0,len(tracers_in_cells[j])):
             tracer_no = tracers_in_cells[j][i]
@@ -133,17 +169,30 @@ def z(visc, shear_modulus, dt):
     return dt/(dt + visc/shear_modulus)
 
 def get_new_stress(mesh, Temp, xm, stress_dev_inv, stress_dev_inv_k, strain_rate_invariant, composition, shear_modulus, step, Picard_iter, dt):
-    """Evaluates the deviatoric stress invariant assuming fully ductile viscosity. 
+    """Evaluates the visco-elastic stress assuming fully ductile viscosity. 
 
     :param mesh: computational domain
     :param Temp: temperature
     :param xm: melt fraction
     :param stress_dev_inv: second invariant of the deviatoric part of the Cauchy stress tensor
-    :param strain_rate_invariant: second invariant of the strain rate tensor
+    :param strain_rate_inv: second invariant of the strain rate tensor
+    :param strain_rate_inv_k: second invariant of the strain rate tensor from the previous time step
+    :param composition: material composition
+    :param shear_modulus: shear modulus
+    :param step: number of the time step (needed for 0th step for viscosity)
+    :param Picard_iter: number of the Picard iteration (needed for 0th iteration for viscosity)
+    :param dt: length of the time step
 
     :returns:
-    .. math::
-       \\sigma_{II}^{visc} = 2\\eta_{visc}\\dot{\\varepsilon}_{II}
+        If ``elasticity = False``,
+        
+        .. math::
+            \\sigma_{II}^{visc} = 2Z\\eta_{visc}\\dot{\\varepsilon}_{II} + (1-Z)\\sigma_{II}^k
+        
+        If ``elasticity = False``,
+
+        .. math::
+            \\sigma_{II}^{visc} = 2\\eta_{visc}\\dot{\\varepsilon}_{II}
 
     """
 
@@ -179,6 +228,14 @@ def get_new_stress(mesh, Temp, xm, stress_dev_inv, stress_dev_inv_k, strain_rate
     stress_dev_inv.vector().set_local(ranks)
 
 def get_new_stress_iter(mesh, Temp, xm, stress_dev_inv, stress_dev_inv_k, strain_rate_inv, composition, shear_modulus, step, Picard_iter, dt):
+    """Performs local visco-elasto-plastic iterations to ensure consistency between viscosity and stress during Picard iterations. Parameters
+    are the same as in :func:`m_rheology.get_new_stress`.
+    
+    .. caution::
+        These iterations are needed every time when ``elasticity = True`` and the viscosity is stress-dependent.
+
+    """
+
     ranks = []
     eval_type = "local"
 
@@ -280,6 +337,24 @@ def get_new_stress_iter(mesh, Temp, xm, stress_dev_inv, stress_dev_inv_k, strain
 #     mechanisms.vector().set_local(ranks)
 
 def G(composition):
+    """Returns shear modulus of the material. Can be compositionally-dependent (see the visco-elasticity benchmark in `Section 4.2.6 <https://geo.mff.cuni.cz/theses/2025-Kihoulou-PhD.pdf#page=61>`_). 
+
+    :param composition: material composition, e.g. ``composition = [C_mantle, C_lid, C_plume]``
+
+    :var G_ice: shear modulus of ice :math:`G_{ice}`\ 
+
+    :returns:
+
+        .. math::
+            G = G_{ice}
+
+        or in case the visco-elasticity benchmark
+
+        .. math::
+            G = G_{mantle}^{C_{mantle}} \cdot G_{lid}^{C_{lid}} \cdot G_{plume}^{C_{plume}}
+
+    """
+
     # --- Rising plume benchmark ---
     # return G_mantle**composition[0] * G_lid**composition[1] * G_plume**composition[2]
 
@@ -300,14 +375,17 @@ def eta_ductile(Temp, strain_rate, stress, xm, composition, step, Picard_iter, e
     :returns: 
 
     * ``"constant"`` for constant viscosity of value :math:`\\eta_0`\ . 
+
     .. math::
        \\eta = \\eta_0
 
     * ``"temp-dep"`` for temperature-dependent viscosity
+
     .. math::
        \\eta(T) =\\eta_0\\cdot\\exp\\left[\\frac{Q}{R}\\left(\\frac{1}{T} - \\frac{1}{T_{\\rm melt}}\\right)\\right]
 
     * ``"GK_2001"`` for temperature and stress-dependent viscosity of ice-I
+
     .. math::
        \\eta(T, \\sigma_{\\rm II}) = \\left(\\frac{1}{\\eta_{\\rm diff}} + \\frac{1}{\\eta_{\\rm disl}} + \\frac{1}{\\eta_{\\rm BS} + \\eta_{\\rm GBS}} + \\frac{1}{\\eta_{\\rm max} } \\right)^{-1}
 
@@ -359,8 +437,8 @@ def eta_eff(p_k, Temp, strain_rate, stress, xm, composition, plastic_strain, ste
     :var eta_min_plast: lower cut-off value for plastic viscosity :math:`\\eta_{p}`\ . Maintains reasonable viscosity contrast between tectonic faults and their surrounfings, see ``m_parameters.py``.
 
     :returns: 
-    .. math::
-       \\eta_{vp} = \\textrm{min}(\\textrm{max}(\\eta_p,\ \\eta_p^{min}) ,\ \\eta_v)
+        .. math::
+            \\eta_{vp} = \\textrm{min}(\\textrm{max}(\\eta_p,\ \\eta_p^{min}) ,\ \\eta_v)
 
     """
     
@@ -386,16 +464,42 @@ def eta_eff(p_k, Temp, strain_rate, stress, xm, composition, plastic_strain, ste
                 - (sigma_yield(p_k, plastic_strain, composition) - stress_dev_inv_k)/(2.0*shear_modulus*dt), sr_min*1e-6)
 
             # --- Visco-(elasto)-plastic rheology after the very first time step ---
-            # return conditional(lt(eta_p, eta_min_plast), eta_min_plast, conditional(lt(eta_p, eta_v), eta_p, eta_v))
+            return conditional(lt(eta_p, eta_min_plast), eta_min_plast, conditional(lt(eta_p, eta_v), eta_p, eta_v))
 
             # This creates sharper faults ?
-            return 1.0/(1.0/eta_v + 1.0/(eta_p + eta_min_plast) + 1.0/eta_max)
+            # return 1.0/(1.0/eta_v + 1.0/(eta_p + eta_min_plast) + 1.0/eta_max)
 
     else:
         # --- Viscous rheology only ---
         return conditional(lt(eta_v, eta_max), eta_v, eta_max)
 
 def eta(Q, A, n, m, Temp, strain_rate_inv, stress_inv):
+    """Evaluates the temperature- and stress-dependent viscosity for individual deformation mechanisms (dislocation creep, grain boundary slining and bassal slip). 
+
+    :param Q: activation energy **for given mechanism**
+    :param A: exponential prefactor **for given mechanism**
+    :param n: stress exponent **for given mechanism**
+    :param m: grain size exponent **for given mechanism**
+    :param Temp: temperature
+    :param stress_invariant: second invariant of the deviatoric part of the Cauchy stress tensor
+    :param strain_rate_invariant: second invariant of the strain rate tensor
+
+    :var elasticity: Chooses between formulas depending whether ``elasticity`` is turned on or not.
+
+    :returns: 
+
+        If ``elasticity = False``, formula using the strain rate invariant is used
+
+        .. math::
+            \\eta_{i} = \\frac{1}{3^{(n+1)/2n}\\ 2^{(n-1)/n}} A^{-1/n}d^{m/n}\\dot{\\varepsilon}_{II}^{(1-n)/n}\\exp\\left( \\frac{Q}{nRT} \\right)
+
+        If ``elasticity = True``, formula using the Cauchy stress invariant is used
+
+        .. math::
+            \\eta_{i} = \\frac{1}{3^{(n+1)/2n}} A^{-1}d^{m}\\dot{\\sigma}_{II}^{1-n}\\exp\\left( \\frac{Q}{RT} \\right)
+
+    """
+
     # See Gerya (2009) chapter 6.2 for derivation of prefactors
     # The correction applies also to diffusion creep, see the function below and eq. (6.8b) in Gerya (2009)
 
@@ -408,26 +512,34 @@ def eta(Q, A, n, m, Temp, strain_rate_inv, stress_inv):
         return 1.0/(3.0**((n+1)/2.0))*A**(-1.0)*d_grain**m*stress_inv**(1.0-n)*exp(Q/(R_gas*Temp))
 
 def eta_diff(Temp):
-    # V_m = 1.97e-5           #m^3
-    # D_0v = 9.10e-4          #m^2 s^-1
-    # D_0b = 6.4e-4           #m^2 s^-1
-    # Q_v = 59.4e3            #J mol^-1
-    # Q_b = 49.0e3            #J mol^-1
-    # delta= 9.04e-10         #m
+    """Computes the viscosity resulting from the diffusion creep, taking into account the boundary and the volumetric diffusion :math:`\\eta_{\\rm diff}`\ . 
 
-    # D_v = D_0v*exp(-Q_v/(R_gas*Temp))
-    # D_b = D_0b*exp(-Q_b/(R_gas*Temp))
+    :param Temp: temperature (:math:`T`\ )
+    
+    :var d_grain: grain size
 
-    # # 3/2 come from the scaling between diff. stress, see Eq. (6.8b) in Gerya (2009)
-    # return 1.0/(2*(3.0/2.0*14)*V_m)*R_gas*Temp*d_grain**2/(D_v + np.pi*delta*D_b/d_grain)
+    :returns:
+        .. math::
+            \\eta_{diff} = \\frac{1}{2 \\cdot 3/2 \cdot 14 V_m} RTd^2 \\left(D_v + \\frac{\\pi\\delta D_b}{d} \\right)^{-1}
+        
+        where
 
-    Q=60e3          #J/mol
-    A=1.0e-4        #Pa^{-2.4} s^{-1}
-    n=1.0
-    p=0.0           # -
+        .. math::
+            D_{v/b} = D_{0,v/b}\\exp\\left(-\\frac{Q}{RT} \\right)\\\\
 
-    A1 = A#*3**((n+1)/2.0)/2.0
-    return 0.5*A**(-1/n)*exp(Q/(n*R_gas*Temp))
+    """
+    V_m = 1.97e-5           #m^3
+    D_0v = 9.10e-4          #m^2 s^-1
+    D_0b = 6.4e-4           #m^2 s^-1
+    Q_v = 59.4e3            #J mol^-1
+    Q_b = 49.0e3            #J mol^-1
+    delta= 9.04e-10         #m
+
+    D_v = D_0v*exp(-Q_v/(R_gas*Temp))
+    D_b = D_0b*exp(-Q_b/(R_gas*Temp))
+
+    # 3/2 come from the scaling between diff. stress, see Eq. (6.8b) in Gerya (2009)
+    return 1.0/(2*(3.0/2.0*14)*V_m)*R_gas*Temp*d_grain**2/(D_v + np.pi*delta*D_b/d_grain)
 
 def eta_disl(Temp, strain_rate_II, stress_II, eval_type):
     """Computes the viscosity resulting from the dislocation creep :math:`\\eta_{disl}`\ . 
@@ -445,7 +557,7 @@ def eta_disl(Temp, strain_rate_II, stress_II, eval_type):
     :var Q_above: activation energy above the premelting temperature
     :var A_above: prefactor above the premelting temperature
 
-    :returns: calls the function ``eta()`` with the parameters of dislocation creep
+    :returns: calls the function :func:`m_rheology.eta` with the parameters of dislocation creep
 
     """
     n = 4.0           # -
@@ -472,6 +584,10 @@ def eta_disl(Temp, strain_rate_II, stress_II, eval_type):
             return eta(Q_below, A_below, n, p, Temp, strain_rate_II, stress_II)
 
 def eta_GBS(Temp, strain_rate_II, stress_II, eval_type):
+    """The same as :func:`m_rheology.eta_disl`, but for grain boundary sliding parameters.
+
+    """
+    
     n = 1.8           # -
     p = 1.4           # -
     T_crit = 255      # K
@@ -496,9 +612,13 @@ def eta_GBS(Temp, strain_rate_II, stress_II, eval_type):
             return eta(Q_below, A_below, n, p, Temp, strain_rate_II, stress_II)    
 
 def eta_BS(Temp, strain_rate_II, stress_II):
-        Q = 60e3          #J/mol
-        A = 2.2e-7        #Pa^{-2.4} s^{-1}
-        n = 2.4           # -
-        p = 0.0           # -
+    """The same as :func:`m_rheology.eta_disl`, but for basal slip parameters.
 
-        return eta(Q, A, n, p, Temp, strain_rate_II, stress_II)
+    """
+
+    Q = 60e3          #J/mol
+    A = 2.2e-7        #Pa^{-2.4} s^{-1}
+    n = 2.4           # -
+    p = 0.0           # -
+
+    return eta(Q, A, n, p, Temp, strain_rate_II, stress_II)

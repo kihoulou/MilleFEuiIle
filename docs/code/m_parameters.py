@@ -28,8 +28,7 @@ size = MPI.size(comm)
 #----------------------------------------------------------------------
 
 # --- Name of the directory with results ---
-# name = "cut-off"+str(int(sys.argv[1]))
-name = "radiationBC"
+name = "ganymede_conditional_C1e6_1kyr"
 
 # Protection from overwriting the directory above
 protect_directory = False
@@ -41,7 +40,7 @@ time_units = Myr
 time_units_string = "Myr"
 
 # --- Output method for Paraview, HDF5 and  tracers ---
-output_frequency = ["time", 100*kyr] # e.g. ["steps", 10] or ["time", 100*kyr]
+output_frequency = ["steps", 20] # e.g. ["steps", 10] or ["time", 100*kyr]
 
 # --- Save tracers into files? ---
 save_tracers = False
@@ -60,32 +59,19 @@ save_tracers = False
 # melt_fraction     = amount of partial melt on the tracer
 # origin            = 0 if the tracer is original, 1 if added later
 # id                = unique ID of the tracer
-Tracers_Output = ["composition_1", "rank", "composition_0"]
+Tracers_Output = []
 
 # --- Headers for the columns in the text file for tracers
 # --- Up to the user (order corredponding to "stat_output").
-Tracers_header = ["rank", "composition"]
+Tracers_header = []
 
 # --- What functions to write into Paraview and HDF5 file ---
-Paraview_Output = ["velocity",\
-                "pressure",\
-                "density",\
-                "composition_0",\
-                "composition_1",\
-                "topography_top",\
-                "strain_rate_inv",\
-                "stress_dev_inv",\
-                "tracers",\
-                "plastic_strain",\
-                "yield_stress",\
-                "z_function",\
-                "shear_modulus",\
-                "viscosity"]
-
+Paraview_Output = ["temperature", "viscosity", "plastic_strain", "velocity", "strain_rate_inv", "composition_1"]
 
 Paraview_Output_Ini = ["temperature"]
 
-# --- What values to print in a text file every time step? Must be one of the following (order does not matter):
+# --- What values to print in a text file every time step? ---
+#  Must be one of the following (order does not matter):
 # nusselt 	= Nusselt number
 # vrms 		= Root mean square velocity
 # tracers 	= Number of tracers
@@ -93,18 +79,18 @@ Paraview_Output_Ini = ["temperature"]
 # q_bot 	= Heat flux over the bottom boundary
 # time		= Duration of the simulation (hours)
 # timestep	= Duration of the time step (seconds)
-stat_output = ["h_top_max", "time", "timestep"]
+stat_output = [ "time", "timestep"]
 
 # --- Headers for the columns in the text file
 # --- Up to the user (order corredponding to "stat_output").
-stat_header = ["h_top (m)", "Time (h)", "dt (s)"]
+stat_header = ["Time (h)", "dt (s)"]
 
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #------------------------- 2/ RELOADING OPTIONS -----------------------
 #----------------------------------------------------------------------
 
 # --- Name of the directory from which the data will be reloaded ---
-reload_name 		= "van_Keken"
+reload_name 		= ""
 
 # --- Whether or not to load HDF5 data from data_reload_name/HDF5/data.h5 --- 
 reload_HDF5 		= False
@@ -127,7 +113,7 @@ restart_time 	= False
 #----------------------------------------------------------------------
 
 # --- Criterion for ending the simulation, e.g. ["time", 1*Myr] or ["step", 1000] ---
-termination_condition = ["time", 1*Myr]
+termination_condition = ["time", 2*Myr]
 
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #------------------------- 3/ TRACERS OPTIONS -------------------------
@@ -146,10 +132,10 @@ weight_tracers_by_ratio = False
 #----------------------------------------------------------------------
 
 # --- Mesh height ---
-height = 25e3 # m
+height = 50e3 # m
 
 # --- Mesh length ---
-length = 50e3 # m
+length = 100e3 # m
 
 # --- Whether to read an external mesh ---
 loading_mesh = False
@@ -158,7 +144,7 @@ loading_mesh = False
 mesh_name 	= "meshes/mesh_25x100km.xml"
 
 # --- Basic mesh resolution if not loading mesh ---
-z_div = 50
+z_div = 20
 
 # --- Number of nodes in horizontal direction ---
 x_div = int(z_div*(length/height)) # (keeps aspect ratio 1)
@@ -172,7 +158,7 @@ triangle_types = "crossed" # crossed, left, right, left/right, right/left
 
 # --- Repeat within the [...] for multiple levels of refinement,
 # leave empty for no refinement ---
-refinement = []
+refinement = [0, length, height/2, height]
 
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #------------------------- 4/ MATERIAL COMPOSITIOIN -------------------
@@ -192,7 +178,7 @@ def interface(x):
     return 5e2*cos(2.0*np.pi*x/length) + 3e3
 
 # --- Leave empty for a single material ---
-materials = []
+materials = [["rectangle", 0, length, 0, height], ["rectangle", 0, length, height- 2.5e3, height]]
 
 # --- If True, the cells without tracers will be assigned material "default_composition" ---
 # --- Applicable only if the material composition is the only tracer-requiring feature ---
@@ -207,7 +193,7 @@ empty_cells_region = [["rectangle",  0, length, 20e3, height]] #  So far rectang
 #----------------------------------------------------------------------
 stokes_elements = "Mini"
 
-time_step_position = "end" #stokes (right after Stokes problem) or "end" (at the end of the time loop)
+time_step_position = "stokes" #stokes (right after Stokes problem) or "end" (at the end of the time loop)
 
 time_step_strategy = "constant"
 
@@ -224,9 +210,9 @@ error_type          = "maximum" # "maximum or integrated"
 
 # Boundary conditions for velocity (free_slip, no_slip, free surface, velocity, velocity_x, velocity_y)
 BC_Stokes_problem = [["free_surface"],                # top boundary       (1)
-                     ["velocity", 0.0, +10e3/Myr],    # bottom boundary    (2)
-                     ["velocity_x", -10e3/Myr],       # left boundary      (3)
-                     ["velocity_x", +10e3/Myr]]       # right boundary     (4)
+                     ["velocity", 0.0, 40e3/Myr],    # bottom boundary    (2)
+                     ["velocity_x", -40e3/Myr],       # left boundary      (3)
+                     ["velocity_x", 40e3/Myr]]       # right boundary     (4)
 
 mesh_displacement_laplace = "full"  #"full_laplace" or "z_only"
 
@@ -241,16 +227,16 @@ stokes_null = "boundary"
 solve_energy_problem = True
 
 # --- Whether the heat transfer should be solved with nonlinear solver ---
-nonlinear_heat_equation = False
+nonlinear_heat_equation = True
 
 # --- Boundary condition for heat transfer equation ---
-BC_heat_transfer   = [["radiation", 90.0],     # top boundary    (1)
-                     ["temp", 270.0],     # bottom boundary (2)
+BC_heat_transfer   = [["radiation", 90],     # top boundary    (1)
+                     ["temp", 265.0],     # bottom boundary (2)
                      ["heat_flux", 0.0],  # left boundary   (3)
                      ["heat_flux", 0.0]]  # right boundary  (4)
 
 # --- Reference temperature ---
-T_ref 	= 270.0 # K
+T_ref 	= 265.0 # K
 
 # --- Insolation parametes ---
 emis 	= 0.97         	# Ice emissivity
@@ -282,7 +268,7 @@ init_cond_profile = True
 cos_perturbation = True
 
 # --- Thermal perturbation amplitude ---
-perturb_ampl 	= 5 # K
+perturb_ampl 	= 1 # K
 # --Number of half-cosine waves in lateral direction ---
 perturb_freq 	= 1 
 
@@ -305,12 +291,12 @@ dT_max = 4.0
 # "cell" computes timestep in each cell and chooses the minimal
 
 # "constant" prescribes a constant timestep
-dt_const = 1.0*kyr
+dt_const = 1*kyr
 
-maximum_time_step = True
+maximum_time_step = False
 time_step_scaling = 25 # dt = t / time_step_scaling
 
-scaled_time_step = True
+scaled_time_step = False
 dt_max = 0.1*Myr
 
 #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -338,10 +324,10 @@ elasticity = True
 plasticity = True
 
 # --- Phase transition at the bottom boundary ----
-phase_transition = False
+phase_transition = True
 
 # --- Strength of the phase transition at the ice-water boundary ---
-DAL_factor 	= 1e-1 # W/m3
+DAL_factor 	= 0.0 # W/m3
 
 # --- Latent heat of the material ---
 Lt 			= 334.0e3 # J/kg
@@ -360,13 +346,13 @@ eta_0 = 1e15	# Pa.s
 Q_activ = 60e3 	# J/mol
 
 # --- Grain size ---
-d_grain = 1.0e-3
+d_grain = 1e-3
 
 # --- Upper cut-off viscosity ---
 eta_max = 1e23
 
 # --- Lower cut-off value for plastic viscosity ---
-eta_min_plast = eta_max/1e6
+eta_min_plast = eta_max/1e8
 
 # # --- Elasticity ---
 # If elasticity is off, we can compute the new viscosity directly from the strain rate (it will be faster)

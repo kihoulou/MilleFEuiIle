@@ -21,7 +21,7 @@ This module contains the most important computation parameters. It is divided in
 8. Rheology
 
 
-.. automodule:: m_parameters
+.. automodule:: m_parameters_docs
    :members:
    :undoc-members:
    :show-inheritance:

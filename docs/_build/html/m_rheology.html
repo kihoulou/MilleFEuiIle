@@ -12,7 +12,7 @@
 <meta content="m_rheology.py | MilleFEuiIle  documentation" name="twitter:title"/>
 <link href="_static/pygments.css?v=e72c8e07" rel="stylesheet" type="text/css"/>
 <link href="_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
-<link href="_static/custom.css?v=ed219b08" rel="stylesheet" type="text/css"/>
+<link href="_static/custom.css?v=a3a74d27" rel="stylesheet" type="text/css"/>
 <link href="_static/mf.png" rel="icon"/>
 <link href="search.html" rel="search" title="Search"/>
 <link href="genindex.html" rel="index" title="Index"/>
@@ -76,10 +76,13 @@
 <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
 <ul class="current">
 <li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="demos.html"><strong>Demos</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
-<li class="toctree-l2"><a class="reference internal" href="thermalconvection.html">Thermal convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermalconvection.html">1. Thermal convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermalconvectionphase.html">2. Thermal convection with phase transition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermalcompconvection.html">3. Thermo-compositional convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="melting.html">4. Thermal convection with melting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tectonics.html">5. Tectonic extension</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 <li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="modules.html"><strong>MilleFEuille modules</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul class="current" x-show="expanded">
 <li class="toctree-l2"><a class="reference internal" href="m_boundary_conditions.html">m_boundary_conditions.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_check.html">m_check.py</a></li>
@@ -97,6 +100,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">m_rheology.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_timestep.html">m_timestep.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_tracers.html">m_tracers.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main.py</a></li>
 </ul>
 </li>
 </ul>
@@ -127,7 +131,24 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="m_rheology.G">
 <span class="sig-prename descclassname"><span class="pre">m_rheology.</span></span><span class="sig-name descname"><span class="pre">G</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">composition</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_rheology.G" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_rheology.G'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>Returns shear modulus of the material. Can be compositionally-dependent (see the visco-elasticity benchmark in <a class="reference external" href="https://geo.mff.cuni.cz/theses/2025-Kihoulou-PhD.pdf#page=61">Section 4.2.6</a>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>composition</strong> – material composition, e.g. <code class="docutils literal notranslate"><span class="pre">composition</span> <span class="pre">=</span> <span class="pre">[C_mantle,</span> <span class="pre">C_lid,</span> <span class="pre">C_plume]</span></code></p>
+</dd>
+<dt class="field-even">Variables<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>G_ice</strong> – shear modulus of ice <span class="math notranslate nohighlight">\(G_{ice}\)</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><div class="math notranslate nohighlight">
+\[G = G_{ice}\]</div>
+<p>or in case the visco-elasticity benchmark</p>
+<div class="math notranslate nohighlight">
+\[G = G_{mantle}^{C_{mantle}} \cdot G_{lid}^{C_{lid}} \cdot G_{plume}^{C_{plume}}\]</div>
+</p>
+</dd>
+</dl>
+</dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="m_rheology.cohesion">
 <span class="sig-prename descclassname"><span class="pre">m_rheology.</span></span><span class="sig-name descname"><span class="pre">cohesion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plastic_strain</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_rheology.cohesion" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_rheology.cohesion'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
@@ -156,19 +177,64 @@ C_\infty &amp; \text{if } \varepsilon_p \geq \varepsilon_\infty
 <dl class="py function">
 <dt class="sig sig-object py" id="m_rheology.eta">
 <span class="sig-prename descclassname"><span class="pre">m_rheology.</span></span><span class="sig-name descname"><span class="pre">eta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Temp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strain_rate_inv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stress_inv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_rheology.eta" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_rheology.eta'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>Evaluates the temperature- and stress-dependent viscosity for individual deformation mechanisms (dislocation creep, grain boundary slining and bassal slip).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Q</strong> – activation energy <strong>for given mechanism</strong></p></li>
+<li><p><strong>A</strong> – exponential prefactor <strong>for given mechanism</strong></p></li>
+<li><p><strong>n</strong> – stress exponent <strong>for given mechanism</strong></p></li>
+<li><p><strong>m</strong> – grain size exponent <strong>for given mechanism</strong></p></li>
+<li><p><strong>Temp</strong> – temperature</p></li>
+<li><p><strong>stress_invariant</strong> – second invariant of the deviatoric part of the Cauchy stress tensor</p></li>
+<li><p><strong>strain_rate_invariant</strong> – second invariant of the strain rate tensor</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>elasticity</strong> – Chooses between formulas depending whether <code class="docutils literal notranslate"><span class="pre">elasticity</span></code> is turned on or not.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>If <code class="docutils literal notranslate"><span class="pre">elasticity</span> <span class="pre">=</span> <span class="pre">False</span></code>, formula using the strain rate invariant is used</p>
+<div class="math notranslate nohighlight">
+\[\eta_{i} = \frac{1}{3^{(n+1)/2n}\ 2^{(n-1)/n}} A^{-1/n}d^{m/n}\dot{\varepsilon}_{II}^{(1-n)/n}\exp\left( \frac{Q}{nRT} \right)\]</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">elasticity</span> <span class="pre">=</span> <span class="pre">True</span></code>, formula using the Cauchy stress invariant is used</p>
+<div class="math notranslate nohighlight">
+\[\eta_{i} = \frac{1}{3^{(n+1)/2n}} A^{-1}d^{m}\dot{\sigma}_{II}^{1-n}\exp\left( \frac{Q}{RT} \right)\]</div>
+</p>
+</dd>
+</dl>
+</dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="m_rheology.eta_BS">
 <span class="sig-prename descclassname"><span class="pre">m_rheology.</span></span><span class="sig-name descname"><span class="pre">eta_BS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Temp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strain_rate_II</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stress_II</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_rheology.eta_BS" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_rheology.eta_BS'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>The same as <a class="reference internal" href="#m_rheology.eta_disl" title="m_rheology.eta_disl"><code class="xref py py-func docutils literal notranslate"><span class="pre">m_rheology.eta_disl()</span></code></a>, but for basal slip parameters.</p>
+</dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="m_rheology.eta_GBS">
 <span class="sig-prename descclassname"><span class="pre">m_rheology.</span></span><span class="sig-name descname"><span class="pre">eta_GBS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Temp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strain_rate_II</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stress_II</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_rheology.eta_GBS" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_rheology.eta_GBS'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>The same as <a class="reference internal" href="#m_rheology.eta_disl" title="m_rheology.eta_disl"><code class="xref py py-func docutils literal notranslate"><span class="pre">m_rheology.eta_disl()</span></code></a>, but for grain boundary sliding parameters.</p>
+</dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="m_rheology.eta_diff">
 <span class="sig-prename descclassname"><span class="pre">m_rheology.</span></span><span class="sig-name descname"><span class="pre">eta_diff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Temp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_rheology.eta_diff" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_rheology.eta_diff'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>Computes the viscosity resulting from the diffusion creep, taking into account the boundary and the volumetric diffusion <span class="math notranslate nohighlight">\(\eta_{\rm diff}\)</span>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Temp</strong> – temperature (<span class="math notranslate nohighlight">\(T\)</span>)</p>
+</dd>
+<dt class="field-even">Variables<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>d_grain</strong> – grain size</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><div class="math notranslate nohighlight">
+\[\eta_{diff} = \frac{1}{2 \cdot 3/2 \cdot 14 V_m} RTd^2 \left(D_v + \frac{\pi\delta D_b}{d} \right)^{-1}\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}D_{v/b} = D_{0,v/b}\exp\left(-\frac{Q}{RT} \right)\\\end{split}\]</div>
+</p>
+</dd>
+</dl>
+</dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="m_rheology.eta_disl">
 <span class="sig-prename descclassname"><span class="pre">m_rheology.</span></span><span class="sig-name descname"><span class="pre">eta_disl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Temp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strain_rate_II</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stress_II</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_rheology.eta_disl" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_rheology.eta_disl'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
@@ -194,7 +260,7 @@ C_\infty &amp; \text{if } \varepsilon_p \geq \varepsilon_\infty
 </ul>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>calls the function <code class="docutils literal notranslate"><span class="pre">eta()</span></code> with the parameters of dislocation creep</p>
+<dd class="field-odd"><p>calls the function <a class="reference internal" href="#m_rheology.eta" title="m_rheology.eta"><code class="xref py py-func docutils literal notranslate"><span class="pre">m_rheology.eta()</span></code></a> with the parameters of dislocation creep</p>
 </dd>
 </dl>
 </dd></dl>
@@ -260,16 +326,16 @@ C_\infty &amp; \text{if } \varepsilon_p \geq \varepsilon_\infty
 <dd class="field-even"><p><strong>eta_min_plast</strong> – lower cut-off value for plastic viscosity <span class="math notranslate nohighlight">\(\eta_{p}\)</span>. Maintains reasonable viscosity contrast between tectonic faults and their surrounfings, see <code class="docutils literal notranslate"><span class="pre">m_parameters.py</span></code>.</p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p>
+<dd class="field-odd"><p><div class="math notranslate nohighlight">
+\[\eta_{vp} = \textrm{min}(\textrm{max}(\eta_p,\ \eta_p^{min}) ,\ \eta_v)\]</div>
+</p>
 </dd>
 </dl>
-<div class="math notranslate nohighlight">
-\[\eta_{vp} = \textrm{min}(\textrm{max}(\eta_p,\ \eta_p^{min}) ,\ \eta_v)\]</div>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="m_rheology.get_new_stress">
 <span class="sig-prename descclassname"><span class="pre">m_rheology.</span></span><span class="sig-name descname"><span class="pre">get_new_stress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Temp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stress_dev_inv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stress_dev_inv_k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strain_rate_invariant</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">composition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shear_modulus</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Picard_iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_rheology.get_new_stress" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_rheology.get_new_stress'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><p>Evaluates the deviatoric stress invariant assuming fully ductile viscosity.</p>
+<dd><p>Evaluates the visco-elastic stress assuming fully ductile viscosity.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -277,28 +343,77 @@ C_\infty &amp; \text{if } \varepsilon_p \geq \varepsilon_\infty
 <li><p><strong>Temp</strong> – temperature</p></li>
 <li><p><strong>xm</strong> – melt fraction</p></li>
 <li><p><strong>stress_dev_inv</strong> – second invariant of the deviatoric part of the Cauchy stress tensor</p></li>
-<li><p><strong>strain_rate_invariant</strong> – second invariant of the strain rate tensor</p></li>
+<li><p><strong>strain_rate_inv</strong> – second invariant of the strain rate tensor</p></li>
+<li><p><strong>strain_rate_inv_k</strong> – second invariant of the strain rate tensor from the previous time step</p></li>
+<li><p><strong>composition</strong> – material composition</p></li>
+<li><p><strong>shear_modulus</strong> – shear modulus</p></li>
+<li><p><strong>step</strong> – number of the time step (needed for 0th step for viscosity)</p></li>
+<li><p><strong>Picard_iter</strong> – number of the Picard iteration (needed for 0th iteration for viscosity)</p></li>
+<li><p><strong>dt</strong> – length of the time step</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p></p>
-</dd>
-</dl>
+<dd class="field-even"><p><p>If <code class="docutils literal notranslate"><span class="pre">elasticity</span> <span class="pre">=</span> <span class="pre">False</span></code>,</p>
+<div class="math notranslate nohighlight">
+\[\sigma_{II}^{visc} = 2Z\eta_{visc}\dot{\varepsilon}_{II} + (1-Z)\sigma_{II}^k\]</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">elasticity</span> <span class="pre">=</span> <span class="pre">False</span></code>,</p>
 <div class="math notranslate nohighlight">
 \[\sigma_{II}^{visc} = 2\eta_{visc}\dot{\varepsilon}_{II}\]</div>
+</p>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="m_rheology.get_new_stress_iter">
 <span class="sig-prename descclassname"><span class="pre">m_rheology.</span></span><span class="sig-name descname"><span class="pre">get_new_stress_iter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Temp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stress_dev_inv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stress_dev_inv_k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strain_rate_inv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">composition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shear_modulus</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Picard_iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_rheology.get_new_stress_iter" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_rheology.get_new_stress_iter'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>Performs local visco-elasto-plastic iterations to ensure consistency between viscosity and stress during Picard iterations. Parameters
+are the same as in <a class="reference internal" href="#m_rheology.get_new_stress" title="m_rheology.get_new_stress"><code class="xref py py-func docutils literal notranslate"><span class="pre">m_rheology.get_new_stress()</span></code></a>.</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>These iterations are needed every time when <code class="docutils literal notranslate"><span class="pre">elasticity</span> <span class="pre">=</span> <span class="pre">True</span></code> and the viscosity is stress-dependent.</p>
+</div>
+</dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="m_rheology.max_function">
 <span class="sig-prename descclassname"><span class="pre">m_rheology.</span></span><span class="sig-name descname"><span class="pre">max_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_rheology.max_function" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_rheology.max_function'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>Numerical implementation of the maximum of two values. Extends the python <code class="docutils literal notranslate"><span class="pre">max()</span></code> to functions on the mesh.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> – value or function on the mesh</p></li>
+<li><p><strong>b</strong> – value or function on the mesh</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><div class="math notranslate nohighlight">
+\[\text{max}(a,b) = \frac{a + b}{2} + \frac{\text{abs}(a + b)}{2}\]</div>
+</p>
+</dd>
+</dl>
+</dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="m_rheology.plastic_strain_integration">
 <span class="sig-prename descclassname"><span class="pre">m_rheology.</span></span><span class="sig-name descname"><span class="pre">plastic_strain_integration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracers_in_cells</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yield_function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strain_rate</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_rheology.plastic_strain_integration" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_rheology.plastic_strain_integration'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>Performs integration and healing of the plastic strain <span class="math notranslate nohighlight">\(\varepsilon_p\)</span> on markers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>yield_function</strong> – yield function (<span class="math notranslate nohighlight">\(F = \sigma_{II} - \sigma_Y\)</span>)</p></li>
+<li><p><strong>dt</strong> – time step length (<span class="math notranslate nohighlight">\(\Delta t\)</span>)</p></li>
+<li><p><strong>strain_rate</strong> – second invariant of the strain rate tensor (<span class="math notranslate nohighlight">\(\dot{\varepsilon}_{II}\)</span>)</p></li>
+<li><p><strong>healing_timescale</strong> – healing time scale of the material (see <code class="docutils literal notranslate"><span class="pre">healing_timescale</span></code> in <code class="docutils literal notranslate"><span class="pre">m_parameters.py</span></code>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><div class="math notranslate nohighlight">
+\[\begin{split}\varepsilon_p = \begin{cases}
+\dfrac{\varepsilon_p^k + \Delta t \dot{\varepsilon}_{II}}{1 + \Delta t / \tau} &amp;\text{if } F = 0\\
+\dfrac{\varepsilon_p^k}{1 + \Delta t / \tau} &amp; \text{if } F &lt; 0\\
+\end{cases}\end{split}\]</div>
+</p>
+</dd>
+</dl>
+</dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="m_rheology.sigma_yield">
 <span class="sig-prename descclassname"><span class="pre">m_rheology.</span></span><span class="sig-name descname"><span class="pre">sigma_yield</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plastic_strain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">composition</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_rheology.sigma_yield" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_rheology.sigma_yield'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
@@ -329,16 +444,27 @@ C_\infty &amp; \text{if } \varepsilon_p \geq \varepsilon_\infty
 <dd class="field-odd"><p><strong>v</strong> – velocity</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p></p>
+<dd class="field-even"><p><div class="math notranslate nohighlight">
+\[\dot{\varepsilon}_{II} = \sqrt{\frac{ \dot{\boldsymbol{\varepsilon}} : \dot{\boldsymbol{\varepsilon}}}{2}}\]</div>
+</p>
 </dd>
 </dl>
-<div class="math notranslate nohighlight">
-\[\dot{\varepsilon}_{II} = \sqrt{\frac{ \dot{\varepsilon} : \dot{\varepsilon}}{2}}\]</div>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="m_rheology.tensor_2nd_invariant">
 <span class="sig-prename descclassname"><span class="pre">m_rheology.</span></span><span class="sig-name descname"><span class="pre">tensor_2nd_invariant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_rheology.tensor_2nd_invariant" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_rheology.tensor_2nd_invariant'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>Computes the second invariant of a tensor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>A</strong> – any tensor</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><div class="math notranslate nohighlight">
+\[\dot{A}_{II} = \sqrt{\frac{ \dot{\boldsymbol{A}} : \dot{\boldsymbol{A}}}{2}}\]</div>
+</p>
+</dd>
+</dl>
+</dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="m_rheology.tidal_heating">
 <span class="sig-prename descclassname"><span class="pre">m_rheology.</span></span><span class="sig-name descname"><span class="pre">tidal_heating</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">visc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_rheology.tidal_heating" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_rheology.tidal_heating'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>

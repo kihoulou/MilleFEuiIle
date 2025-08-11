@@ -12,10 +12,11 @@
 <meta content="m_tracers.py | MilleFEuiIle  documentation" name="twitter:title"/>
 <link href="_static/pygments.css?v=e72c8e07" rel="stylesheet" type="text/css"/>
 <link href="_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
-<link href="_static/custom.css?v=ed219b08" rel="stylesheet" type="text/css"/>
+<link href="_static/custom.css?v=a3a74d27" rel="stylesheet" type="text/css"/>
 <link href="_static/mf.png" rel="icon"/>
 <link href="search.html" rel="search" title="Search"/>
 <link href="genindex.html" rel="index" title="Index"/>
+<link href="main.html" rel="next" title="main.py"/>
 <link href="m_timestep.html" rel="prev" title="m_timestep.py"/>
 <script>
     <!-- Prevent Flash of wrong theme -->
@@ -75,10 +76,13 @@
 <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
 <ul class="current">
 <li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="demos.html"><strong>Demos</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
-<li class="toctree-l2"><a class="reference internal" href="thermalconvection.html">Thermal convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermalconvection.html">1. Thermal convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermalconvectionphase.html">2. Thermal convection with phase transition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermalcompconvection.html">3. Thermo-compositional convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="melting.html">4. Thermal convection with melting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tectonics.html">5. Tectonic extension</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 <li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="modules.html"><strong>MilleFEuille modules</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul class="current" x-show="expanded">
 <li class="toctree-l2"><a class="reference internal" href="m_boundary_conditions.html">m_boundary_conditions.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_check.html">m_check.py</a></li>
@@ -96,6 +100,7 @@
 <li class="toctree-l2"><a class="reference internal" href="m_rheology.html">m_rheology.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_timestep.html">m_timestep.py</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">m_tracers.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main.py</a></li>
 </ul>
 </li>
 </ul>
@@ -127,54 +132,155 @@
 <dt class="sig sig-object py" id="m_tracers.Tracers">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">m_tracers.</span></span><span class="sig-name descname"><span class="pre">Tracers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MeshClass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ElemClass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FilesClass</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_tracers.Tracers" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_tracers.Tracers'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class that contains functions related to initial distribution, addition, advection and removal of the particle tracers.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_tracers.Tracers.add_tracers">
 <span class="sig-name descname"><span class="pre">add_tracers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_tracers.Tracers.add_tracers" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_tracers.Tracers.add_tracers'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>When number of tracers in an element drops below a critical level (defined within),
+new tracers will be added to ensure that the element will always contain some tracers.
+The physical properties are assigned from the value at the element.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Tracers are not added if:</p>
+<ul class="simple">
+<li><p>the composition of the element is mixed (tracer can have only one composition)</p></li>
+</ul>
+<p>and adding would violate the mass conservation.</p>
+<ul class="simple">
+<li><p>there is a part of the domain specified by <code class="docutils literal notranslate"><span class="pre">allow_empty_cells</span> <span class="pre">=</span> <span class="pre">True</span></code> and <code class="docutils literal notranslate"><span class="pre">empty_region</span></code></p></li>
+</ul>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Under some circumstances, a cell might loose all the tracers during one time step (e.g., when the surface
+topography moves too quickly during one time step) and the tracers are then added in the same manner as above.
+These cases are rare, though undesirable, therefore <strong>occuremce of empty cells</strong> is monitored in each time step and
+recorded in <code class="docutils literal notranslate"><span class="pre">data_*/empty_cells.dat</span></code>.</p>
+</div>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_tracers.Tracers.advect_tracers">
 <span class="sig-name descname"><span class="pre">advect_tracers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_tracers.Tracers.advect_tracers" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_tracers.Tracers.advect_tracers'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>Advects the tracers by the velocity field using the 2<sup>nd</sup> or 
+4<sup>th</sup>-order Runge-Kutta integration scheme (see <code class="docutils literal notranslate"><span class="pre">integration_method</span></code> in <code class="docutils literal notranslate"><span class="pre">m_parameters.py</span></code>). Each process advects the tracers that
+lie within its part of the domain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v</strong> – flow velocity</p></li>
+<li><p><strong>v_mesh</strong> – mesh deformation velocity (serves to anticipate the mesh motion)</p></li>
+<li><p><strong>dt</strong> – time step length</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The tracers can be advected succesfully by this function only if the position before
+and after the advection lies in the same rank. If the advection fails at any point
+of the integration scheme, the tracer is passed to a function <a class="reference internal" href="#m_tracers.Tracers.find_tracers" title="m_tracers.Tracers.find_tracers"><code class="xref py py-func docutils literal notranslate"><span class="pre">m_tracers.Tracers.find_tracers()</span></code></a>.</p>
+</div>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_tracers.Tracers.check_tracers">
 <span class="sig-name descname"><span class="pre">check_tracers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_tracers.Tracers.check_tracers" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_tracers.Tracers.check_tracers'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>Checks whether the number of the tracers in the <code class="docutils literal notranslate"><span class="pre">tracers</span></code> lists (corrected for empty places called <code class="docutils literal notranslate"><span class="pre">vacancy</span></code>)
+matches with the total sum of the tracers in the cells.</p>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_tracers.Tracers.delete_and_find">
 <span class="sig-name descname"><span class="pre">delete_and_find</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_tracers.Tracers.delete_and_find" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_tracers.Tracers.delete_and_find'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>When a tracer moves from one rank to another, this function deletes it from the <code class="docutils literal notranslate"><span class="pre">tracers</span></code> list, leaving an
+unoccupied position <code class="docutils literal notranslate"><span class="pre">[]</span></code>. The index of this position is entered to the <code class="docutils literal notranslate"><span class="pre">vacancy</span></code> list and new tracers will be
+added there preferentially over adding them at the end of the <code class="docutils literal notranslate"><span class="pre">tracers</span></code> list (which protects the list from unconstrained growth).
+Finally, for the moving tracer, the rank and cell where it newly belongs is found and the tracer is added to the <code class="docutils literal notranslate"><span class="pre">tracers</span></code> list of the respective rank.</p>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_tracers.Tracers.find_tracers">
 <span class="sig-name descname"><span class="pre">find_tracers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_tracers.Tracers.find_tracers" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_tracers.Tracers.find_tracers'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>Advects the tracers that <strong>changed the rank</strong> during the advection (i.e., could not
+be advected by <a class="reference internal" href="#m_tracers.Tracers.advect_tracers" title="m_tracers.Tracers.advect_tracers"><code class="xref py py-func docutils literal notranslate"><span class="pre">m_tracers.Tracers.advect_tracers()</span></code></a>) by the velocity field using the 2<sup>nd</sup> or 
+4<sup>th</sup>-order Runge-Kutta integration scheme.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v</strong> – flow velocity</p></li>
+<li><p><strong>dt</strong> – time step length</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_tracers.Tracers.introduce_tracers">
 <span class="sig-name descname"><span class="pre">introduce_tracers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_tracers.Tracers.introduce_tracers" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_tracers.Tracers.introduce_tracers'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>At the beginning of the simulation, this function</p>
+<ul class="simple">
+<li><p>distributes the tracers regularly into the elements</p></li>
+<li><p>assignes the cell number (<code class="docutils literal notranslate"><span class="pre">j</span></code>) to a corresponding tracer</p></li>
+<li><p>assignes the tracer number (its position within the <code class="docutils literal notranslate"><span class="pre">tracers</span></code> array) to a corresponding cell <code class="docutils literal notranslate"><span class="pre">tracers_in_cell</span></code></p></li>
+</ul>
+<p>Each tracer carries the following properties</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Create an ID that will be unique ---</span>
+</span><span id="line-2"><span class="n">unique_ID</span> <span class="o">=</span> <span class="n">tracer_no</span><span class="o">*</span><span class="n">size</span> <span class="o">+</span> <span class="n">rank</span>
+</span><span id="line-3">
+</span><span id="line-4"><span class="bp">self</span><span class="o">.</span><span class="n">tracers</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">x_pos</span><span class="p">,</span> <span class="n">y_pos</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">ocean_mat</span><span class="p">,</span> <span class="n">surf_mat</span><span class="p">,</span> <span class="n">y_pos</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">unique_ID</span><span class="p">])</span>
+</span><span id="line-5">
+</span><span id="line-6"><span class="c1"># --- Essential for advection of tracers ---</span>
+</span><span id="line-7"><span class="c1"># 0) x-position                     </span>
+</span><span id="line-8"><span class="c1"># 1) y-position                     </span>
+</span><span id="line-9"><span class="c1"># 2) cell where the tracer is         </span>
+</span><span id="line-10"><span class="c1"># 3) rank where the tracer is</span>
+</span><span id="line-11">
+</span><span id="line-12"><span class="c1"># --- Quantities to be advected ---</span>
+</span><span id="line-13"><span class="c1"># 4) tau_xx</span>
+</span><span id="line-14"><span class="c1"># 5) tau_xz</span>
+</span><span id="line-15"><span class="c1"># 6) plastic strain</span>
+</span><span id="line-16"><span class="c1"># 7) ocean material </span>
+</span><span id="line-17"><span class="c1"># 8) surface material</span>
+</span><span id="line-18"><span class="c1"># 9) original depth of the tracer</span>
+</span><span id="line-19"><span class="c1"># 10) composition [mat1, mat2, ...]</span>
+</span><span id="line-20"><span class="c1"># 11) [melt fraction, delta_T]</span>
+</span><span id="line-21"><span class="c1"># 12) tracer original (0) or added (1)</span>
+</span><span id="line-22"><span class="c1"># 13) unique tracer ID</span>
+</span></code></pre></div>
+</div>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_tracers.Tracers.load_tracers">
 <span class="sig-name descname"><span class="pre">load_tracers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_tracers.Tracers.load_tracers" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_tracers.Tracers.load_tracers'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>If the simulation is being restarted from a saved checkpoint (<code class="docutils literal notranslate"><span class="pre">reload_tracers</span> <span class="pre">=</span> <span class="pre">True</span></code> with <code class="docutils literal notranslate"><span class="pre">reload_name</span></code> and <code class="docutils literal notranslate"><span class="pre">reload_tracers_step</span></code> specified), 
+this function loads tracers from a given file located in the respective directory.</p>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_tracers.Tracers.rank_interpolation">
 <span class="sig-name descname"><span class="pre">rank_interpolation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_tracers.Tracers.rank_interpolation" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_tracers.Tracers.rank_interpolation'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>Assigns the rank of the process to the function <code class="docutils literal notranslate"><span class="pre">mesh_ranks</span></code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>This function is useful to visualize which process covers which part of the computational domain.</p>
+</div>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_tracers.Tracers.save_header_tracer">
 <span class="sig-name descname"><span class="pre">save_header_tracer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_tracers.Tracers.save_header_tracer" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_tracers.Tracers.save_header_tracer'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>Saves the header for the tracer data files in <code class="docutils literal notranslate"><span class="pre">data_*/tracetrs/step_*.txt</span></code>.
+Inputs for the header are given in the <code class="docutils literal notranslate"><span class="pre">Tracers_header</span></code> list.</p>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_tracers.Tracers.save_indiv_tracer">
 <span class="sig-name descname"><span class="pre">save_indiv_tracer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_tracers.Tracers.save_indiv_tracer" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_tracers.Tracers.save_indiv_tracer'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>Saves the variables carried by an individual tracer. The tracer’s <em>x</em> and <em>y</em> coordinates
+are saved by default, other are specified in the <code class="docutils literal notranslate"><span class="pre">Tracers_Output</span></code> list.</p>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_tracers.Tracers.save_tracers">
 <span class="sig-name descname"><span class="pre">save_tracers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_tracers.Tracers.save_tracers" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_tracers.Tracers.save_tracers'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>Saves the tracers in a dedicated directory <code class="docutils literal notranslate"><span class="pre">data_*/tracetrs/step_*.txt</span></code>.</p>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_tracers.Tracers.tracer_count_interpolation">
 <span class="sig-name descname"><span class="pre">tracer_count_interpolation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_tracers.Tracers.tracer_count_interpolation" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_tracers.Tracers.tracer_count_interpolation'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>Counts the number of tracers inside an element and assigns it to the dunction <code class="docutils literal notranslate"><span class="pre">number_of_tracers</span></code>.</p>
+</dd></dl>
 </dd></dl>
 </section>
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">

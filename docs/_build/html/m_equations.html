@@ -12,7 +12,7 @@
 <meta content="m_equations.py | MilleFEuiIle  documentation" name="twitter:title"/>
 <link href="_static/pygments.css?v=e72c8e07" rel="stylesheet" type="text/css"/>
 <link href="_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
-<link href="_static/custom.css?v=ed219b08" rel="stylesheet" type="text/css"/>
+<link href="_static/custom.css?v=a3a74d27" rel="stylesheet" type="text/css"/>
 <link href="_static/mf.png" rel="icon"/>
 <link href="search.html" rel="search" title="Search"/>
 <link href="genindex.html" rel="index" title="Index"/>
@@ -76,10 +76,13 @@
 <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
 <ul class="current">
 <li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="demos.html"><strong>Demos</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
-<li class="toctree-l2"><a class="reference internal" href="thermalconvection.html">Thermal convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermalconvection.html">1. Thermal convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermalconvectionphase.html">2. Thermal convection with phase transition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermalcompconvection.html">3. Thermo-compositional convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="melting.html">4. Thermal convection with melting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tectonics.html">5. Tectonic extension</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 <li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="modules.html"><strong>MilleFEuille modules</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul class="current" x-show="expanded">
 <li class="toctree-l2"><a class="reference internal" href="m_boundary_conditions.html">m_boundary_conditions.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_check.html">m_check.py</a></li>
@@ -97,6 +100,7 @@
 <li class="toctree-l2"><a class="reference internal" href="m_rheology.html">m_rheology.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_timestep.html">m_timestep.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_tracers.html">m_tracers.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main.py</a></li>
 </ul>
 </li>
 </ul>
@@ -264,9 +268,9 @@ are added</p>
 \[- \int_{\Gamma_{\rm top}} (1 - A)I\hat{T}\ + T^4\varepsilon\sigma_{SB}\hat{T}\ \textrm{d}\Gamma_{\rm top}\]</div>
 <p>where</p>
 <ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(I\)</span> is the insolation at the body’s surface (in <a class="reference internal" href="m_parameters.html#module-m_parameters" title="m_parameters"><code class="xref py py-mod docutils literal notranslate"><span class="pre">m_parameters</span></code></a>)</p></li>
-<li><p><span class="math notranslate nohighlight">\(A\)</span> is the albedo of the body’s surface (in <a class="reference internal" href="m_parameters.html#module-m_parameters" title="m_parameters"><code class="xref py py-mod docutils literal notranslate"><span class="pre">m_parameters</span></code></a>)</p></li>
-<li><p><span class="math notranslate nohighlight">\(\varepsilon\)</span> is the body’s surface emmisivity (in <a class="reference internal" href="m_parameters.html#module-m_parameters" title="m_parameters"><code class="xref py py-mod docutils literal notranslate"><span class="pre">m_parameters</span></code></a>)</p></li>
+<li><p><span class="math notranslate nohighlight">\(I\)</span> is the insolation at the body’s surface (in <code class="xref py py-mod docutils literal notranslate"><span class="pre">m_parameters</span></code>)</p></li>
+<li><p><span class="math notranslate nohighlight">\(A\)</span> is the albedo of the body’s surface (in <code class="xref py py-mod docutils literal notranslate"><span class="pre">m_parameters</span></code>)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\varepsilon\)</span> is the body’s surface emmisivity (in <code class="xref py py-mod docutils literal notranslate"><span class="pre">m_parameters</span></code>)</p></li>
 <li><p><span class="math notranslate nohighlight">\(\sigma_{SB}\)</span> is the Stefan-Boltzmann constant (in <a class="reference internal" href="m_constants.html#module-m_constants" title="m_constants"><code class="xref py py-mod docutils literal notranslate"><span class="pre">m_constants</span></code></a>)</p></li>
 </ul>
 <div class="admonition note">
@@ -357,11 +361,11 @@ are added</p>
 </ul>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p>
+<dd class="field-odd"><p><div class="math notranslate nohighlight">
+\[T^\prime = T - A\sin\left(\frac{\pi y}{h}\right) \cdot\cos\left(\frac{2\pi fx}{l}\right)\]</div>
+</p>
 </dd>
 </dl>
-<div class="math notranslate nohighlight">
-\[T^\prime = T - A\sin\left(\frac{\pi y}{h}\right) \cdot\cos\left(\frac{2\pi fx}{l}\right)\]</div>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_equations.Equations.update_stress">

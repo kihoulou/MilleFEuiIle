@@ -11,10 +11,6 @@ comm = MPI.comm_world
 rank = MPI.rank(comm)
 size = MPI.size(comm)
 
-def Max(a, b): return (a+b+abs(a-b))/2.0
-
-def Min(a, b): return (a+b-abs(a-b))/2.0
-
 def tracer_counting(mesh, tracers_in_cells, tracers):
     n1 = 0.0
     n2 = 0.0

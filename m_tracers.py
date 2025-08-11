@@ -7,6 +7,10 @@ rank = MPI.rank(comm)
 size = MPI.size(comm)
 
 class Tracers:
+    """Class that contains functions related to initial distribution, addition, advection and removal of the particle tracers.
+
+    """
+
     def __init__(self, MeshClass, ElemClass, FilesClass):        
         self.mesh = MeshClass.mesh
         self.moving_mesh = MeshClass.moving_mesh
@@ -59,10 +63,19 @@ class Tracers:
                 self.load_tracers()
 
     def save_tracers(self, step):
+        """Saves the tracers in a dedicated directory ``data_*/tracetrs/step_*.txt``.
+
+        """
+        
         file = open("data_" + self.name + "/tracers/step_" + str(step) + ".dat","a")
-        self.save_header_tracer(file)
+        if (rank == 0):
+            self.save_header_tracer(file)
+        file.close()
+
+        MPI.barrier(comm)
         for j in range (0, len(self.tracers)): 
             if (j not in self.vacancy):
+                file = open("data_" + self.name + "/tracers/step_" + str(step) + ".dat","a")
                 self.save_indiv_tracer(file, j,\
                             rank            = self.tracers[j][3],\
                             dev_stress_xx   = self.tracers[j][4],\
@@ -75,9 +88,14 @@ class Tracers:
                             melt_fraction   = self.tracers[j][11][0],\
                             origin          = self.tracers[j][12],\
                             id              = self.tracers[j][13])
-        file.close()
+                file.close()
     
     def save_header_tracer(self, file):
+        """Saves the header for the tracer data files in ``data_*/tracetrs/step_*.txt``.
+        Inputs for the header are given in the ``Tracers_header`` list.
+
+        """
+
         file.write((2*"%s\t\t")%("x_pos (m)", "y_pos (m)"))   
 
         for arg in Tracers_header:
@@ -85,6 +103,11 @@ class Tracers:
         file.write("\n")
 
     def save_indiv_tracer(self, file, j, **kwargs):
+        """Saves the variables carried by an individual tracer. The tracer's *x* and *y* coordinates
+        are saved by default, other are specified in the ``Tracers_Output`` list.
+
+        """
+
         file.write((2*"%.7E\t")%(self.tracers[j][0], self.tracers[j][1]))   
 
         for arg in Tracers_Output:
@@ -96,8 +119,16 @@ class Tracers:
                     else:
                         file.write(("%.5E\t")%(kwargs[key]))
         file.write("\n")
+        
 
     def rank_interpolation(self):
+        """Assigns the rank of the process to the function ``mesh_ranks``.
+
+        .. tip::
+            This function is useful to visualize which process covers which part of the computational domain.
+
+        """
+
         ranks = []
         for j in range(self.mesh.num_cells()):
             ranks.append(rank)
@@ -106,6 +137,10 @@ class Tracers:
         self.mesh_ranks.vector().set_local(ranks)   
 
     def tracer_count_interpolation(self):
+        """Counts the number of tracers inside an element and assigns it to the dunction ``number_of_tracers``.
+
+        """
+
         ranks = []
         for j in range(self.mesh.num_cells()):
             ranks.append(len(self.tracers_in_cells[j]))
@@ -114,6 +149,41 @@ class Tracers:
         self.number_of_tracers.vector().set_local(ranks)
 
     def introduce_tracers(self):
+        """At the beginning of the simulation, this function
+
+        * distributes the tracers regularly into the elements
+        * assignes the cell number (``j``) to a corresponding tracer
+        * assignes the tracer number (its position within the ``tracers`` array) to a corresponding cell ``tracers_in_cell``
+
+        Each tracer carries the following properties
+
+        .. code-block:: python
+
+            # --- Create an ID that will be unique ---
+            unique_ID = tracer_no*size + rank
+
+            self.tracers.append([x_pos, y_pos, j, rank, 0.0, 0.0, 0.0, ocean_mat, surf_mat, y_pos, comp, [0.0, 0.0], 0.0, unique_ID])
+
+            # --- Essential for advection of tracers ---
+            # 0) x-position                     
+            # 1) y-position                     
+            # 2) cell where the tracer is         
+            # 3) rank where the tracer is
+
+            # --- Quantities to be advected ---
+            # 4) tau_xx
+            # 5) tau_xz
+            # 6) plastic strain
+            # 7) ocean material 
+            # 8) surface material
+            # 9) original depth of the tracer
+            # 10) composition [mat1, mat2, ...]
+            # 11) [melt fraction, delta_T]
+            # 12) tracer original (0) or added (1)
+            # 13) unique tracer ID
+
+        """
+
         tracer_no = 0
 
         for j in range(self.mesh.num_cells()):
@@ -278,8 +348,12 @@ class Tracers:
                         tracer_no +=1   
 
     def load_tracers(self):
-        # infile = open("data_"+reload_name+"/tracers/step_"+str(reload_step)+".dat", "r") 
-        infile = open("step_3000_new.dat", "r") 
+        """ If the simulation is being restarted from a saved checkpoint (``reload_tracers = True`` with ``reload_name`` and ``reload_tracers_step`` specified), 
+        this function loads tracers from a given file located in the respective directory.
+
+        """
+
+        infile = open("data_"+reload_name+"/tracers/step_"+str(reload_tracers_step)+".dat", "r") 
         lines = infile.readlines() 
         tracer_no=0
 
@@ -327,6 +401,20 @@ class Tracers:
         infile.close()
 
     def advect_tracers(self, v, v_mesh, dt):
+        """ Advects the tracers by the velocity field using the 2\ :sup:`nd` or 
+        4\ :sup:`th`-order Runge-Kutta integration scheme (see ``integration_method`` in ``m_parameters.py``). Each process advects the tracers that
+        lie within its part of the domain.
+
+        :param v: flow velocity
+        :param v_mesh: mesh deformation velocity (serves to anticipate the mesh motion)
+        :param dt: time step length
+
+        .. note::
+            The tracers can be advected succesfully by this function only if the position before
+            and after the advection lies in the same rank. If the advection fails at any point
+            of the integration scheme, the tracer is passed to a function :func:`m_tracers.Tracers.find_tracers`.
+
+        """
         
         self.start_advection = time.time()
         tracers_process = len(self.tracers)
@@ -404,6 +492,14 @@ class Tracers:
                 print("\t---> There are no tracers to advect.")
 
     def find_tracers(self, v, dt):
+        """ Advects the tracers that **changed the rank** during the advection (i.e., could not
+        be advected by :func:`m_tracers.Tracers.advect_tracers`) by the velocity field using the 2\ :sup:`nd` or 
+        4\ :sup:`th`-order Runge-Kutta integration scheme. 
+
+        :param v: flow velocity
+        :param dt: time step length
+
+        """
 
         self.tracers_to_find = []
         all_moving_tracers = comm.allgather(self.moving_tracers)
@@ -521,6 +617,11 @@ class Tracers:
             print(" ")
 
     def check_tracers(self):
+        """ Checks whether the number of the tracers in the ``tracers`` lists (corrected for empty places called ``vacancy``)
+        matches with the total sum of the tracers in the cells.
+
+        """
+
         # --- Check number of tracers in cells ---
         TiC_sum = 0
 
@@ -539,6 +640,13 @@ class Tracers:
             print("\tNumber of tracers in cells =", int(TiC_sum))
             
     def delete_and_find(self):
+        """ When a tracer moves from one rank to another, this function deletes it from the ``tracers`` list, leaving an
+        unoccupied position ``[]``. The index of this position is entered to the ``vacancy`` list and new tracers will be
+        added there preferentially over adding them at the end of the ``tracers`` list (which protects the list from unconstrained growth).
+        Finally, for the moving tracer, the rank and cell where it newly belongs is found and the tracer is added to the ``tracers`` list of the respective rank.
+
+        """
+
         if (rank == 0):
             print("")
             print("\tSorting moving tracers...")
@@ -599,6 +707,27 @@ class Tracers:
             print("")
 
     def add_tracers(self, t, step):
+        """ When number of tracers in an element drops below a critical level (defined within),
+        new tracers will be added to ensure that the element will always contain some tracers.
+        The physical properties are assigned from the value at the element.
+
+        ..  note::
+
+            Tracers are not added if:
+
+            * the composition of the element is mixed (tracer can have only one composition)
+            and adding would violate the mass conservation.
+
+            * there is a part of the domain specified by ``allow_empty_cells = True`` and ``empty_region``
+
+        ..  caution::
+
+            Under some circumstances, a cell might loose all the tracers during one time step (e.g., when the surface
+            topography moves too quickly during one time step) and the tracers are then added in the same manner as above.
+            These cases are rare, though undesirable, therefore **occuremce of empty cells** is monitored in each time step and
+            recorded in ``data_*/empty_cells.dat``.
+
+        """
 
         # --- Search the mesh for empty cells ---
         case = 0

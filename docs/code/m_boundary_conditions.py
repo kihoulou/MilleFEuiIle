@@ -28,7 +28,7 @@ def apply_temperature_BC(sCG2, boundary_parts):
     return bc_temp
 
 class Point_Fixed_Pressure(SubDomain):
-    def inside(self, x,):
+    def inside(self, x, on_boundary):
         return near(x[0], 0.0) and near(x[1], height)
 
 def apply_velocity_BC(V, boundary_parts, top_left):

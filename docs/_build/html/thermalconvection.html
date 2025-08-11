@@ -7,16 +7,16 @@
 <meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
 <meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Thermal convection | MilleFEuiIle  documentation</title>
-<meta content="Thermal convection | MilleFEuiIle  documentation" property="og:title"/>
-<meta content="Thermal convection | MilleFEuiIle  documentation" name="twitter:title"/>
+<title>1. Thermal convection | MilleFEuiIle  documentation</title>
+<meta content="1. Thermal convection | MilleFEuiIle  documentation" property="og:title"/>
+<meta content="1. Thermal convection | MilleFEuiIle  documentation" name="twitter:title"/>
 <link href="_static/pygments.css?v=e72c8e07" rel="stylesheet" type="text/css"/>
 <link href="_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
-<link href="_static/custom.css?v=ed219b08" rel="stylesheet" type="text/css"/>
+<link href="_static/custom.css?v=a3a74d27" rel="stylesheet" type="text/css"/>
 <link href="_static/mf.png" rel="icon"/>
 <link href="search.html" rel="search" title="Search"/>
 <link href="genindex.html" rel="index" title="Index"/>
-<link href="support.html" rel="next" title="Support"/>
+<link href="thermalconvectionphase.html" rel="next" title="2. Thermal convection with phase transition"/>
 <link href="demos.html" rel="prev" title="Demos"/>
 <script>
     <!-- Prevent Flash of wrong theme -->
@@ -76,10 +76,13 @@
 <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
 <ul class="current">
 <li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="demos.html"><strong>Demos</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul class="current" x-show="expanded">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Thermal convection</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">1. Thermal convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermalconvectionphase.html">2. Thermal convection with phase transition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermalcompconvection.html">3. Thermo-compositional convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="melting.html">4. Thermal convection with melting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tectonics.html">5. Tectonic extension</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 <li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="modules.html"><strong>MilleFEuille modules</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
 <li class="toctree-l2"><a class="reference internal" href="m_boundary_conditions.html">m_boundary_conditions.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_check.html">m_check.py</a></li>
@@ -97,6 +100,7 @@
 <li class="toctree-l2"><a class="reference internal" href="m_rheology.html">m_rheology.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_timestep.html">m_timestep.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_tracers.html">m_tracers.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main.py</a></li>
 </ul>
 </li>
 </ul>
@@ -119,14 +123,429 @@
 </svg>
 </a>
 <div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap" href="demos.html"><strong>Demos</strong></a>
-<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Thermal convection</span>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">1. Thermal convection</span>
 </nav>
 <div id="content" role="main">
 <section id="thermal-convection">
-<h1>Thermal convection<a class="headerlink" href="#thermal-convection" title="Link to this heading"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h1>
-<img alt="_images/convection.gif" src="_images/convection.gif"/>
+<h1>1. Thermal convection<a class="headerlink" href="#thermal-convection" title="Link to this heading"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h1>
+<figure class="align-default" id="id1">
+<span id="convection"></span><img alt="_images/1_convection.gif" src="_images/1_convection.gif"/>
+<figcaption>
+<p><span class="caption-text">Thermal convection in an ice shell.</span><a class="headerlink" href="#id1" title="Link to this image"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></p>
+</figcaption>
+</figure>
+<section id="parameter-file-line-by-line">
+<h2>Parameter file line by line<a class="headerlink" href="#parameter-file-line-by-line" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#parameter-file-line-by-line'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
+<p>The parameter file contains all parameters that can be set. Not all of them
+are needed for every setting, therefore here only the active ones are highlighted.</p>
+<section id="output-files-settings">
+<h3>Output files settings<a class="headerlink" href="#output-files-settings" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#output-files-settings'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
+<p>We start with the directory name</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Name of the directory with results ---</span>
+</span><span id="line-2"><mark><span class="n">name</span> <span class="o">=</span> <span class="s2">"convection"</span>
+</mark></span></code></pre></div>
+</div>
+<p>The directory protection will be turned off, meaning that when lauched repeatedly,
+the results will be overwritten each time</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># Protection from overwriting the directory above</span>
+</span><span id="line-2"><mark><span class="n">protect_directory</span> <span class="o">=</span> <span class="kc">False</span>
+</mark></span></code></pre></div>
+</div>
+<p>We choose the time units millions of years and output every 250 kyr.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- In what units the time will be? ---</span>
+</span><span id="line-2"><span class="c1"># 1.0 - seconds or nondimensional, or yr, kyr or Myr</span>
+</span><span id="line-3"><mark><span class="n">time_units</span> <span class="o">=</span> <span class="n">Myr</span>
+</mark></span><span id="line-4">
+</span><span id="line-5"><span class="c1"># --- String representation of time_units ---</span>
+</span><span id="line-6"><mark><span class="n">time_units_string</span> <span class="o">=</span> <span class="s2">"Myr"</span>
+</mark></span><span id="line-7">
+</span><span id="line-8"><span class="c1"># --- Output method for Paraview, HDF5 and tracers ---</span>
+</span><span id="line-9"><mark><span class="n">output_frequency</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"time"</span><span class="p">,</span> <span class="mi">250</span><span class="o">*</span><span class="n">kyr</span><span class="p">]</span>
+</mark></span></code></pre></div>
+</div>
+<p>As there will be no tracers, their saving will be turned off and the
+properties and their headers may be empty</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Save tracers into files? ---</span>
+</span><span id="line-2"><mark><span class="n">save_tracers</span> <span class="o">=</span> <span class="kc">False</span>
+</mark></span><span id="line-3">
+</span><span id="line-4"><span class="c1"># --- What properties to save? Must be one of the following (order does not matter):</span>
+</span><span id="line-5"><mark><span class="n">Tracers_Output</span> <span class="o">=</span> <span class="p">[]</span>
+</mark></span><span id="line-6">
+</span><span id="line-7"><span class="c1"># --- Headers for the columns in the text file for tracers</span>
+</span><span id="line-8"><mark><span class="n">Tracers_header</span> <span class="o">=</span> <span class="p">[]</span>
+</mark></span></code></pre></div>
+</div>
+<p>To visualize the results in Paraview, we will save temperature and velocity.
+For initial condition, we will save only temperature.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- What functions to write into Paraview and HDF5 file ---</span>
+</span><span id="line-2"><mark><span class="n">Paraview_Output</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"temperature"</span><span class="p">,</span> <span class="s2">"velocity"</span><span class="p">]</span>
+</mark></span><span id="line-3">
+</span><span id="line-4"><mark><span class="n">Paraview_Output_Ini</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"temperature"</span><span class="p">]</span>
+</mark></span></code></pre></div>
+</div>
+<p>To the statistics text file, time (in the units specified above, i.e., Myr)
+and the duration of the time step will be saved. We also choose corresponding headers.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- What values to print in a text file every time step? ---</span>
+</span><span id="line-2"><mark><span class="n">stat_output</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">"time"</span><span class="p">,</span> <span class="s2">"timestep"</span><span class="p">]</span>
+</mark></span><span id="line-3">
+</span><span id="line-4"><span class="c1"># --- Headers for the columns in the text file</span>
+</span><span id="line-5"><mark><span class="n">stat_header</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Time (h)"</span><span class="p">,</span> <span class="s2">"dt (s)"</span><span class="p">]</span>
+</mark></span></code></pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
 </section>
-</div></div>
+<section id="reloading-options">
+<h3>Reloading options<a class="headerlink" href="#reloading-options" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#reloading-options'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
+<p>As we define our initial condition and not reload, the following options need to be set.
+The number at <code class="docutils literal notranslate"><span class="pre">reload_HDF5_step</span></code> and <code class="docutils literal notranslate"><span class="pre">reload_tracers_step</span></code> does not matter, but needs
+to be defined.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Name of the directory from which the data will be reloaded ---</span>
+</span><span id="line-2"><mark><span class="n">reload_name</span>                 <span class="o">=</span> <span class="s2">""</span>
+</mark></span><span id="line-3">
+</span><span id="line-4"><span class="c1"># --- Whether or not to load HDF5 data from data_reload_name/HDF5/data.h5 ---</span>
+</span><span id="line-5"><mark><span class="n">reload_HDF5</span>                 <span class="o">=</span> <span class="kc">False</span>
+</mark></span><span id="line-6">
+</span><span id="line-7"><span class="c1"># ---  Time stamp of the HDF5 file which will be loaded ---</span>
+</span><span id="line-8"><mark><span class="n">reload_HDF5_step</span>                    <span class="o">=</span> <span class="mi">0</span>
+</mark></span><span id="line-9">
+</span><span id="line-10"><span class="c1"># --- What functions to read from HDF5 file when reloading ---</span>
+</span><span id="line-11"><mark><span class="n">reload_HDF5_functions</span> <span class="o">=</span> <span class="p">[]</span>
+</mark></span><span id="line-12">
+</span><span id="line-13"><mark><span class="n">reload_tracers</span>      <span class="o">=</span> <span class="kc">False</span>
+</mark></span><span id="line-14">
+</span><span id="line-15"><mark><span class="n">reload_tracers_step</span>         <span class="o">=</span> <span class="mi">0</span> <span class="c1"># Second column in data_timestamp.dat</span>
+</mark></span><span id="line-16">
+</span><span id="line-17"><span class="c1"># --- Whether to reset time when reloading ---</span>
+</span><span id="line-18"><mark><span class="n">restart_time</span>        <span class="o">=</span> <span class="kc">False</span>
+</mark></span></code></pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+</section>
+<section id="simulation-duration">
+<h3>Simulation duration<a class="headerlink" href="#simulation-duration" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#simulation-duration'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
+<p>The simulation will be stopped at 50 Myr.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Criterion for ending the simulation, e.g. ["time", 1*Myr] or ["step", 1000] ---</span>
+</span><span id="line-2"><mark><span class="n">termination_condition</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"time"</span><span class="p">,</span> <span class="mi">50</span><span class="o">*</span><span class="n">Myr</span><span class="p">]</span>
+</mark></span></code></pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+</section>
+<section id="tracers-options">
+<h3>Tracers options<a class="headerlink" href="#tracers-options" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tracers-options'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
+<p>FOr this case, anything related to tracers is irrelevant, therefore we can leave
+any values here</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">sm_thickness</span> <span class="o">=</span> <span class="mf">500.0</span>        <span class="c1"># m</span>
+</span><span id="line-2"><span class="n">om_thickness</span> <span class="o">=</span> <span class="mf">500.0</span>        <span class="c1"># m</span>
+</span><span id="line-3">
+</span><span id="line-4"><span class="n">integration_method</span> <span class="o">=</span> <span class="s2">"RK4"</span> <span class="c1"># Euler, RK2, RK4</span>
+</span><span id="line-5">
+</span><span id="line-6"><span class="n">tracers_per_cell</span> <span class="o">=</span> <span class="mi">20</span>
+</span><span id="line-7">
+</span><span id="line-8"><span class="n">weight_tracers_by_ratio</span> <span class="o">=</span> <span class="kc">False</span>
+</span></code></pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+</section>
+<section id="mesh-geometry">
+<h3>Mesh geometry<a class="headerlink" href="#mesh-geometry" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#mesh-geometry'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
+<p>The computational domain will be 100 km thick and 200 km long. The mesh will be created
+during the inicialization, using crossed geometry of the elements. The basic elements will have
+the longest side of 5 km and the mesh will be refined in the bottom half.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Mesh height ---</span>
+</span><span id="line-2"><mark><span class="n">height</span> <span class="o">=</span> <span class="mf">100e3</span> <span class="c1"># m</span>
+</mark></span><span id="line-3">
+</span><span id="line-4"><span class="c1"># --- Mesh length ---</span>
+</span><span id="line-5"><mark><span class="n">length</span> <span class="o">=</span> <span class="mf">200e3</span> <span class="c1"># m</span>
+</mark></span><span id="line-6">
+</span><span id="line-7"><span class="c1"># --- Whether to read an external mesh ---</span>
+</span><span id="line-8"><mark><span class="n">loading_mesh</span> <span class="o">=</span> <span class="kc">False</span>
+</mark></span><span id="line-9">
+</span><span id="line-10"><span class="c1"># --- Mesh to be loaded ---</span>
+</span><span id="line-11"><mark><span class="n">mesh_name</span>   <span class="o">=</span> <span class="s2">""</span>
+</mark></span><span id="line-12">
+</span><span id="line-13"><span class="c1"># --- Basic mesh resolution if not loading mesh ---</span>
+</span><span id="line-14"><mark><span class="n">z_div</span> <span class="o">=</span> <span class="mi">20</span>
+</mark></span><span id="line-15">
+</span><span id="line-16"><span class="c1"># --- Number of nodes in horizontal direction ---</span>
+</span><span id="line-17"><mark><span class="n">x_div</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">z_div</span><span class="o">*</span><span class="p">(</span><span class="n">length</span><span class="o">/</span><span class="n">height</span><span class="p">))</span> <span class="c1"># (keeps aspect ratio 1)</span>
+</mark></span><span id="line-18">
+</span><span id="line-19"><span class="c1"># --- Method of dividing basic squares into mesh triangle elements. ---</span>
+</span><span id="line-20"><mark><span class="n">triangle_types</span> <span class="o">=</span> <span class="s2">"crossed"</span> <span class="c1"># crossed, left, right, left/right, right/left</span>
+</mark></span><span id="line-21">
+</span><span id="line-22"><span class="c1"># --- Rectangular mesh refinement ---</span>
+</span><span id="line-23"><mark><span class="n">refinement</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span>
+</mark></span></code></pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+</section>
+<section id="material-composition">
+<h3>Material composition<a class="headerlink" href="#material-composition" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#material-composition'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
+<p>The ice will consist of pure ice, therefore the list <code class="docutils literal notranslate"><span class="pre">materials</span></code> will remain empty.
+Other options can be left as they are.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><mark><span class="n">materials</span> <span class="o">=</span> <span class="p">[]</span>
+</mark></span><span id="line-2">
+</span><span id="line-3"><span class="n">empty_cells_allowed</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="line-4">
+</span><span id="line-5"><span class="n">empty_cells_composition</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="line-6">
+</span><span id="line-7"><span class="n">empty_cells_region</span> <span class="o">=</span> <span class="p">[]</span>
+</span></code></pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+</section>
+<section id="stokes-problem-settings">
+<h3>Stokes problem settings<a class="headerlink" href="#stokes-problem-settings" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#stokes-problem-settings'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
+<p>For the discretization of the velocity, we choose Mini elements
+The time step will be computed from the highest velocity and smallest element side
+in the domain, and assigned after solving the Stokes problem. The CFL coefficient will be
+0.5. Since the rheology will be Newtonian (only temperature-dependent viscosity), the
+variables related to Picard iterations can be disregarded.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><mark><span class="n">stokes_elements</span> <span class="o">=</span> <span class="s2">"Mini"</span>
+</mark></span><span id="line-2">
+</span><span id="line-3"><mark><span class="n">time_step_position</span> <span class="o">=</span> <span class="s2">"stokes"</span> <span class="c1">#stokes (right after Stokes problem) or "end" (at the end of the time loop)</span>
+</mark></span><span id="line-4">
+</span><span id="line-5"><mark><span class="n">time_step_strategy</span> <span class="o">=</span> <span class="s2">"domain"</span>
+</mark></span><span id="line-6">
+</span><span id="line-7"><span class="c1"># --- The CFL parameter ---</span>
+</span><span id="line-8"><mark><span class="n">cfl</span> <span class="o">=</span> <span class="mf">0.5</span>
+</mark></span><span id="line-9">
+</span><span id="line-10"><span class="c1"># ---  Maximum number of Stokes solver Picard iterations ---</span>
+</span><span id="line-11"><span class="n">Picard_iter_max</span>     <span class="o">=</span> <span class="mi">25</span>
+</span><span id="line-12">
+</span><span id="line-13"><span class="c1"># --- Minimum relative error in velocity field ---</span>
+</span><span id="line-14"><span class="n">Picard_iter_error</span>   <span class="o">=</span> <span class="mf">1e-3</span>
+</span><span id="line-15">
+</span><span id="line-16"><span class="n">error_type</span>          <span class="o">=</span> <span class="s2">"maximum"</span> <span class="c1"># "maximum or integrated"</span>
+</span></code></pre></div>
+</div>
+<p>For the boundary conditions we prescribe free slip everywhere. The mesh will not be moving,
+therefore the mesh displacement settings do not matter.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># Boundary conditions for velocity (free_slip, no_slip, free surface, velocity, velocity_x, velocity_y)</span>
+</span><span id="line-2"><mark><span class="n">BC_Stokes_problem</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">"free_slip"</span><span class="p">],</span>                <span class="c1"># top boundary       (1)</span>
+</mark></span><span id="line-3"><mark>                    <span class="p">[</span><span class="s2">"free_slip"</span><span class="p">],</span>    <span class="c1"># bottom boundary    (2)</span>
+</mark></span><span id="line-4"><mark>                    <span class="p">[</span><span class="s2">"free_slip"</span><span class="p">],</span>       <span class="c1"># left boundary      (3)</span>
+</mark></span><span id="line-5"><mark>                    <span class="p">[</span><span class="s2">"free_slip"</span><span class="p">]]</span>       <span class="c1"># right boundary     (4)</span>
+</mark></span><span id="line-6">
+</span><span id="line-7"><span class="n">mesh_displacement_laplace</span> <span class="o">=</span> <span class="s2">"full"</span>  <span class="c1">#"full_laplace" or "z_only"</span>
+</span><span id="line-8">
+</span><span id="line-9"><span class="c1"># Method for correcting velocity field in case of multiple free surface conditions</span>
+</span><span id="line-10"><span class="n">stokes_null</span> <span class="o">=</span> <span class="s2">"boundary"</span>
+</span></code></pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+</section>
+<section id="thermal-solver-settings">
+<h3>Thermal solver settings<a class="headerlink" href="#thermal-solver-settings" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#thermal-solver-settings'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
+<p>Since we solve thermal convection, the heat transfer equation needs to be solved. The nonlinearity
+is rather weak (<span class="math notranslate nohighlight">\(k\)</span> and <span class="math notranslate nohighlight">\(c_p\)</span>) are temperature dependent, therefore linear solver can be used.
+At the surface and ice-water boudnary, we prescribe temperature, while the lateral boundaries
+are adiabatic. The reference temperature is set to 273 K. Parameters related to radiative boundary condition
+will not be used.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Solve heat transfer? ---</span>
+</span><span id="line-2"><mark><span class="n">solve_energy_problem</span> <span class="o">=</span> <span class="kc">True</span>
+</mark></span><span id="line-3">
+</span><span id="line-4"><span class="c1"># --- Whether the heat transfer should be solved with nonlinear solver ---</span>
+</span><span id="line-5"><mark><span class="n">nonlinear_heat_equation</span> <span class="o">=</span> <span class="kc">False</span>
+</mark></span><span id="line-6">
+</span><span id="line-7"><span class="c1"># --- Boundary condition for heat transfer equation ---</span>
+</span><span id="line-8"><mark><span class="n">BC_heat_transfer</span>   <span class="o">=</span> <span class="p">[[</span><span class="s2">"temp"</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">],</span>     <span class="c1"># top boundary    (1)</span>
+</mark></span><span id="line-9"><mark>                    <span class="p">[</span><span class="s2">"temp"</span><span class="p">,</span> <span class="mf">265.0</span><span class="p">],</span>     <span class="c1"># bottom boundary (2)</span>
+</mark></span><span id="line-10"><mark>                    <span class="p">[</span><span class="s2">"heat_flux"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>  <span class="c1"># left boundary   (3)</span>
+</mark></span><span id="line-11"><mark>                    <span class="p">[</span><span class="s2">"heat_flux"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]]</span>  <span class="c1"># right boundary  (4)</span>
+</mark></span><span id="line-12">
+</span><span id="line-13"><span class="c1"># --- Reference temperature ---</span>
+</span><span id="line-14"><mark><span class="n">T_ref</span>       <span class="o">=</span> <span class="mf">273.0</span> <span class="c1"># K</span>
+</mark></span><span id="line-15">
+</span><span id="line-16"><span class="c1"># --- Insolation parametes ---</span>
+</span><span id="line-17"><span class="n">emis</span>        <span class="o">=</span> <span class="mf">0.97</span>          <span class="c1"># Ice emissivity</span>
+</span><span id="line-18"><span class="n">albedo</span>      <span class="o">=</span> <span class="mf">0.67</span>
+</span><span id="line-19"><span class="n">dist_AU</span> <span class="o">=</span> <span class="mf">5.2</span>                       <span class="c1"># Object's distance from Sun in AU</span>
+</span><span id="line-20"><span class="n">insolation</span> <span class="o">=</span> <span class="n">insol_1AU</span><span class="o">/</span><span class="n">dist_AU</span><span class="o">**</span><span class="mi">2</span>
+</span></code></pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<p>In the absence of tidal heating, the melting is not expected to occur. As an initial condition,
+a conductive profile will be solved and perturbed by a cosine wave.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Melting inside the shell ---</span>
+</span><span id="line-2"><span class="c1"># --- Whether generate partial melt if the temperature of the solid reaches T_melt ---</span>
+</span><span id="line-3"><mark><span class="n">internal_melting</span> <span class="o">=</span> <span class="kc">False</span>
+</mark></span><span id="line-4">
+</span><span id="line-5"><span class="c1"># --- Melting temperature of the solid ---</span>
+</span><span id="line-6"><span class="n">T_melt</span> <span class="o">=</span> <span class="mf">270.0</span>      <span class="c1"># K</span>
+</span><span id="line-7">
+</span><span id="line-8"><span class="c1"># --- Tidal heating ---</span>
+</span><span id="line-9"><mark><span class="n">tidal_dissipation</span>           <span class="o">=</span> <span class="kc">False</span>
+</mark></span><span id="line-10">
+</span><span id="line-11"><span class="n">initial_tidal_dissipation</span>   <span class="o">=</span> <span class="kc">False</span>
+</span><span id="line-12"><span class="n">heating_model</span>               <span class="o">=</span> <span class="s2">"Maxwell"</span> <span class="c1"># Maxwell, Andrade or none</span>
+</span><span id="line-13"><span class="n">H_max</span> <span class="o">=</span> <span class="mf">4e-6</span> <span class="c1"># W m^{-3}</span>
+</span><span id="line-14">
+</span><span id="line-15"><span class="c1"># Andrade parameters</span>
+</span><span id="line-16"><span class="n">alpha_and</span> <span class="o">=</span> <span class="mf">0.2</span>
+</span><span id="line-17">
+</span><span id="line-18"><span class="c1"># --- Find conductive initial condition ---</span>
+</span><span id="line-19"><mark><span class="n">init_cond_profile</span> <span class="o">=</span> <span class="kc">True</span>
+</mark></span><span id="line-20">
+</span><span id="line-21"><span class="c1"># --- Cosine perturbation of initial temperature ---</span>
+</span><span id="line-22"><mark><span class="n">cos_perturbation</span> <span class="o">=</span> <span class="kc">True</span>
+</mark></span><span id="line-23">
+</span><span id="line-24"><span class="c1"># --- Thermal perturbation amplitude ---</span>
+</span><span id="line-25"><mark><span class="n">perturb_ampl</span>        <span class="o">=</span> <span class="mi">5</span> <span class="c1"># K</span>
+</mark></span><span id="line-26">
+</span><span id="line-27"><span class="c1"># --Number of half-cosine waves in lateral direction ---</span>
+</span><span id="line-28"><mark><span class="n">perturb_freq</span>        <span class="o">=</span> <span class="mi">1</span>
+</mark></span></code></pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+</section>
+<section id="rheology">
+<h3>Rheology<a class="headerlink" href="#rheology" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#rheology'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
+<p>To mimic Titan’s ice shell, we prescribe corresponding gravity and ice physical properties.
+Since the density is directly given by a temperature-dependent formula
+in <code class="docutils literal notranslate"><span class="pre">m_material_properties.py</span></code>, the thermal expansivity here is inactive.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Gravity acceleratuin ---</span>
+</span><span id="line-2"><mark><span class="n">g</span>           <span class="o">=</span> <span class="mf">1.3</span>                           <span class="c1"># m s^-2</span>
+</mark></span><span id="line-3">
+</span><span id="line-4"><span class="c1"># --- Density of the domain solid ---</span>
+</span><span id="line-5"><mark><span class="n">rho_s</span>       <span class="o">=</span> <span class="mf">920.0</span> <span class="c1"># kg/m3</span>
+</mark></span><span id="line-6">
+</span><span id="line-7"><span class="c1"># --- Density of the liquid below the domain ---</span>
+</span><span id="line-8"><mark><span class="n">rho_l</span>       <span class="o">=</span> <span class="mf">1000.0</span> <span class="c1"># kg/m3</span>
+</mark></span><span id="line-9">
+</span><span id="line-10"><span class="c1"># --- Density of the melt produced by the solid ---</span>
+</span><span id="line-11"><mark><span class="n">rho_m</span>       <span class="o">=</span> <span class="n">rho_l</span> <span class="c1"># kg/m3</span>
+</mark></span><span id="line-12">
+</span><span id="line-13"><span class="n">alpha_exp</span> <span class="o">=</span> <span class="mf">1.6e-4</span>  <span class="c1"># K^-1</span>
+</span></code></pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<p>Solving for a viscous flow only, the plasticity and elasticity will not be taken account.
+Since there is a free slip boundary condition at the bottom boundary,
+the phase transition and its parameters are inactive. The top surface is immobile as well,
+therefore adaptive smoothing is inactive.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Rheology ---</span>
+</span><span id="line-2"><mark><span class="n">elasticity</span> <span class="o">=</span> <span class="kc">False</span>
+</mark></span><span id="line-3">
+</span><span id="line-4"><mark><span class="n">plasticity</span> <span class="o">=</span> <span class="kc">False</span>
+</mark></span><span id="line-5">
+</span><span id="line-6"><span class="c1"># --- Phase transition at the bottom boundary ----</span>
+</span><span id="line-7"><mark><span class="n">phase_transition</span> <span class="o">=</span> <span class="kc">False</span>
+</mark></span><span id="line-8">
+</span><span id="line-9"><span class="c1"># --- Strength of the phase transition at the ice-water boundary ---</span>
+</span><span id="line-10"><span class="n">DAL_factor</span>  <span class="o">=</span> <span class="mf">1e-1</span> <span class="c1"># W/m3</span>
+</span><span id="line-11">
+</span><span id="line-12"><span class="c1"># --- Latent heat of the material ---</span>
+</span><span id="line-13"><span class="n">Lt</span>                  <span class="o">=</span> <span class="mf">334.0e3</span> <span class="c1"># J/kg</span>
+</span><span id="line-14">
+</span><span id="line-15"><span class="c1"># --- Adaptive topography diffusion and topography diffusion factor ---</span>
+</span><span id="line-16"><span class="n">adaptive_smoothing</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="line-17"><span class="n">topo_diff</span> <span class="o">=</span> <span class="mf">1e-8</span><span class="o">*</span><span class="n">time_scaling</span>
+</span></code></pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<p>The viscosity will be onpy temperature-dependent, with viscosity at melting temperature
+<span class="math notranslate nohighlight">\(10^{15}\)</span> Pa s, activation energy 60 kJ/mol, and cut-off value <span class="math notranslate nohighlight">\(10^{23}\)</span> Pa s.
+The grain size and parameters for plasticity are inactive.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- VISCOSITY ---</span>
+</span><span id="line-2"><mark><span class="n">viscosity_type</span> <span class="o">=</span> <span class="s2">"temp-dep"</span> <span class="c1"># constant, temp-dep, GK_2001 (Goldsby and Kohlstedt, 2001) or composition</span>
+</mark></span><span id="line-3">
+</span><span id="line-4"><span class="c1"># --- Parameters for constant / temperature-dependent viscosity ---</span>
+</span><span id="line-5"><mark><span class="n">eta_0</span> <span class="o">=</span> <span class="mf">1e15</span>        <span class="c1"># Pa.s</span>
+</mark></span><span id="line-6">
+</span><span id="line-7"><span class="c1"># --- Activation energy ---</span>
+</span><span id="line-8"><mark><span class="n">Q_activ</span> <span class="o">=</span> <span class="mf">60e3</span>      <span class="c1"># J/mol</span>
+</mark></span><span id="line-9">
+</span><span id="line-10"><span class="c1"># --- Grain size ---</span>
+</span><span id="line-11"><span class="n">d_grain</span> <span class="o">=</span> <span class="mf">1.0e-3</span>
+</span><span id="line-12">
+</span><span id="line-13"><span class="c1"># --- Upper cut-off viscosity ---</span>
+</span><span id="line-14"><mark><span class="n">eta_max</span> <span class="o">=</span> <span class="mf">1e23</span>
+</mark></span><span id="line-15">
+</span><span id="line-16"><span class="c1"># --- Lower cut-off value for plastic viscosity ---</span>
+</span><span id="line-17"><span class="n">eta_min_plast</span> <span class="o">=</span> <span class="n">eta_max</span><span class="o">/</span><span class="mf">1e6</span>
+</span><span id="line-18">
+</span><span id="line-19"><span class="c1"># # --- Elasticity ---</span>
+</span><span id="line-20"><span class="c1"># If elasticity is off, we can compute the new viscosity directly from the strain rate (it will be faster)</span>
+</span><span id="line-21"><span class="c1"># However, the stress formula + VEP iterations would work too</span>
+</span><span id="line-22"><span class="n">stress_iter_error</span> <span class="o">=</span> <span class="mf">1e-4</span>
+</span><span id="line-23">
+</span><span id="line-24"><span class="c1"># --- Plasticity ---</span>
+</span><span id="line-25"><span class="c1"># --- Angle of internal friction in degrees ---</span>
+</span><span id="line-26"><span class="n">int_friction_angle</span> <span class="o">=</span> <span class="mf">16.0</span>
+</span><span id="line-27"><span class="n">int_friction_angle2</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span id="line-28">
+</span><span id="line-29"><span class="c1"># --- Cohesion of an undamaged material ---</span>
+</span><span id="line-30"><span class="n">cohesion_strong</span> <span class="o">=</span> <span class="mf">1e6</span>
+</span><span id="line-31">
+</span><span id="line-32"><span class="c1"># --- Cohesion of a fully damaged material ---</span>
+</span><span id="line-33"><span class="n">cohesion_weak</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span id="line-34">
+</span><span id="line-35"><span class="n">yield_stress_max</span><span class="p">,</span> <span class="n">yield_stress_min</span> <span class="o">=</span> <span class="mf">1e8</span><span class="p">,</span> <span class="mf">0.1</span>
+</span><span id="line-36">
+</span><span id="line-37"><span class="c1"># --- Value of the plastic strain at which the material starts to accumulate damage ---</span>
+</span><span id="line-38"><span class="n">eps_strong</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="line-39">
+</span><span id="line-40"><span class="c1"># --- Critical value of the plastic strain beyond which the material is considered as fully damaged ---</span>
+</span><span id="line-41"><span class="n">eps_weak</span> <span class="o">=</span> <span class="mf">0.2</span>
+</span><span id="line-42">
+</span><span id="line-43"><span class="c1"># --- Whether the accumulated plastic strain decreases in time ---</span>
+</span><span id="line-44"><span class="n">healing</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="line-45">
+</span><span id="line-46"><span class="c1"># --- Characteristic time scale for the microscopic healing processes ---</span>
+</span><span id="line-47"><span class="n">healing_timescale</span> <span class="o">=</span> <span class="mi">300</span><span class="o">*</span><span class="n">kyr</span>
+</span></code></pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+</section>
+</section>
+<section id="download">
+<h2>Download<a class="headerlink" href="#download" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#download'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
+<p>Here you can download the complete <a class="reference download internal" download="" href="_downloads/998a2ab0d7597164d7ad48f223b53466/MilleFEuiIle.zip"><code class="xref download docutils literal notranslate"><span class="pre">parameter</span> <span class="pre">file</span></code></a> and the <a class="reference download internal" download="" href="_downloads/1b4fe46fc63dd491d5bdb86b3d6f6ec5/plot_convection.py"><code class="xref download docutils literal notranslate"><span class="pre">plotting</span> <span class="pre">script</span></code></a>for the animation.</p>
+</section>
+</section>
+</div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
+<div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
+<ul>
+<li><a :data-current="activeSection === '#parameter-file-line-by-line'" class="reference internal" href="#parameter-file-line-by-line">Parameter file line by line</a><ul>
+<li><a :data-current="activeSection === '#output-files-settings'" class="reference internal" href="#output-files-settings">Output files settings</a></li>
+<li><a :data-current="activeSection === '#reloading-options'" class="reference internal" href="#reloading-options">Reloading options</a></li>
+<li><a :data-current="activeSection === '#simulation-duration'" class="reference internal" href="#simulation-duration">Simulation duration</a></li>
+<li><a :data-current="activeSection === '#tracers-options'" class="reference internal" href="#tracers-options">Tracers options</a></li>
+<li><a :data-current="activeSection === '#mesh-geometry'" class="reference internal" href="#mesh-geometry">Mesh geometry</a></li>
+<li><a :data-current="activeSection === '#material-composition'" class="reference internal" href="#material-composition">Material composition</a></li>
+<li><a :data-current="activeSection === '#stokes-problem-settings'" class="reference internal" href="#stokes-problem-settings">Stokes problem settings</a></li>
+<li><a :data-current="activeSection === '#thermal-solver-settings'" class="reference internal" href="#thermal-solver-settings">Thermal solver settings</a></li>
+<li><a :data-current="activeSection === '#rheology'" class="reference internal" href="#rheology">Rheology</a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#download'" class="reference internal" href="#download">Download</a></li>
+</ul>
+</div>
+</aside>
 </main>
 </div>
 </div><footer class="py-6 border-t border-border md:py-0">
@@ -141,5 +560,6 @@
 <script src="_static/doctools.js?v=9bcbadda"></script>
 <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
 <script defer="defer" src="_static/theme.js?v=073f68d9"></script>
+<script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </body>
 </html>
