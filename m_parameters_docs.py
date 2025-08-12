@@ -684,6 +684,16 @@ T_melt = 270.0	# K
 :meta hide-value:
 """
 
+# --- Threshold for adding or removing tracers when melting ---
+dT_melt_tresh = 4.0
+"""
+:var: Threshold for adding or removing tracers when melting.
+
+:vartype: float, unit K
+
+:meta hide-value:
+"""
+
 # --- Tidal heating ---
 tidal_dissipation           = False
 """

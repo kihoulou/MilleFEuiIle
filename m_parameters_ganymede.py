@@ -28,7 +28,7 @@ size = MPI.size(comm)
 #----------------------------------------------------------------------
 
 # --- Name of the directory with results ---
-name = "ganymede"
+name = "ganymede_conditional_C1e6_fsnew"
 
 # Protection from overwriting the directory above
 protect_directory = False
@@ -40,7 +40,7 @@ time_units = Myr
 time_units_string = "Myr"
 
 # --- Output method for Paraview, HDF5 and  tracers ---
-output_frequency = ["steps", 20] # e.g. ["steps", 10] or ["time", 100*kyr]
+output_frequency = ["steps", 1] # e.g. ["steps", 10] or ["time", 100*kyr]
 
 # --- Save tracers into files? ---
 save_tracers = False
@@ -158,7 +158,7 @@ triangle_types = "crossed" # crossed, left, right, left/right, right/left
 
 # --- Repeat within the [...] for multiple levels of refinement,
 # leave empty for no refinement ---
-refinement = [0, length, height/2, height] #, 0, length, 7.0*height/8, height]
+refinement = [0, length, height - 25e3, height]
 
 #xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #------------------------- 4/ MATERIAL COMPOSITIOIN -------------------
@@ -178,7 +178,7 @@ def interface(x):
     return 5e2*cos(2.0*np.pi*x/length) + 3e3
 
 # --- Leave empty for a single material ---
-materials = [["rectangle", 0, length, 0, height], ["rectangle", 0, length, height- 5e3, height]]
+materials = [["rectangle", 0, length, 0, height], ["rectangle", 0, length, height- 2.5e3, height]]
 
 # --- If True, the cells without tracers will be assigned material "default_composition" ---
 # --- Applicable only if the material composition is the only tracer-requiring feature ---
@@ -210,9 +210,9 @@ error_type          = "maximum" # "maximum or integrated"
 
 # Boundary conditions for velocity (free_slip, no_slip, free surface, velocity, velocity_x, velocity_y)
 BC_Stokes_problem = [["free_surface"],                # top boundary       (1)
-                     ["velocity", 0.0, 10e3/Myr],    # bottom boundary    (2)
-                     ["velocity_x", -10e3/Myr],       # left boundary      (3)
-                     ["velocity_x", 10e3/Myr]]       # right boundary     (4)
+                     ["velocity", 0.0, 40e3/Myr],    # bottom boundary    (2)
+                     ["velocity_x", -40e3/Myr],       # left boundary      (3)
+                     ["velocity_x", 40e3/Myr]]       # right boundary     (4)
 
 mesh_displacement_laplace = "full"  #"full_laplace" or "z_only"
 
@@ -291,7 +291,7 @@ dT_max = 4.0
 # "cell" computes timestep in each cell and chooses the minimal
 
 # "constant" prescribes a constant timestep
-dt_const = 2.5*kyr
+dt_const = 1*kyr
 
 maximum_time_step = False
 time_step_scaling = 25 # dt = t / time_step_scaling
@@ -365,7 +365,7 @@ int_friction_angle = 16.0
 int_friction_angle2 = 0.0
 
 # --- Cohesion of an undamaged material ---
-cohesion_strong = 1e4
+cohesion_strong = 1e6
 
 # --- Cohesion of a fully damaged material ---
 cohesion_weak = 0.0

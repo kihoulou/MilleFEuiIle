@@ -4,6 +4,10 @@ from m_material_properties import *
 from m_interpolation import *
 
 class Melting:
+    """Class that contains functions related to the phase transition inside the domain.
+
+    """
+
     def __init__(self, MeshClass, ElemClass, TracersClass):
         
         self.mesh = MeshClass.mesh
@@ -24,6 +28,20 @@ class Melting:
                         self.add_melt_tracers()
 
     def add_melt_tracers(self):
+        """If the temperature in the domain is within a given range below the melting temperature :math:`(T > T_{\\rm melt} - dT_{\\rm melt. tresh}`\ ,
+        see ``T_melt`` and ``dT_melt_thres`` in ``m_parameters.py``), 
+        the number of tracers is checked. If the number of tracers is lower than 10, the tracers are added.
+
+        :var T_melt: melting temperature
+        :var dT_melt_thres: threshold for adding or removing tracers when melting
+
+        .. note::
+        
+            If melting is the only mechanism requiring tracers, the tracers will be used only in the part of the
+            domain where :math:`T > T_{\\rm melt} - dT_{\\rm melt. tresh}`\ , which saves computation time.
+
+        """
+
         for j in range(self.mesh.num_cells()):
             centroid = Cell(self.mesh, j).midpoint()
         
@@ -33,7 +51,7 @@ class Melting:
             temp_cell = self.Temp(Point(centroid.x(),centroid.y()))
             xm_cell = self.xm(Point(centroid.x(),centroid.y()))
 
-            if (temp_cell > T_melt - dT_max and len(self.tracers_in_cells[j]) < 10):
+            if (temp_cell > T_melt - dT_melt_tresh  and len(self.tracers_in_cells[j]) < 10):
                 for ii in range(0,5):
                     tracer_angle = 90.0*(ii-1)
 
@@ -57,6 +75,15 @@ class Melting:
 
     # When the temperature is below melting point and no melt is present, delete these tracers
     def delete_melt_tracers(self):
+        """If the temperature in the domain drops enough below the melting temperature :math:`(T < T_{\\rm melt} - dT_{\\rm melt. tresh}`\ ,
+        see ``T_melt`` and ``dT_melt_thres`` in ``m_parameters.py``), 
+        the tracers are removed.
+
+        :var T_melt: melting temperature
+        :var dT_melt_thres: threshold for adding or removing tracers when melting
+
+        """
+
         MPI.barrier(comm)
         for j in range(self.mesh.num_cells()):
             to_remove = []
@@ -69,7 +96,7 @@ class Melting:
                 temp_tracer = self.Temp(Point(xx,yy))
                 xm_tracer = self.tracers[tracer_no][11][0]
 
-                if (temp_tracer < T_melt - dT_max and xm_tracer == 0.0):
+                if (temp_tracer < T_melt - dT_melt_tresh  and xm_tracer == 0.0):
                     to_remove.append(tracer_no)
 
                     self.vacancy.append(tracer_no)
@@ -81,6 +108,14 @@ class Melting:
 
 
     def compute_melting(self):
+        """Computes the amount of partial melt on the tracer.
+
+        :var T_melt: melting temperature
+        :var Lt: latent heat
+        :var cp(): specific heat defined by :func:`m_material_parameters.cp`
+
+        """
+
         for j in range(self.mesh.num_cells()):
             for i in range(0, len(self.tracers_in_cells[j])):
                 tracer_no = self.tracers_in_cells[j][i]

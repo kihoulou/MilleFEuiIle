@@ -47,7 +47,7 @@ def run_code():
 
     # --- Check of the basic string inputs ---
     check_input_parameters()
-    override_parameters()
+    check_compatibility()
 
     MPI.barrier(comm)
 

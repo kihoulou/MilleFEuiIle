@@ -437,10 +437,10 @@ class Equations:
 
         .. math::
             \\begin{align}
-            0 = &\\int_\\Omega \\frac{\\partial h_{\\rm top}}{\\partial z} \\frac{\\partial \\hat{h}_{\\rm top}}{\partial z}\\ \\textrm{d}\\Omega\\\\
-            &- \\int_{\\Gamma_{\\rm top}} \\frac{\\partial h_{\\rm top}}{\\partial z} \\hat{h}_{\\rm top}\\ \\textrm{d}\\Gamma_{\\rm top}\\\\
+            0 = &\\int_\\Omega \\nabla h_{\\rm top} \\cdot \\nabla \\hat{h}_{\\rm top}\\ \\textrm{d}\\Omega\\\\
+            &- \\int_{\\Gamma_{\\rm top}} \\frac{\\partial h_{\\rm top}}{\\partial \\boldsymbol{n}} \\hat{h}_{\\rm top}\\ \\textrm{d}\\Gamma_{\\rm top}\\\\
             &- \\int_{\\Gamma_{\\rm top}} \\left[h_{\\rm top} - h_{\\rm top}^k - \\Delta t \\left(\\frac{\\partial h_{\\rm top}}{\\partial x} v_x - v_z \\right)\\right]
-            \\left(\\frac{\\partial \\hat{h}_{\\rm top}}{\\partial z} - \\frac{\\hat{h}_{\\rm top}}{\\gamma h_e} \\right)\\ \\textrm{d}\\Gamma_{\\rm top}
+            \\left(\\frac{\\partial \\hat{h}_{\\rm top}}{\\partial \\boldsymbol{n}} - \\frac{\\hat{h}_{\\rm top}}{\\gamma h_e} \\right)\\ \\textrm{d}\\Gamma_{\\rm top}
             \\end{align}
 
         where
@@ -456,11 +456,16 @@ class Equations:
         """
 
         # --- Top free surface equation ---
-        eq_fs_top = (self._h_top.dx(1)*self.h_top_.dx(1))*dx\
-            - (self._h_top.dx(1)*self.h_top_)*self.ds(1)\
-            - ((self._h_top - self.h_top_k + self.dt*(self._h_top.dx(0)*self.v_k[0] - self.v_k[1]))\
-            * (self.h_top_.dx(1) - self.h_top_/(self.gamma*self.h_e_top)))*self.ds(1)
+        # eq_fs_top = (self._h_top.dx(1)*self.h_top_.dx(1))*dx\
+        #     - (self._h_top.dx(1)*self.h_top_)*self.ds(1)\
+        #     - ((self._h_top - self.h_top_k + self.dt*(self._h_top.dx(0)*self.v_k[0] - self.v_k[1]))\
+        #     * (self.h_top_.dx(1) - self.h_top_/(self.gamma*self.h_e_top)))*self.ds(1)
 
+        eq_fs_top = (dot(nabla_grad(self._h_top), nabla_grad(self.h_top_)))*dx \
+        - (dot(nabla_grad(self._h_top), self.normal) * self.h_top_)*self.ds(1) \
+        - ((self._h_top - self.h_top_k + self.dt * (self._h_top.dx(0) * self.v_k[0] - self.v_k[1]))\
+        * (dot(nabla_grad(self.h_top_), self.normal) - self.h_top_ / (self.gamma * self.h_e_top)))*self.ds(1)
+    
         bc_fs_top = []
 
         free_surface_top = LinearVariationalProblem(lhs(eq_fs_top), rhs(eq_fs_top), self.h_top, bc_fs_top)
@@ -473,10 +478,10 @@ class Equations:
 
         .. math::
             \\begin{align}
-            0 = &\\int_\\Omega \\frac{\\partial h_{\\rm bot}}{\\partial z} \\frac{\\partial \\hat{h}_{\\rm bot}}{\partial z}\\ \\textrm{d}\\Omega\\\\
-            &- \\int_{\\Gamma_{\\rm bot}} \\frac{\\partial h_{\\rm bot}}{\\partial z} \\hat{h}_{\\rm bot}\\ \\textrm{d}\\Gamma_{\\rm bot}\\\\
+            0 = &\\int_\\Omega \\nabla h_{\\rm bot} \\cdot \\nabla \\hat{h}_{\\rm bot}\\ \\textrm{d}\\Omega\\\\
+            &- \\int_{\\Gamma_{\\rm bot}} \\frac{\\partial h_{\\rm bot}}{\\partial \\boldsymbol{n}} \\hat{h}_{\\rm bot}\\ \\textrm{d}\\Gamma_{\\rm bot}\\\\
             &- \\int_{\\Gamma_{\\rm bot}} \\left[h_{\\rm bot} - h_{\\rm bot}^k - \\Delta t \\left(\\frac{\\partial h_{\\rm bot}}{\\partial x} (v_x + u_x) - (v_z + u_z) \\right)\\right]
-            \\left(\\frac{\\partial \\hat{h}_{\\rm bot}}{\\partial z} - \\frac{\\hat{h}_{\\rm bot}}{\\gamma h_e} \\right)\\ \\textrm{d}\\Gamma_{\\rm bot}
+            \\left(\\frac{\\partial \\hat{h}_{\\rm bot}}{\\partial \\boldsymbol{n}} - \\frac{\\hat{h}_{\\rm bot}}{\\gamma h_e} \\right)\\ \\textrm{d}\\Gamma_{\\rm bot}
             \\end{align}
 
         where
@@ -493,11 +498,18 @@ class Equations:
         """
 
         # --- Bottom free surface equation ---
-        eq_fs_bot = (self._h_bot.dx(1))*(self.h_bot_.dx(1))*dx\
-            - (self._h_bot.dx(1))*self.h_bot_*self.ds(2)\
-            - (self._h_bot - self.h_bot_k + self.dt*(self._h_bot.dx(0)*(self.v_k[0] + self.u[0]) - (self.v_k[1] + self.u[1])))\
-            * (self.h_bot_.dx(1) - self.h_bot_/(self.gamma*self.h_e_bot))*self.ds(2)
+        # eq_fs_bot = (self._h_bot.dx(1))*(self.h_bot_.dx(1))*dx\
+        #     - (self._h_bot.dx(1))*self.h_bot_*self.ds(2)\
+        #     - (self._h_bot - self.h_bot_k + self.dt*(self._h_bot.dx(0)*(self.v_k[0] + self.u[0]) - (self.v_k[1] + self.u[1])))\
+        #     * (self.h_bot_.dx(1) - self.h_bot_/(self.gamma*self.h_e_bot))*self.ds(2)
                                                                                     
+        eq_fs_bot = (dot(nabla_grad(self._h_bot), nabla_grad(self.h_bot_)))*dx \
+        - (dot(nabla_grad(self._h_bot), -self.normal) * self.h_bot_)*self.ds(2) \
+        - (self._h_bot - self.h_bot_k + self.dt*(self._h_bot.dx(0) * (self.v_k[0] + self.u[0]) - (self.v_k[1] + self.u[1])))\
+        * (dot(nabla_grad(self.h_bot_), -self.normal) - self.h_bot_ / (self.gamma*self.h_e_bot)) *self.ds(2)
+        
+
+
         bc_fs_bot = []
 
         free_surface_bot = LinearVariationalProblem(lhs(eq_fs_bot), rhs(eq_fs_bot), self.h_bot, bc_fs_bot)
@@ -716,6 +728,9 @@ class Equations:
             stress_reduction(self.mesh, self.tracers_in_cells, self.tracers, self.yield_function, self.yield_stress, self.stress_dev_inv)
 
     def rotate_and_interpolate_stress(self):
+        """ Computes the vorticity tensor :math:`\\boldsymbol{W} = (\\nabla \\boldsymbol{v} - (\\nabla \\boldsymbol{v})^T)/2`\ , rotates the elastic stress and interpolates it at the mesh. See :func:`m_interpolation.stress_rotation`.
+        """
+
         # --- Rotate stress ---
         self.vorticity_tensor.assign(project(skew(nabla_grad(self.v_k)), self.tDG0))
         stress_rotation(self.mesh, self.tracers_in_cells, self.tracers, self.vorticity_tensor, self.dt)

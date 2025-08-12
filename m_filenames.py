@@ -13,8 +13,12 @@ class SaveFiles:
             if (protect_directory == False):
                     if (rank == 0):
                         os.system("rm data_" + name + "/HDF5/*")
+                        os.system("rm data_" + name + "/img/*")
+                        os.system("rm data_" + name + "/anim/*")
                         os.system("rm data_" + name + "/paraview/*.xdmf")
                         os.system("rm data_" + name + "/paraview/*.h5")
+                        os.system("rm data_" + name + "/paraview/initial_condition/*.xdmf")
+                        os.system("rm data_" + name + "/paraview/initial_condition/*.h5")
                         os.system("rm data_" + name + "/source_code/*.py")
                         os.system("rm data_" + name + "/boundary_data/*.dat")
                         os.system("rm data_" + name + "/tracers/*.dat")
@@ -24,7 +28,7 @@ class SaveFiles:
                     print("\nWarning:\nName collision detected. New directory name is", str("data_" + self.name), ".\n")
 
         MPI.barrier(comm)
-        directories = ["HDF5", "tracers", "paraview", "source_code"]
+        directories = ["HDF5", "anim", "img", "tracers", "paraview", "paraview/initial_condition", "source_code"]
         for dir in directories:
             Path("data_" + self.name + "/" + dir).mkdir(parents = True, exist_ok = True)
 
@@ -68,6 +72,7 @@ class SaveFiles:
         self.save_mesh()
 
         self.Paraview_Dict = {}
+        self.Paraview_Dict_Ini = {}
         self.Function_Dict = {}
 
         # --- Initialize the text files ---
@@ -94,6 +99,15 @@ class SaveFiles:
         stat_hdf5 = open("data_" + self.name + "/HDF5/data_timestamp.dat", 'w')
         stat_hdf5.write((4*"%s\t"+"\n")%("# HDF5", "step", "time step\t", "time"))    
         stat_hdf5.close()
+
+        # --- Initialize Paraview files for initial condition and fill dictionaries ---
+        for i in range(len(Paraview_Output_Ini)):
+            self.Paraview_Dict_Ini[Paraview_Output_Ini[i]] = XDMFFile(comm,"data_" + self.name + "/paraview/initial_condition/" + Paraview_Output_Ini[i] + ".xdmf")
+            self.Paraview_Dict_Ini[Paraview_Output_Ini[i]].parameters["flush_output"] = True
+            self.Paraview_Dict_Ini[Paraview_Output_Ini[i]].parameters["rewrite_function_mesh"] = True
+
+            if (Paraview_Output_Ini[i] == "temperature"):
+                self.Function_Dict[Paraview_Output_Ini[i]] = self.Temp
 
         # --- Initialize Paraview files and fill dictionaries ---
         for i in range(len(Paraview_Output)):
@@ -233,6 +247,11 @@ class SaveFiles:
         for i in range(len(Paraview_Output)):
             self.Function_Dict[Paraview_Output[i]].rename(Paraview_Output[i], "")
             self.Paraview_Dict[Paraview_Output[i]].write(self.Function_Dict[Paraview_Output[i]], float(t)/time_units)
+
+    def Save_Paraview_Ini(self):
+        for i in range(len(Paraview_Output_Ini)):
+            self.Function_Dict[Paraview_Output_Ini[i]].rename(Paraview_Output_Ini[i], "")
+            self.Paraview_Dict_Ini[Paraview_Output_Ini[i]].write(self.Function_Dict[Paraview_Output_Ini[i]])
 
     def Save_HDF5(self, step_output, step, dt, t):
         for i in range(len(Paraview_Output)):

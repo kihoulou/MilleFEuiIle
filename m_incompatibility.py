@@ -10,7 +10,7 @@ ENDC = '\033[0m'
 BOLD = '\033[1m'
 UNDERLINE = '\033[4m'
         
-def override_parameters():
+def check_compatibility():
     """Performs a check on compatibility of physical inputs in ``m_parameters`` module before running the code.
 
     :returns: Parameters that have a conflict between each other.
