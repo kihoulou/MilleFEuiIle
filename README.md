@@ -20,5 +20,5 @@ ice shells of icy bodies. Combining finite element method and Lagrangian markers
 
 The code is provided with several demos and a thorough user guide, see [MilleFEuiIle documentation](https://geo.mff.cuni.cz/~kihoulou/millefeuille/).
 
-[M. Kihoulou](https://geo.mff.cuni.cz/~kihoulou/), March 2025  
+[Martin Kihoulou](https://geo.mff.cuni.cz/~kihoulou/), September 2025  
 martin.kihoulou@mff.cuni.cz 
