@@ -1,6 +1,0 @@
-5. Tectonic extension
-----------------------
-
-.. image:: gif/3a_convection.gif
-
-

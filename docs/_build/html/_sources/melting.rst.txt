@@ -1,4 +1,0 @@
-4. Thermal convection with melting
---------------------------------------
-
-.. image:: gif/3a_convection.gif
