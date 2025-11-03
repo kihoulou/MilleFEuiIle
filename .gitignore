@@ -10,5 +10,3 @@ run_*.sh
 
 # --- common ---
 data*/
-*.png
-*.jpg
