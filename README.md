@@ -18,7 +18,7 @@ ice shells of icy bodies. Combining finite element method and Lagrangian markers
 + long-term tectonic extension/compression
 + tidally-driven partial melting
 
-The code is provided with several demos and a thorough user guide, see [MilleFEuiIle documentation](https://geo.mff.cuni.cz/~kihoulou/millefeuille/).
+The code is provided with several demos and a thorough user guide, see [MilleFEuiIle documentation](https://https://kihoulou.github.io/MilleFEuiIle/).
 
 [Martin Kihoulou](https://geo.mff.cuni.cz/~kihoulou/), September 2025  
 martin.kihoulou@mff.cuni.cz 
