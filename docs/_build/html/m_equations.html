@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+
+<html :class="{'dark': darkMode === 'dark' || (darkMode === 'system' &amp;&amp; window.matchMedia('(prefers-color-scheme: dark)').matches)}" class="scroll-smooth" data-content_root="./" lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') || localStorage.setItem('darkMode', 'system'), activeSection: '' }" x-init="$watch('darkMode', val =&gt; localStorage.setItem('darkMode', val))">
+<head>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta charset="utf-8"/>
+<meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
+<meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>m_equations.py | MilleFEuiIle  documentation</title>
+<meta content="m_equations.py | MilleFEuiIle  documentation" property="og:title"/>
+<meta content="m_equations.py | MilleFEuiIle  documentation" name="twitter:title"/>
+<link href="_static/pygments.css?v=e72c8e07" rel="stylesheet" type="text/css"/>
+<link href="_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
+<link href="_static/custom.css?v=59ae5d2a" rel="stylesheet" type="text/css"/>
+<link href="_static/mf.png" rel="icon"/>
+<link href="search.html" rel="search" title="Search"/>
+<link href="genindex.html" rel="index" title="Index"/>
+<link href="m_filenames.html" rel="next" title="m_filenames.py"/>
+<link href="m_elements.html" rel="prev" title="m_elements.py"/>
+<script>
+    <!-- Prevent Flash of wrong theme -->
+      const userPreference = localStorage.getItem('darkMode');
+      let mode;
+      if (userPreference === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        mode = 'dark';
+        document.documentElement.classList.add('dark');
+      } else {
+        mode = 'light';
+      }
+      if (!userPreference) {localStorage.setItem('darkMode', mode)}
+    </script>
+</head>
+<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false, showScrollTop: false }">
+<div @click.self="showSidebar = false" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" x-cloak="" x-show="showSidebar"></div><div class="relative flex flex-col min-h-screen" id="page"><a class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100" href="#content">
+      Skip to content
+    </a><header class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
+<div class="hidden mr-4 md:flex">
+<a class="flex items-center mr-6" href="index.html">
+<img alt="Logo" class="mr-2 hidden dark:block" height="24" src="_static/mf.png" width="24"/>
+<img alt="Logo" class="mr-2 dark:hidden" height="24" src="_static/mf.png" width="24"/><span class="hidden font-bold sm:inline-block text-clip whitespace-nowrap">MilleFEuiIle  documentation</span>
+</a></div><button @click="showSidebar = true" class="inline-flex items-center justify-center h-10 px-0 py-2 mr-2 text-base font-medium transition-colors rounded-md hover:text-accent-foreground hover:bg-transparent md:hidden" type="button">
+<svg aria-hidden="true" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M152.587 825.087q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440Zm0-203.587q-19.152 0-32.326-13.174T107.087 576q0-19.152 13.174-32.326t32.326-13.174h320q19.152 0 32.326 13.174T518.087 576q0 19.152-13.174 32.326T472.587 621.5h-320Zm0-203.587q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440ZM708.913 576l112.174 112.174q12.674 12.674 12.674 31.826t-12.674 31.826Q808.413 764.5 789.261 764.5t-31.826-12.674l-144-144Q600 594.391 600 576t13.435-31.826l144-144q12.674-12.674 31.826-12.674t31.826 12.674q12.674 12.674 12.674 31.826t-12.674 31.826L708.913 576Z"></path>
+</svg>
+<span class="sr-only">Toggle navigation menu</span>
+</button>
+<div class="flex items-center justify-between flex-1 space-x-2 sm:space-x-4 md:justify-end">
+<div class="flex-1 w-full md:w-auto md:flex-none"><form @keydown.k.window.meta="$refs.search.focus()" action="search.html" class="relative flex items-center group" id="searchbox" method="get">
+<input aria-label="Search the docs" class="inline-flex items-center font-medium transition-colors bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background border border-input hover:bg-accent focus:bg-accent hover:text-accent-foreground focus:text-accent-foreground hover:placeholder-accent-foreground py-2 px-4 relative h-9 w-full justify-start rounded-[0.5rem] text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64" id="search-input" name="q" placeholder="Search ..." type="search" x-ref="search"/>
+<kbd class="pointer-events-none absolute right-1.5 top-2 hidden h-5 select-none text-muted-foreground items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex group-hover:bg-accent group-hover:text-accent-foreground">
+<span class="text-xs">⌘</span>
+    K
+  </kbd>
+</form>
+</div>
+<nav class="flex items-center space-x-1">
+<button @click="darkMode = darkMode === 'light' ? 'dark' : 'light'" aria-label="Color theme switcher" class="relative inline-flex items-center justify-center px-0 text-sm font-medium transition-colors rounded-md hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button">
+<svg class="absolute transition-all scale-100 rotate-0 dark:-rotate-90 dark:scale-0" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 685q45.456 0 77.228-31.772Q589 621.456 589 576q0-45.456-31.772-77.228Q525.456 467 480 467q-45.456 0-77.228 31.772Q371 530.544 371 576q0 45.456 31.772 77.228Q434.544 685 480 685Zm0 91q-83 0-141.5-58.5T280 576q0-83 58.5-141.5T480 376q83 0 141.5 58.5T680 576q0 83-58.5 141.5T480 776ZM80 621.5q-19.152 0-32.326-13.174T34.5 576q0-19.152 13.174-32.326T80 530.5h80q19.152 0 32.326 13.174T205.5 576q0 19.152-13.174 32.326T160 621.5H80Zm720 0q-19.152 0-32.326-13.174T754.5 576q0-19.152 13.174-32.326T800 530.5h80q19.152 0 32.326 13.174T925.5 576q0 19.152-13.174 32.326T880 621.5h-80Zm-320-320q-19.152 0-32.326-13.174T434.5 256v-80q0-19.152 13.174-32.326T480 130.5q19.152 0 32.326 13.174T525.5 176v80q0 19.152-13.174 32.326T480 301.5Zm0 720q-19.152 0-32.326-13.17Q434.5 995.152 434.5 976v-80q0-19.152 13.174-32.326T480 850.5q19.152 0 32.326 13.174T525.5 896v80q0 19.152-13.174 32.33-13.174 13.17-32.326 13.17ZM222.174 382.065l-43-42Q165.5 327.391 166 308.239t13.174-33.065q13.435-13.674 32.587-13.674t32.065 13.674l42.239 43q12.674 13.435 12.555 31.706-.12 18.272-12.555 31.946-12.674 13.674-31.445 13.413-18.772-.261-32.446-13.174Zm494 494.761-42.239-43q-12.674-13.435-12.674-32.087t12.674-31.565Q686.609 756.5 705.38 757q18.772.5 32.446 13.174l43 41.761Q794.5 824.609 794 843.761t-13.174 33.065Q767.391 890.5 748.239 890.5t-32.065-13.674Zm-42-494.761Q660.5 369.391 661 350.62q.5-18.772 13.174-32.446l41.761-43Q728.609 261.5 747.761 262t33.065 13.174q13.674 13.435 13.674 32.587t-13.674 32.065l-43 42.239q-13.435 12.674-31.706 12.555-18.272-.12-31.946-12.555Zm-495 494.761Q165.5 863.391 165.5 844.239t13.674-32.065l43-42.239q13.435-12.674 32.087-12.674t31.565 12.674Q299.5 782.609 299 801.38q-.5 18.772-13.174 32.446l-41.761 43Q231.391 890.5 212.239 890t-33.065-13.174ZM480 576Z"></path>
+</svg>
+<svg class="absolute transition-all scale-0 rotate-90 dark:rotate-0 dark:scale-100" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 936q-151 0-255.5-104.5T120 576q0-138 90-239.5T440 218q25-3 39 18t-1 44q-17 26-25.5 55t-8.5 61q0 90 63 153t153 63q31 0 61.5-9t54.5-25q21-14 43-1.5t19 39.5q-14 138-117.5 229T480 936Zm0-80q88 0 158-48.5T740 681q-20 5-40 8t-40 3q-123 0-209.5-86.5T364 396q0-20 3-40t8-40q-78 32-126.5 102T200 576q0 116 82 198t198 82Zm-10-270Z"></path>
+</svg>
+</button>
+</nav>
+</div>
+</div>
+</header>
+<div class="flex-1"><div class="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10"><aside :aria-hidden="!showSidebar" :class="{ 'translate-x-0': showSidebar }" class="fixed inset-y-0 left-0 md:top-14 z-50 md:z-30 bg-background md:bg-transparent transition-all duration-100 -translate-x-full md:translate-x-0 ml-0 p-6 md:p-0 md:-ml-2 md:h-[calc(100vh-3.5rem)] w-5/6 md:w-full shrink-0 overflow-y-auto border-r border-border md:sticky" id="left-sidebar">
+<a class="!justify-start text-sm md:!hidden bg-background" href="index.html">
+<img alt="Logo" class="mr-2 hidden dark:block" height="16" src="_static/mf.png" width="16"/>
+<img alt="Logo" class="mr-2 dark:hidden" height="16" src="_static/mf.png" width="16"/><span class="font-bold text-clip whitespace-nowrap">MilleFEuiIle  documentation</span>
+</a>
+<div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
+<div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
+<ul class="current">
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="demos.html"><strong>Demos</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="thermalconvection.html">1. Thermal convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermalconvectionphase.html">2. Thermal convection with phase transition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="melting.html">3. Thermal convection with melting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tectonics.html">4. Tectonic extension</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="modules.html"><strong>MilleFEuille modules</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul class="current" x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="m_boundary_conditions.html">m_boundary_conditions.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_check.html">m_check.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_constants.html">m_constants.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_elements.html">m_elements.py</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">m_equations.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_filenames.html">m_filenames.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_interpolation.html">m_interpolation.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_incompatibility.html">m_incompatibility.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_material_properties.html">m_material_properties.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_melting.html">m_melting.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_mesh.html">m_mesh.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html">m_parameters.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_postproc.html">m_postproc.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_rheology.html">m_rheology.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_timestep.html">m_timestep.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_tracers.html">m_tracers.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main.py</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+<button @click="showSidebar = false" class="absolute md:hidden right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100" type="button">
+<svg class="h-4 w-4" fill="currentColor" height="24" stroke="none" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 632 284 828q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536 576l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480 632Z"></path>
+</svg>
+</button>
+</aside>
+<main class="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
+<div class="w-full min-w-0 mx-auto">
+<nav aria-label="breadcrumbs" class="flex items-center mb-4 space-x-1 text-sm text-muted-foreground">
+<a class="overflow-hidden text-ellipsis whitespace-nowrap hover:text-foreground" href="index.html">
+<span class="hidden md:inline">MilleFEuiIle  documentation</span>
+<svg aria-label="Home" class="md:hidden" fill="currentColor" height="18" stroke="none" viewbox="0 96 960 960" width="18" xmlns="http://www.w3.org/2000/svg">
+<path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
+</svg>
+</a>
+<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap" href="modules.html"><strong>MilleFEuille modules</strong></a>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">m_equations.py</span>
+</nav>
+<div id="content" role="main">
+<section id="module-m_equations">
+<span id="m-equations-py"></span><h1>m_equations.py<a class="headerlink" href="#module-m_equations" title="Link to this heading"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="m_equations.Equations">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">m_equations.</span></span><span class="sig-name descname"><span class="pre">Equations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MeshClass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ElemClass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">TracersClass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MeltingClass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FilesClass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="m_equations.Equations.compute_u">
+<span class="sig-name descname"><span class="pre">compute_u</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.compute_u" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.compute_u'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Updates the heat fluxes <span class="math notranslate nohighlight">\(\boldsymbol{q}_{\rm ice}\)</span>  and <span class="math notranslate nohighlight">\(\boldsymbol{q}_{\rm ocean}\)</span> and computes
+new phase transition velocity <span class="math notranslate nohighlight">\(\boldsymbol{u}\)</span>.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="m_equations.Equations.equation_Stokes">
+<span class="sig-name descname"><span class="pre">equation_Stokes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.equation_Stokes" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.equation_Stokes'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Defines the weak form of the Stokes problem</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+<p>Weak form of the continuity equation</p>
+<div class="math notranslate nohighlight">
+\[0 = \int_\Omega \nabla\cdot \boldsymbol{v}\ \hat{p}\ \textrm{d}\Omega    \]</div>
+<p>Weak form of the momentum equation if <code class="docutils literal notranslate"><span class="pre">elasticity</span> <span class="pre">=</span> <span class="pre">False</span></code></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}0 = \int_\Omega \hat{p}\nabla\cdot \hat{\boldsymbol{v}} - \rho g (\boldsymbol{e}_z \cdot \hat{\boldsymbol{v}})
+-\eta\ (\nabla \boldsymbol{v} + \nabla^T \boldsymbol{v}): \nabla^T \hat{\boldsymbol{v}}\ \textrm{d}\Omega\\    \end{split}\]</div>
+<p>Weak form of the momentum equation if <code class="docutils literal notranslate"><span class="pre">elasticity</span> <span class="pre">=</span> <span class="pre">True</span></code></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}0 = \int_\Omega \hat{p}\nabla\cdot \hat{\boldsymbol{v}} - \rho g (\boldsymbol{e}_z \cdot \hat{\boldsymbol{v}})
+- Z\eta\ (\nabla \boldsymbol{v} + \nabla^T \boldsymbol{v}): \nabla^T \hat{\boldsymbol{v}}
+- (1-Z) (\boldsymbol{\sigma} : \nabla^T \hat{\boldsymbol{v}})\ \textrm{d}\Omega\\    \end{split}\]</div>
+<p>In case of a free surface condition at the top boundary <code class="docutils literal notranslate"><span class="pre">BC_Stokes_problem[0][0]</span> <span class="pre">=</span> <span class="pre">"free_surface"</span></code>, the ‘drunken sailor’ stabilization term
+is added</p>
+<div class="math notranslate nohighlight">
+\[- \int_{\Gamma_{\rm top}} \rho_s g\lambda\Delta t (\boldsymbol{v} \cdot \boldsymbol{n})(\boldsymbol{e}_z \cdot \hat{\boldsymbol{v}}) \ \textrm{d}\Gamma_{\rm top}\]</div>
+<p>In case of a free surface condition at the bottom boundary <code class="docutils literal notranslate"><span class="pre">BC_Stokes_problem[1][0]</span> <span class="pre">=</span> <span class="pre">"free_surface"</span></code>, the hydrostatic pressure and the ‘drunken sailor’ stabilization term
+are added</p>
+<div class="math notranslate nohighlight">
+\[+ \int_{\Gamma_{\rm bot}} (h_{\rm bot}\rho_l - h\rho_s)(\boldsymbol{n} \cdot \hat{\boldsymbol{v}}) + (\rho_l - \rho_s) g\lambda\Delta t [(\boldsymbol{v} + \boldsymbol{u})
+\cdot \boldsymbol{n}](\boldsymbol{e}_z \cdot \hat{\boldsymbol{v}}) \ \textrm{d}\Gamma_{\rm bot}\]</div>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="m_equations.Equations.equation_free_surface_bottom">
+<span class="sig-name descname"><span class="pre">equation_free_surface_bottom</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.equation_free_surface_bottom" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.equation_free_surface_bottom'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Defines the weak form, <code class="docutils literal notranslate"><span class="pre">LinearVariationalProblem</span></code> and <code class="docutils literal notranslate"><span class="pre">LinearVariationalSolver</span></code> for the bottom surface evolution equation.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+0 = &amp;\int_\Omega \nabla h_{\rm bot} \cdot \nabla \hat{h}_{\rm bot}\ \textrm{d}\Omega\\
+&amp;- \int_{\Gamma_{\rm bot}} \frac{\partial h_{\rm bot}}{\partial \boldsymbol{n}} \hat{h}_{\rm bot}\ \textrm{d}\Gamma_{\rm bot}\\
+&amp;- \int_{\Gamma_{\rm bot}} \left[h_{\rm bot} - h_{\rm bot}^k - \Delta t \left(\frac{\partial h_{\rm bot}}{\partial x} (v_x + u_x) - (v_z + u_z) \right)\right]
+\left(\frac{\partial \hat{h}_{\rm bot}}{\partial \boldsymbol{n}} - \frac{\hat{h}_{\rm bot}}{\gamma h_e} \right)\ \textrm{d}\Gamma_{\rm bot}
+\end{align}\end{split}\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(h_{\rm bot}\)</span> is the bottom topography trial function</p></li>
+<li><p><span class="math notranslate nohighlight">\(h_{\rm bot}^k\)</span> is the bottom topography function from the previous time step</p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{h}_{\rm bot}\)</span> is the bottom topography test function</p></li>
+<li><p><span class="math notranslate nohighlight">\(v_x\)</span> and <span class="math notranslate nohighlight">\(v_z\)</span> are the horizontal and vertical components of the velocity</p></li>
+<li><p><span class="math notranslate nohighlight">\(u_x\)</span> and <span class="math notranslate nohighlight">\(u_z\)</span> are the horizontal and vertical components of the phase change velocity</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Delta t\)</span> is the time step length</p></li>
+<li><p><span class="math notranslate nohighlight">\(\gamma\)</span> is a stabilization parameter</p></li>
+<li><p><span class="math notranslate nohighlight">\(h_e\)</span> is the element size at the bottom boundary</p></li>
+</ul>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="m_equations.Equations.equation_free_surface_top">
+<span class="sig-name descname"><span class="pre">equation_free_surface_top</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.equation_free_surface_top" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.equation_free_surface_top'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Defines the weak form, <code class="docutils literal notranslate"><span class="pre">LinearVariationalProblem</span></code> and <code class="docutils literal notranslate"><span class="pre">LinearVariationalSolver</span></code> for the top surface evolution equation.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+0 = &amp;\int_\Omega \nabla h_{\rm top} \cdot \nabla \hat{h}_{\rm top}\ \textrm{d}\Omega\\
+&amp;- \int_{\Gamma_{\rm top}} \frac{\partial h_{\rm top}}{\partial \boldsymbol{n}} \hat{h}_{\rm top}\ \textrm{d}\Gamma_{\rm top}\\
+&amp;- \int_{\Gamma_{\rm top}} \left[h_{\rm top} - h_{\rm top}^k - \Delta t \left(\frac{\partial h_{\rm top}}{\partial x} v_x - v_z \right)\right]
+\left(\frac{\partial \hat{h}_{\rm top}}{\partial \boldsymbol{n}} - \frac{\hat{h}_{\rm top}}{\gamma h_e} \right)\ \textrm{d}\Gamma_{\rm top}
+\end{align}\end{split}\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(h_{\rm top}\)</span> is the top topography trial function</p></li>
+<li><p><span class="math notranslate nohighlight">\(h_{\rm top}^k\)</span> is the top topography function from the previous time step</p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{h}_{\rm top}\)</span> is the top topography test function</p></li>
+<li><p><span class="math notranslate nohighlight">\(v_x\)</span> and <span class="math notranslate nohighlight">\(v_z\)</span> are the horizontal and vertical components of the velocity</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Delta t\)</span> is the time step length</p></li>
+<li><p><span class="math notranslate nohighlight">\(\gamma\)</span> is a stabilization parameter</p></li>
+<li><p><span class="math notranslate nohighlight">\(h_e\)</span> is the element size at the top boundary</p></li>
+</ul>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="m_equations.Equations.equation_heat">
+<span class="sig-name descname"><span class="pre">equation_heat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.equation_heat" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.equation_heat'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Defines the weak form of the time-dependent heat transfer equation.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+0 = &amp;\int_\Omega \rho_s c_p \frac{T - T^k}{\Delta t}\hat{T}\\
+&amp;+ 0.5[\rho_s c_p((\boldsymbol{v} - \boldsymbol{v}_{\rm mesh}) \cdot \nabla T)\ \hat{T} + k\ (\nabla T \cdot \nabla \hat{T})]\\
+&amp;+ 0.5[\rho_s c_p((\boldsymbol{v} - \boldsymbol{v}_{\rm mesh}) \cdot \nabla T^k)\ \hat{T} + k\ (\nabla T^k \cdot \nabla \hat{T})]\ \textrm{d}\Omega\\
+\end{align}\end{split}\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(T\)</span> is the temperature trial function</p></li>
+<li><p><span class="math notranslate nohighlight">\(T^k\)</span> is the temperature function from the previous time step</p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{T}\)</span> is the temperature test function</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{v}\)</span> is the velocity</p></li>
+<li><p><span class="math notranslate nohighlight">\(\boldsymbol{v}_{\rm mesh}\)</span> is the mesh velocity</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Delta t\)</span> is the time step length</p></li>
+</ul>
+<p>If <code class="docutils literal notranslate"><span class="pre">tidal_dissipation</span> <span class="pre">=</span> <span class="pre">True</span></code>, the corresponding volumetric heating term defined in <a class="reference internal" href="m_rheology.html#m_rheology.tidal_heating" title="m_rheology.tidal_heating"><code class="xref py py-func docutils literal notranslate"><span class="pre">m_rheology.tidal_heating()</span></code></a> is added</p>
+<div class="math notranslate nohighlight">
+\[- \int_\Omega H_{\rm tidal}(\eta)\ \hat{T}\ \textrm{d}\Omega\]</div>
+<p>In case of radiation boundary condition at the top boundary <code class="docutils literal notranslate"><span class="pre">BC_T_top</span> <span class="pre">=</span> <span class="pre">"radiation"</span></code>, the corresponding boundary condition is added</p>
+<div class="math notranslate nohighlight">
+\[- \int_{\Gamma_{\rm top}} (1 - A)I\hat{T}\ + T^4\varepsilon\sigma_{SB}\hat{T}\ \textrm{d}\Gamma_{\rm top}\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(I\)</span> is the insolation at the body’s surface (in <code class="xref py py-mod docutils literal notranslate"><span class="pre">m_parameters</span></code>)</p></li>
+<li><p><span class="math notranslate nohighlight">\(A\)</span> is the albedo of the body’s surface (in <code class="xref py py-mod docutils literal notranslate"><span class="pre">m_parameters</span></code>)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\varepsilon\)</span> is the body’s surface emmisivity (in <code class="xref py py-mod docutils literal notranslate"><span class="pre">m_parameters</span></code>)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\sigma_{SB}\)</span> is the Stefan-Boltzmann constant (in <a class="reference internal" href="m_constants.html#module-m_constants" title="m_constants"><code class="xref py py-mod docutils literal notranslate"><span class="pre">m_constants</span></code></a>)</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">BC_heat_transfer[0][0]</span> <span class="pre">=</span> <span class="pre">"radiation"</span></code>, nonlinear solver will be automatically used.</p>
+</div>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="m_equations.Equations.equation_heat_ini">
+<span class="sig-name descname"><span class="pre">equation_heat_ini</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.equation_heat_ini" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.equation_heat_ini'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Defines the weak form of the stationary heat transfer equation.</p>
+</dd>
+</dl>
+<div class="math notranslate nohighlight">
+\[0 = \int_\Omega k\ (\nabla T \cdot \nabla \hat{T})\ \textrm{d}\Omega\]</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">BC_heat_transfer[0][0]</span> <span class="pre">=</span> <span class="pre">"radiation"</span></code>, the corresponding boundary condition is added</p>
+<div class="math notranslate nohighlight">
+\[- \int_{\Gamma_{\rm top}} I(1 - A)\hat{T}\ + T^4\varepsilon\sigma_{SB}\hat{T}\ \textrm{d}\Gamma_{\rm top}\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(I\)</span> is the insolation at the body’s surface</p></li>
+<li><p><span class="math notranslate nohighlight">\(A\)</span> is the albedo of the body’s surface</p></li>
+<li><p><span class="math notranslate nohighlight">\(\varepsilon\)</span> is the body’s surface emmisivity</p></li>
+<li><p><span class="math notranslate nohighlight">\(\sigma_{SB}\)</span> is the Stefan-Boltzmann constant</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">BC_heat_transfer[0][0]</span> <span class="pre">=</span> <span class="pre">"radiation"</span></code>, nonlinear solver will be automatically used.</p>
+</div>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="m_equations.Equations.equation_mesh_displacement">
+<span class="sig-name descname"><span class="pre">equation_mesh_displacement</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.equation_mesh_displacement" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.equation_mesh_displacement'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Defines the weak form, <code class="docutils literal notranslate"><span class="pre">LinearVariationalProblem</span></code> and <code class="docutils literal notranslate"><span class="pre">LinearVariationalSolver</span></code> for mesh displacement distribution equation.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+<p>If <code class="docutils literal notranslate"><span class="pre">mesh_displacement_laplace</span> <span class="pre">=</span> <span class="pre">"full"</span></code> then</p>
+<div class="math notranslate nohighlight">
+\[0 = \int_\Omega \nabla h_2 \cdot \nabla \hat{h}_2\ \textrm{d}\Omega\]</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">mesh_displacement_laplace</span> <span class="pre">=</span> <span class="pre">"z-only"</span></code> then</p>
+<div class="math notranslate nohighlight">
+\[0 = \int_\Omega \frac{\partial h_2}{\partial z}\frac{\partial \hat{h}_2}{\partial z} \ \textrm{d}\Omega\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(h_2\)</span> is the mesh displacement trial function</p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{h}_2\)</span> is the mesh displacement test function</p></li>
+</ul>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="m_equations.Equations.rotate_and_interpolate_stress">
+<span class="sig-name descname"><span class="pre">rotate_and_interpolate_stress</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.rotate_and_interpolate_stress" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.rotate_and_interpolate_stress'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd><p>Computes the vorticity tensor <span class="math notranslate nohighlight">\(\boldsymbol{W} = (\nabla \boldsymbol{v} - (\nabla \boldsymbol{v})^T)/2\)</span>, rotates the elastic stress and interpolates it at the mesh. See <a class="reference internal" href="m_interpolation.html#m_interpolation.stress_rotation" title="m_interpolation.stress_rotation"><code class="xref py py-func docutils literal notranslate"><span class="pre">m_interpolation.stress_rotation()</span></code></a>.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="m_equations.Equations.solve_Stokes_problem">
+<span class="sig-name descname"><span class="pre">solve_Stokes_problem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FilesClass</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.solve_Stokes_problem" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.solve_Stokes_problem'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd><p>Solves the Stokes problem.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="m_equations.Equations.solve_heat_equation">
+<span class="sig-name descname"><span class="pre">solve_heat_equation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.solve_heat_equation" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.solve_heat_equation'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="m_equations.Equations.solve_initial_heat_equation">
+<span class="sig-name descname"><span class="pre">solve_initial_heat_equation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.solve_initial_heat_equation" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.solve_initial_heat_equation'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="m_equations.Equations.solve_topography_evolution">
+<span class="sig-name descname"><span class="pre">solve_topography_evolution</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.solve_topography_evolution" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.solve_topography_evolution'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="m_equations.Equations.thermal_perturbation">
+<span class="sig-name descname"><span class="pre">thermal_perturbation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.thermal_perturbation" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.thermal_perturbation'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Perturbs the initial temperature profile.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>perturb_ampl</strong> – amplitude of the thermal perturbation (<span class="math notranslate nohighlight">\(A\)</span>)</p></li>
+<li><p><strong>perturb_freq</strong> – spatial frequency of the thermal perturbation (<span class="math notranslate nohighlight">\(f\)</span>)</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><div class="math notranslate nohighlight">
+\[T^\prime = T - A\sin\left(\frac{\pi y}{h}\right) \cdot\cos\left(\frac{2\pi fx}{l}\right)\]</div>
+</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="m_equations.Equations.update_stress">
+<span class="sig-name descname"><span class="pre">update_stress</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.update_stress" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.update_stress'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="m_equations.Equations.update_viscosity">
+<span class="sig-name descname"><span class="pre">update_viscosity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Picard_iter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.update_viscosity" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.update_viscosity'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Updates the viscosity fuction</p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+</section>
+</div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
+<div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
+<ul>
+<li><a :data-current="activeSection === '#m_equations.Equations'" class="reference internal" href="#m_equations.Equations"><code class="docutils literal notranslate"><span class="pre">Equations</span></code></a><ul>
+<li><a :data-current="activeSection === '#m_equations.Equations.compute_u'" class="reference internal" href="#m_equations.Equations.compute_u"><code class="docutils literal notranslate"><span class="pre">Equations.compute_u()</span></code></a></li>
+<li><a :data-current="activeSection === '#m_equations.Equations.equation_Stokes'" class="reference internal" href="#m_equations.Equations.equation_Stokes"><code class="docutils literal notranslate"><span class="pre">Equations.equation_Stokes()</span></code></a></li>
+<li><a :data-current="activeSection === '#m_equations.Equations.equation_free_surface_bottom'" class="reference internal" href="#m_equations.Equations.equation_free_surface_bottom"><code class="docutils literal notranslate"><span class="pre">Equations.equation_free_surface_bottom()</span></code></a></li>
+<li><a :data-current="activeSection === '#m_equations.Equations.equation_free_surface_top'" class="reference internal" href="#m_equations.Equations.equation_free_surface_top"><code class="docutils literal notranslate"><span class="pre">Equations.equation_free_surface_top()</span></code></a></li>
+<li><a :data-current="activeSection === '#m_equations.Equations.equation_heat'" class="reference internal" href="#m_equations.Equations.equation_heat"><code class="docutils literal notranslate"><span class="pre">Equations.equation_heat()</span></code></a></li>
+<li><a :data-current="activeSection === '#m_equations.Equations.equation_heat_ini'" class="reference internal" href="#m_equations.Equations.equation_heat_ini"><code class="docutils literal notranslate"><span class="pre">Equations.equation_heat_ini()</span></code></a></li>
+<li><a :data-current="activeSection === '#m_equations.Equations.equation_mesh_displacement'" class="reference internal" href="#m_equations.Equations.equation_mesh_displacement"><code class="docutils literal notranslate"><span class="pre">Equations.equation_mesh_displacement()</span></code></a></li>
+<li><a :data-current="activeSection === '#m_equations.Equations.rotate_and_interpolate_stress'" class="reference internal" href="#m_equations.Equations.rotate_and_interpolate_stress"><code class="docutils literal notranslate"><span class="pre">Equations.rotate_and_interpolate_stress()</span></code></a></li>
+<li><a :data-current="activeSection === '#m_equations.Equations.solve_Stokes_problem'" class="reference internal" href="#m_equations.Equations.solve_Stokes_problem"><code class="docutils literal notranslate"><span class="pre">Equations.solve_Stokes_problem()</span></code></a></li>
+<li><a :data-current="activeSection === '#m_equations.Equations.solve_heat_equation'" class="reference internal" href="#m_equations.Equations.solve_heat_equation"><code class="docutils literal notranslate"><span class="pre">Equations.solve_heat_equation()</span></code></a></li>
+<li><a :data-current="activeSection === '#m_equations.Equations.solve_initial_heat_equation'" class="reference internal" href="#m_equations.Equations.solve_initial_heat_equation"><code class="docutils literal notranslate"><span class="pre">Equations.solve_initial_heat_equation()</span></code></a></li>
+<li><a :data-current="activeSection === '#m_equations.Equations.solve_topography_evolution'" class="reference internal" href="#m_equations.Equations.solve_topography_evolution"><code class="docutils literal notranslate"><span class="pre">Equations.solve_topography_evolution()</span></code></a></li>
+<li><a :data-current="activeSection === '#m_equations.Equations.thermal_perturbation'" class="reference internal" href="#m_equations.Equations.thermal_perturbation"><code class="docutils literal notranslate"><span class="pre">Equations.thermal_perturbation()</span></code></a></li>
+<li><a :data-current="activeSection === '#m_equations.Equations.update_stress'" class="reference internal" href="#m_equations.Equations.update_stress"><code class="docutils literal notranslate"><span class="pre">Equations.update_stress()</span></code></a></li>
+<li><a :data-current="activeSection === '#m_equations.Equations.update_viscosity'" class="reference internal" href="#m_equations.Equations.update_viscosity"><code class="docutils literal notranslate"><span class="pre">Equations.update_viscosity()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</aside>
+</main>
+</div>
+</div><footer class="py-6 border-t border-border md:py-0">
+<div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+<div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
+<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2025, Martin Kihoulou Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 8.1.3</a></p>
+</div>
+</div>
+</footer>
+</div>
+<script src="_static/documentation_options.js?v=5929fcd5"></script>
+<script src="_static/doctools.js?v=9bcbadda"></script>
+<script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+<script defer="defer" src="_static/theme.js?v=073f68d9"></script>
+<script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>

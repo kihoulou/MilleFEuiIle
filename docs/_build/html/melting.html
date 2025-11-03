@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+
+<html :class="{'dark': darkMode === 'dark' || (darkMode === 'system' &amp;&amp; window.matchMedia('(prefers-color-scheme: dark)').matches)}" class="scroll-smooth" data-content_root="./" lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') || localStorage.setItem('darkMode', 'system'), activeSection: '' }" x-init="$watch('darkMode', val =&gt; localStorage.setItem('darkMode', val))">
+<head>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta charset="utf-8"/>
+<meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
+<meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>3. Thermal convection with melting | MilleFEuiIle  documentation</title>
+<meta content="3. Thermal convection with melting | MilleFEuiIle  documentation" property="og:title"/>
+<meta content="3. Thermal convection with melting | MilleFEuiIle  documentation" name="twitter:title"/>
+<link href="_static/pygments.css?v=e72c8e07" rel="stylesheet" type="text/css"/>
+<link href="_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
+<link href="_static/custom.css?v=59ae5d2a" rel="stylesheet" type="text/css"/>
+<link href="_static/mf.png" rel="icon"/>
+<link href="search.html" rel="search" title="Search"/>
+<link href="genindex.html" rel="index" title="Index"/>
+<link href="tectonics.html" rel="next" title="4. Tectonic extension"/>
+<link href="thermalconvectionphase.html" rel="prev" title="2. Thermal convection with phase transition"/>
+<script>
+    <!-- Prevent Flash of wrong theme -->
+      const userPreference = localStorage.getItem('darkMode');
+      let mode;
+      if (userPreference === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        mode = 'dark';
+        document.documentElement.classList.add('dark');
+      } else {
+        mode = 'light';
+      }
+      if (!userPreference) {localStorage.setItem('darkMode', mode)}
+    </script>
+</head>
+<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false, showScrollTop: false }">
+<div @click.self="showSidebar = false" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" x-cloak="" x-show="showSidebar"></div><div class="relative flex flex-col min-h-screen" id="page"><a class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100" href="#content">
+      Skip to content
+    </a><header class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
+<div class="hidden mr-4 md:flex">
+<a class="flex items-center mr-6" href="index.html">
+<img alt="Logo" class="mr-2 hidden dark:block" height="24" src="_static/mf.png" width="24"/>
+<img alt="Logo" class="mr-2 dark:hidden" height="24" src="_static/mf.png" width="24"/><span class="hidden font-bold sm:inline-block text-clip whitespace-nowrap">MilleFEuiIle  documentation</span>
+</a></div><button @click="showSidebar = true" class="inline-flex items-center justify-center h-10 px-0 py-2 mr-2 text-base font-medium transition-colors rounded-md hover:text-accent-foreground hover:bg-transparent md:hidden" type="button">
+<svg aria-hidden="true" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M152.587 825.087q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440Zm0-203.587q-19.152 0-32.326-13.174T107.087 576q0-19.152 13.174-32.326t32.326-13.174h320q19.152 0 32.326 13.174T518.087 576q0 19.152-13.174 32.326T472.587 621.5h-320Zm0-203.587q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440ZM708.913 576l112.174 112.174q12.674 12.674 12.674 31.826t-12.674 31.826Q808.413 764.5 789.261 764.5t-31.826-12.674l-144-144Q600 594.391 600 576t13.435-31.826l144-144q12.674-12.674 31.826-12.674t31.826 12.674q12.674 12.674 12.674 31.826t-12.674 31.826L708.913 576Z"></path>
+</svg>
+<span class="sr-only">Toggle navigation menu</span>
+</button>
+<div class="flex items-center justify-between flex-1 space-x-2 sm:space-x-4 md:justify-end">
+<div class="flex-1 w-full md:w-auto md:flex-none"><form @keydown.k.window.meta="$refs.search.focus()" action="search.html" class="relative flex items-center group" id="searchbox" method="get">
+<input aria-label="Search the docs" class="inline-flex items-center font-medium transition-colors bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background border border-input hover:bg-accent focus:bg-accent hover:text-accent-foreground focus:text-accent-foreground hover:placeholder-accent-foreground py-2 px-4 relative h-9 w-full justify-start rounded-[0.5rem] text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64" id="search-input" name="q" placeholder="Search ..." type="search" x-ref="search"/>
+<kbd class="pointer-events-none absolute right-1.5 top-2 hidden h-5 select-none text-muted-foreground items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex group-hover:bg-accent group-hover:text-accent-foreground">
+<span class="text-xs">⌘</span>
+    K
+  </kbd>
+</form>
+</div>
+<nav class="flex items-center space-x-1">
+<button @click="darkMode = darkMode === 'light' ? 'dark' : 'light'" aria-label="Color theme switcher" class="relative inline-flex items-center justify-center px-0 text-sm font-medium transition-colors rounded-md hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button">
+<svg class="absolute transition-all scale-100 rotate-0 dark:-rotate-90 dark:scale-0" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 685q45.456 0 77.228-31.772Q589 621.456 589 576q0-45.456-31.772-77.228Q525.456 467 480 467q-45.456 0-77.228 31.772Q371 530.544 371 576q0 45.456 31.772 77.228Q434.544 685 480 685Zm0 91q-83 0-141.5-58.5T280 576q0-83 58.5-141.5T480 376q83 0 141.5 58.5T680 576q0 83-58.5 141.5T480 776ZM80 621.5q-19.152 0-32.326-13.174T34.5 576q0-19.152 13.174-32.326T80 530.5h80q19.152 0 32.326 13.174T205.5 576q0 19.152-13.174 32.326T160 621.5H80Zm720 0q-19.152 0-32.326-13.174T754.5 576q0-19.152 13.174-32.326T800 530.5h80q19.152 0 32.326 13.174T925.5 576q0 19.152-13.174 32.326T880 621.5h-80Zm-320-320q-19.152 0-32.326-13.174T434.5 256v-80q0-19.152 13.174-32.326T480 130.5q19.152 0 32.326 13.174T525.5 176v80q0 19.152-13.174 32.326T480 301.5Zm0 720q-19.152 0-32.326-13.17Q434.5 995.152 434.5 976v-80q0-19.152 13.174-32.326T480 850.5q19.152 0 32.326 13.174T525.5 896v80q0 19.152-13.174 32.33-13.174 13.17-32.326 13.17ZM222.174 382.065l-43-42Q165.5 327.391 166 308.239t13.174-33.065q13.435-13.674 32.587-13.674t32.065 13.674l42.239 43q12.674 13.435 12.555 31.706-.12 18.272-12.555 31.946-12.674 13.674-31.445 13.413-18.772-.261-32.446-13.174Zm494 494.761-42.239-43q-12.674-13.435-12.674-32.087t12.674-31.565Q686.609 756.5 705.38 757q18.772.5 32.446 13.174l43 41.761Q794.5 824.609 794 843.761t-13.174 33.065Q767.391 890.5 748.239 890.5t-32.065-13.674Zm-42-494.761Q660.5 369.391 661 350.62q.5-18.772 13.174-32.446l41.761-43Q728.609 261.5 747.761 262t33.065 13.174q13.674 13.435 13.674 32.587t-13.674 32.065l-43 42.239q-13.435 12.674-31.706 12.555-18.272-.12-31.946-12.555Zm-495 494.761Q165.5 863.391 165.5 844.239t13.674-32.065l43-42.239q13.435-12.674 32.087-12.674t31.565 12.674Q299.5 782.609 299 801.38q-.5 18.772-13.174 32.446l-41.761 43Q231.391 890.5 212.239 890t-33.065-13.174ZM480 576Z"></path>
+</svg>
+<svg class="absolute transition-all scale-0 rotate-90 dark:rotate-0 dark:scale-100" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 936q-151 0-255.5-104.5T120 576q0-138 90-239.5T440 218q25-3 39 18t-1 44q-17 26-25.5 55t-8.5 61q0 90 63 153t153 63q31 0 61.5-9t54.5-25q21-14 43-1.5t19 39.5q-14 138-117.5 229T480 936Zm0-80q88 0 158-48.5T740 681q-20 5-40 8t-40 3q-123 0-209.5-86.5T364 396q0-20 3-40t8-40q-78 32-126.5 102T200 576q0 116 82 198t198 82Zm-10-270Z"></path>
+</svg>
+</button>
+</nav>
+</div>
+</div>
+</header>
+<div class="flex-1"><div class="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10"><aside :aria-hidden="!showSidebar" :class="{ 'translate-x-0': showSidebar }" class="fixed inset-y-0 left-0 md:top-14 z-50 md:z-30 bg-background md:bg-transparent transition-all duration-100 -translate-x-full md:translate-x-0 ml-0 p-6 md:p-0 md:-ml-2 md:h-[calc(100vh-3.5rem)] w-5/6 md:w-full shrink-0 overflow-y-auto border-r border-border md:sticky" id="left-sidebar">
+<a class="!justify-start text-sm md:!hidden bg-background" href="index.html">
+<img alt="Logo" class="mr-2 hidden dark:block" height="16" src="_static/mf.png" width="16"/>
+<img alt="Logo" class="mr-2 dark:hidden" height="16" src="_static/mf.png" width="16"/><span class="font-bold text-clip whitespace-nowrap">MilleFEuiIle  documentation</span>
+</a>
+<div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
+<div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
+<ul class="current">
+<li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="demos.html"><strong>Demos</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul class="current" x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="thermalconvection.html">1. Thermal convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermalconvectionphase.html">2. Thermal convection with phase transition</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">3. Thermal convection with melting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tectonics.html">4. Tectonic extension</a></li>
+</ul>
+</li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="modules.html"><strong>MilleFEuille modules</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="m_boundary_conditions.html">m_boundary_conditions.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_check.html">m_check.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_constants.html">m_constants.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_elements.html">m_elements.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_equations.html">m_equations.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_filenames.html">m_filenames.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_interpolation.html">m_interpolation.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_incompatibility.html">m_incompatibility.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_material_properties.html">m_material_properties.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_melting.html">m_melting.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_mesh.html">m_mesh.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_parameters.html">m_parameters.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_postproc.html">m_postproc.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_rheology.html">m_rheology.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_timestep.html">m_timestep.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_tracers.html">m_tracers.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main.py</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+<button @click="showSidebar = false" class="absolute md:hidden right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100" type="button">
+<svg class="h-4 w-4" fill="currentColor" height="24" stroke="none" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 632 284 828q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536 576l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480 632Z"></path>
+</svg>
+</button>
+</aside>
+<main class="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
+<div class="w-full min-w-0 mx-auto">
+<nav aria-label="breadcrumbs" class="flex items-center mb-4 space-x-1 text-sm text-muted-foreground">
+<a class="overflow-hidden text-ellipsis whitespace-nowrap hover:text-foreground" href="index.html">
+<span class="hidden md:inline">MilleFEuiIle  documentation</span>
+<svg aria-label="Home" class="md:hidden" fill="currentColor" height="18" stroke="none" viewbox="0 96 960 960" width="18" xmlns="http://www.w3.org/2000/svg">
+<path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
+</svg>
+</a>
+<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap" href="demos.html"><strong>Demos</strong></a>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">3. Thermal convection with melting</span>
+</nav>
+<div id="content" role="main">
+<section id="thermal-convection-with-melting">
+<h1>3. Thermal convection with melting<a class="headerlink" href="#thermal-convection-with-melting" title="Link to this heading"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h1>
+<p>Because of specific formulas for density and constant thermal properties of ice used in the study, the modules with rheology and material properties need to be modified in addition to the parameter file.</p>
+<figure class="align-default" id="id1">
+<img alt="_images/convection_melting.gif" src="_images/convection_melting.gif"/>
+<figcaption>
+<p><span class="caption-text">Tidally heated thermal convection in an ice shell following the setup by Tobie et al. (2003).</span><a class="headerlink" href="#id1" title="Link to this image"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></p>
+</figcaption>
+</figure>
+<section id="parameter-file-line-by-line">
+<h2>Parameter file line by line<a class="headerlink" href="#parameter-file-line-by-line" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#parameter-file-line-by-line'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
+<p>The parameter file contains all parameters that can be set. Not all of them
+are needed for every setting, therefore here only the active ones are highlighted.</p>
+<section id="output-files-settings">
+<h3>Output files settings<a class="headerlink" href="#output-files-settings" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#output-files-settings'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
+<p>We start with the directory name</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Name of the directory with results ---</span>
+</span><span id="line-2"><mark><span class="n">name</span> <span class="o">=</span> <span class="s2">"convection"</span>
+</mark></span></code></pre></div>
+</div>
+<p>The directory protection will be turned off, meaning that when lauched repeatedly,
+the results will be overwritten each time</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># Protection from overwriting the directory above</span>
+</span><span id="line-2"><mark><span class="n">protect_directory</span> <span class="o">=</span> <span class="kc">False</span>
+</mark></span></code></pre></div>
+</div>
+<p>We choose the time units millions of years and output every 25 kyr.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- In what units the time will be? ---</span>
+</span><span id="line-2"><span class="c1"># 1.0 - seconds or nondimensional, or yr, kyr or Myr</span>
+</span><span id="line-3"><mark><span class="n">time_units</span> <span class="o">=</span> <span class="n">Myr</span>
+</mark></span><span id="line-4">
+</span><span id="line-5"><span class="c1"># --- String representation of time_units ---</span>
+</span><span id="line-6"><mark><span class="n">time_units_string</span> <span class="o">=</span> <span class="s2">"Myr"</span>
+</mark></span><span id="line-7">
+</span><span id="line-8"><span class="c1"># --- Output method for Paraview, HDF5 and tracers ---</span>
+</span><span id="line-9"><mark><span class="n">output_frequency</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"time"</span><span class="p">,</span> <span class="mi">25</span><span class="o">*</span><span class="n">kyr</span><span class="p">]</span>
+</mark></span></code></pre></div>
+</div>
+<p>Tracers will be used for partial melt, we need to save them in order to visualize them later.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Save tracers into files? ---</span>
+</span><span id="line-2"><mark><span class="n">save_tracers</span> <span class="o">=</span> <span class="kc">True</span>
+</mark></span><span id="line-3">
+</span><span id="line-4"><span class="c1"># --- What properties to save? Must be one of the following (order does not matter):</span>
+</span><span id="line-5"><mark><span class="n">Tracers_Output</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"melt_fraction"</span><span class="p">]</span>
+</mark></span><span id="line-6">
+</span><span id="line-7"><span class="c1"># --- Headers for the columns in the text file for tracers</span>
+</span><span id="line-8"><mark><span class="n">Tracers_header</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Melt fraction (-)"</span><span class="p">]</span>
+</mark></span></code></pre></div>
+</div>
+<p>To visualize the results in Paraview, we will save temperature, melt fraction, and viscosity.
+For initial condition, we will save only temperature.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- What functions to write into Paraview and HDF5 file ---</span>
+</span><span id="line-2"><mark><span class="n">Paraview_Output</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"temperature"</span><span class="p">,</span> <span class="s2">"melt_fraction"</span><span class="p">,</span> <span class="s2">"viscosity"</span><span class="p">]</span>
+</mark></span><span id="line-3">
+</span><span id="line-4"><mark><span class="n">Paraview_Output_Ini</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"temperature"</span><span class="p">]</span>
+</mark></span></code></pre></div>
+</div>
+<p>To the statistics text file, time (in the units specified above, i.e., Myr)
+and the duration of the time step will be saved. We also choose corresponding headers.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- What values to print in a text file every time step? ---</span>
+</span><span id="line-2"><mark><span class="n">stat_output</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">"time"</span><span class="p">,</span> <span class="s2">"timestep"</span><span class="p">]</span>
+</mark></span><span id="line-3">
+</span><span id="line-4"><span class="c1"># --- Headers for the columns in the text file</span>
+</span><span id="line-5"><mark><span class="n">stat_header</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Time (h)"</span><span class="p">,</span> <span class="s2">"dt (s)"</span><span class="p">]</span>
+</mark></span></code></pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+</section>
+<section id="reloading-options">
+<h3>Reloading options<a class="headerlink" href="#reloading-options" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#reloading-options'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
+<p>As we define our initial condition and not reload, the following options need to be set.
+The number at <code class="docutils literal notranslate"><span class="pre">reload_HDF5_step</span></code> and <code class="docutils literal notranslate"><span class="pre">reload_tracers_step</span></code> does not matter, but needs
+to be defined.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Name of the directory from which the data will be reloaded ---</span>
+</span><span id="line-2"><mark><span class="n">reload_name</span>                 <span class="o">=</span> <span class="s2">""</span>
+</mark></span><span id="line-3">
+</span><span id="line-4"><span class="c1"># --- Whether or not to load HDF5 data from data_reload_name/HDF5/data.h5 ---</span>
+</span><span id="line-5"><mark><span class="n">reload_HDF5</span>                 <span class="o">=</span> <span class="kc">False</span>
+</mark></span><span id="line-6">
+</span><span id="line-7"><span class="c1"># ---  Time stamp of the HDF5 file which will be loaded ---</span>
+</span><span id="line-8"><mark><span class="n">reload_HDF5_step</span>                    <span class="o">=</span> <span class="mi">0</span>
+</mark></span><span id="line-9">
+</span><span id="line-10"><span class="c1"># --- What functions to read from HDF5 file when reloading ---</span>
+</span><span id="line-11"><mark><span class="n">reload_HDF5_functions</span> <span class="o">=</span> <span class="p">[]</span>
+</mark></span><span id="line-12">
+</span><span id="line-13"><mark><span class="n">reload_tracers</span>      <span class="o">=</span> <span class="kc">False</span>
+</mark></span><span id="line-14">
+</span><span id="line-15"><mark><span class="n">reload_tracers_step</span>         <span class="o">=</span> <span class="mi">0</span> <span class="c1"># Second column in data_timestamp.dat</span>
+</mark></span><span id="line-16">
+</span><span id="line-17"><span class="c1"># --- Whether to reset time when reloading ---</span>
+</span><span id="line-18"><mark><span class="n">restart_time</span>        <span class="o">=</span> <span class="kc">False</span>
+</mark></span></code></pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+</section>
+<section id="simulation-duration">
+<h3>Simulation duration<a class="headerlink" href="#simulation-duration" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#simulation-duration'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
+<p>The simulation will be stopped at 20 Myr.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Criterion for ending the simulation, e.g. ["time", 1*Myr] or ["step", 1000] ---</span>
+</span><span id="line-2"><mark><span class="n">termination_condition</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"time"</span><span class="p">,</span> <span class="mi">20</span><span class="o">*</span><span class="n">Myr</span><span class="p">]</span>
+</mark></span></code></pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+</section>
+<section id="tracers-options">
+<h3>Tracers options<a class="headerlink" href="#tracers-options" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tracers-options'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
+<p>Although tracers will be used, the options below are not relevant, because melt is the only mechanism using them, therefore the tracers will be added on the go.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">sm_thickness</span> <span class="o">=</span> <span class="mf">500.0</span>        <span class="c1"># m</span>
+</span><span id="line-2"><span class="n">om_thickness</span> <span class="o">=</span> <span class="mf">500.0</span>        <span class="c1"># m</span>
+</span><span id="line-3">
+</span><span id="line-4"><span class="n">integration_method</span> <span class="o">=</span> <span class="s2">"RK4"</span> <span class="c1"># Euler, RK2, RK4</span>
+</span><span id="line-5">
+</span><span id="line-6"><span class="n">tracers_per_cell</span> <span class="o">=</span> <span class="mi">20</span>
+</span><span id="line-7">
+</span><span id="line-8"><span class="n">weight_tracers_by_ratio</span> <span class="o">=</span> <span class="kc">False</span>
+</span></code></pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+</section>
+<section id="mesh-geometry">
+<h3>Mesh geometry<a class="headerlink" href="#mesh-geometry" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#mesh-geometry'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
+<p>The computational domain will be 20 km thick and 40 km long. The mesh will be created
+during the inicialization, using crossed geometry of the elements. The basic elements will have
+the longest side of 1 km.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Mesh height ---</span>
+</span><span id="line-2"><mark><span class="n">height</span> <span class="o">=</span> <span class="mf">20e3</span> <span class="c1"># m</span>
+</mark></span><span id="line-3">
+</span><span id="line-4"><span class="c1"># --- Mesh length ---</span>
+</span><span id="line-5"><mark><span class="n">length</span> <span class="o">=</span> <span class="mf">40e3</span> <span class="c1"># m</span>
+</mark></span><span id="line-6">
+</span><span id="line-7"><span class="c1"># --- Whether to read an external mesh ---</span>
+</span><span id="line-8"><mark><span class="n">loading_mesh</span> <span class="o">=</span> <span class="kc">False</span>
+</mark></span><span id="line-9">
+</span><span id="line-10"><span class="c1"># --- Mesh to be loaded ---</span>
+</span><span id="line-11"><mark><span class="n">mesh_name</span>   <span class="o">=</span> <span class="s2">""</span>
+</mark></span><span id="line-12">
+</span><span id="line-13"><span class="c1"># --- Basic mesh resolution if not loading mesh ---</span>
+</span><span id="line-14"><mark><span class="n">z_div</span> <span class="o">=</span> <span class="mi">40</span>
+</mark></span><span id="line-15">
+</span><span id="line-16"><span class="c1"># --- Number of nodes in horizontal direction ---</span>
+</span><span id="line-17"><mark><span class="n">x_div</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">z_div</span><span class="o">*</span><span class="p">(</span><span class="n">length</span><span class="o">/</span><span class="n">height</span><span class="p">))</span> <span class="c1"># (keeps aspect ratio 1)</span>
+</mark></span><span id="line-18">
+</span><span id="line-19"><span class="c1"># --- Method of dividing basic squares into mesh triangle elements. ---</span>
+</span><span id="line-20"><mark><span class="n">triangle_types</span> <span class="o">=</span> <span class="s2">"crossed"</span> <span class="c1"># crossed, left, right, left/right, right/left</span>
+</mark></span><span id="line-21">
+</span><span id="line-22"><span class="c1"># --- Rectangular mesh refinement ---</span>
+</span><span id="line-23"><mark><span class="n">refinement</span> <span class="o">=</span> <span class="p">[]</span>
+</mark></span></code></pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+</section>
+<section id="material-composition">
+<h3>Material composition<a class="headerlink" href="#material-composition" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#material-composition'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
+<p>The ice will consist of pure ice, therefore the list <code class="docutils literal notranslate"><span class="pre">materials</span></code> will remain empty.
+Other options can be left as they are.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><mark><span class="n">materials</span> <span class="o">=</span> <span class="p">[]</span>
+</mark></span><span id="line-2">
+</span><span id="line-3"><span class="n">empty_cells_allowed</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="line-4">
+</span><span id="line-5"><span class="n">empty_cells_composition</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="line-6">
+</span><span id="line-7"><span class="n">empty_cells_region</span> <span class="o">=</span> <span class="p">[]</span>
+</span></code></pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+</section>
+</section>
+<section id="rheology-file-modification">
+<h2>Rheology file modification<a class="headerlink" href="#rheology-file-modification" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#rheology-file-modification'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
+</section>
+<section id="material-properties-file-modification">
+<h2>Material properties file modification<a class="headerlink" href="#material-properties-file-modification" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#material-properties-file-modification'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
+<p>Here we adopt the density of the mixture of ice and melt from Tobie et al. (2003):</p>
+<div class="math notranslate nohighlight">
+\[\rho(T, \chi) = \rho_s(1 - \alpha(T - T_{ref})) + \chi\rho_s(1 - \rho_s / \rho_m)\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="k">def</span><span class="w"> </span><span class="nf">rho</span><span class="p">(</span><span class="n">Temp</span><span class="p">,</span> <span class="n">composition</span><span class="p">,</span> <span class="n">xm</span><span class="p">):</span>
+</span><span id="line-2">        <span class="c1"># .</span>
+</span><span id="line-3">        <span class="c1"># .</span>
+</span><span id="line-4">        <span class="c1"># .</span>
+</span><span id="line-5"><mark>        <span class="k">return</span> <span class="n">rho_s</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="mf">1.6e-4</span><span class="o">*</span><span class="p">(</span><span class="n">Temp</span><span class="o">-</span><span class="n">T_ref</span><span class="p">))</span> <span class="o">+</span> <span class="n">xm</span><span class="o">*</span><span class="n">rho_s</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="n">rho_s</span><span class="o">/</span><span class="n">rho_m</span><span class="p">)</span>
+</mark></span></code></pre></div>
+</div>
+<p>and constant thermal properties:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="k">def</span><span class="w"> </span><span class="nf">k</span><span class="p">(</span><span class="n">Temp</span><span class="p">,</span> <span class="n">composition</span><span class="p">):</span>
+</span><span id="line-2">        <span class="c1">#return 2.3 567.0/Temp</span>
+</span><span id="line-3"><mark>        <span class="k">return</span> <span class="mf">2.3</span>
+</mark></span><span id="line-4">
+</span><span id="line-5"><span class="k">def</span><span class="w"> </span><span class="nf">cp</span><span class="p">(</span><span class="n">Temp</span><span class="p">,</span> <span class="n">composition</span><span class="p">):</span>
+</span><span id="line-6">        <span class="c1">#return 185.0 + 7.037*Temp</span>
+</span><span id="line-7"><mark>        <span class="k">return</span> <span class="mf">2100.0</span>
+</mark></span></code></pre></div>
+</div>
+</section>
+</section>
+</div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
+<div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
+<ul>
+<li><a :data-current="activeSection === '#parameter-file-line-by-line'" class="reference internal" href="#parameter-file-line-by-line">Parameter file line by line</a><ul>
+<li><a :data-current="activeSection === '#output-files-settings'" class="reference internal" href="#output-files-settings">Output files settings</a></li>
+<li><a :data-current="activeSection === '#reloading-options'" class="reference internal" href="#reloading-options">Reloading options</a></li>
+<li><a :data-current="activeSection === '#simulation-duration'" class="reference internal" href="#simulation-duration">Simulation duration</a></li>
+<li><a :data-current="activeSection === '#tracers-options'" class="reference internal" href="#tracers-options">Tracers options</a></li>
+<li><a :data-current="activeSection === '#mesh-geometry'" class="reference internal" href="#mesh-geometry">Mesh geometry</a></li>
+<li><a :data-current="activeSection === '#material-composition'" class="reference internal" href="#material-composition">Material composition</a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#rheology-file-modification'" class="reference internal" href="#rheology-file-modification">Rheology file modification</a></li>
+<li><a :data-current="activeSection === '#material-properties-file-modification'" class="reference internal" href="#material-properties-file-modification">Material properties file modification</a></li>
+</ul>
+</div>
+</aside>
+</main>
+</div>
+</div><footer class="py-6 border-t border-border md:py-0">
+<div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+<div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
+<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2025, Martin Kihoulou Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 8.1.3</a></p>
+</div>
+</div>
+</footer>
+</div>
+<script src="_static/documentation_options.js?v=5929fcd5"></script>
+<script src="_static/doctools.js?v=9bcbadda"></script>
+<script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+<script defer="defer" src="_static/theme.js?v=073f68d9"></script>
+<script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>
