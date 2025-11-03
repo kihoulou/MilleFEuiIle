@@ -1,4 +1,3 @@
-![mf](https://github.com/user-attachments/assets/559e7b2e-f07c-4d23-8aae-9c69f4c6bcf2)
 # MilleFEuiIle
 ## Multi-InstrumentaL **Lagrangian**-Eulerian FEniCS-Using Ice-I Layer Explorer
 
@@ -19,7 +18,7 @@ ice shells of icy bodies. Combining finite element method and Lagrangian markers
 + long-term tectonic extension/compression
 + tidally-driven partial melting
 
-The code is provided with several demos and a thorough user guide.
+The code is provided with several demos and a thorough user guide, see [MilleFEuiIle documentation](https://geo.mff.cuni.cz/~kihoulou/millefeuille/).
 
-[M. Kihoulou](https://geo.mff.cuni.cz/~kihoulou/), March 2025  
+[Martin Kihoulou](https://geo.mff.cuni.cz/~kihoulou/), September 2025  
 martin.kihoulou@mff.cuni.cz 
