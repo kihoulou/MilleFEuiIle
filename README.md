@@ -1,5 +1,5 @@
 # MilleFEuiIle
-## Multi-InstrumentaL **Lagrangian**-Eulerian FEniCS-Using Ice-I Layer Explorer
+## Multi-InstrumentaL **Lagrangian**-Eulerian FEniCS-Using Ice-Ih Layer Explorer
              
 <img width="201" height="201" align="left" alt="mf_logo" src="https://github.com/user-attachments/assets/c1a674f0-a049-4dff-993f-528affcfb960" />
 **MilleFEuiIle** [ *mil·fœj* ] is a computational code built upon the open-source finite-element python library FEniCS, developed to solve thermo-mechanical evolution of
