@@ -3,10 +3,6 @@
 __pycache__ 
 main_*.py
 
-# --- iSALE ---
-iSALE_IC*/ 
-run_*.sh
-!run_iSALE.sh
-
 # --- common ---
 data*/
+Zenodo*/

@@ -1,7 +1,7 @@
 from dolfin import *
 import numpy
 from scipy import special
-from m_parameters import *
+from m_parameters_docs import *
 
 def tidal_heating(visc):
 
@@ -71,7 +71,6 @@ def z(visc, shear_modulus, dt):
     return dt/(dt + visc/shear_modulus)
 
 def get_new_stress(mesh, Temp, xm, stress_dev_inv, stress_dev_inv_k, strain_rate_invariant, composition, shear_modulus, step, Picard_iter, dt):
-
     ranks = []
     eval_type = "local"
     for j in range(mesh.num_cells()):
@@ -104,7 +103,6 @@ def get_new_stress(mesh, Temp, xm, stress_dev_inv, stress_dev_inv_k, strain_rate
     stress_dev_inv.vector().set_local(ranks)
 
 def get_new_stress_iter(mesh, Temp, xm, stress_dev_inv, stress_dev_inv_k, strain_rate_inv, composition, shear_modulus, step, Picard_iter, dt):
-
     ranks = []
     eval_type = "local"
 
@@ -220,17 +218,13 @@ def eta_ductile(Temp, strain_rate, stress, xm, composition, step, Picard_iter, e
 
     if (viscosity_type == "temp-dep"):
         T_bot = BC_heat_transfer[1][1]
-        # eta_v = 1.0/(1.0/(eta_0*exp(Q_activ/R_gas*(1.0/Temp - 1.0/T_bot))) + 1.0/eta_max)*exp(-45.0*xm)
-        eta_v = eta_0*exp(-14.0*(Temp - T_bot)/170.0)*exp(-45.0*xm)
+        eta_v = 1.0/(1.0/(eta_0*exp(Q_activ/R_gas*(1.0/Temp - 1.0/T_bot))) + 1.0/eta_max)*exp(-45.0*xm)
 
     if (viscosity_type == "GK_2001"):
         if (step == 0 and Picard_iter == 0):
             eta_v =  1.0/(1.0/eta_diff(Temp) + 1.0/eta_max)*exp(-45.0*xm) 
+
         else:               
-            # eta_v = 1.0/(1.0/eta_diff(Temp)\
-            #         + 1.0/eta_disl(Temp, strain_rate, stress, eval_type)\
-            #         + 1.0/eta_max)*exp(-45.0*xm)
-            
             eta_v = 1.0/(1.0/eta_diff(Temp)\
                     + 1.0/eta_disl(Temp, strain_rate, stress, eval_type)\
                     + 1.0/(eta_GBS(Temp, strain_rate, stress, eval_type) + eta_BS(Temp, strain_rate, stress))\
@@ -245,6 +239,9 @@ def eta_ductile(Temp, strain_rate, stress, xm, composition, step, Picard_iter, e
         pass
 
     return eta_v
+
+    # Cannot be conditional because of the local iterations!
+    # return conditional(gt(eta_v, eta_max), eta_max, conditional(lt(eta_v, eta_min), eta_min, eta_v))
 
 def eta_eff(p_k, Temp, strain_rate, stress, xm, composition, plastic_strain, step, Picard_iter, stress_dev_inv_k, shear_modulus, dt, sr_min):
     
@@ -277,7 +274,7 @@ def eta_eff(p_k, Temp, strain_rate, stress, xm, composition, plastic_strain, ste
 
     else:
         # --- Viscous rheology only ---
-        return conditional(lt(eta_v, eta_max), eta_v, eta_max)
+        return eta_v
 
 def eta(Q, A, n, m, Temp, strain_rate_inv, stress_inv):
 
@@ -303,9 +300,9 @@ def eta_diff(Temp):
     D_v = D_0v*exp(-Q_v/(R_gas*Temp))
     D_b = D_0b*exp(-Q_b/(R_gas*Temp))
 
-    # 3/2 come from the scaling between diff. stress, see Eq. (6.8b) in Gerya (2009)
+    # 3/2 come from the scaling between diff. stress and 2nd invariant, see Eq. (6.8b) in Gerya (2009)
     return 1.0/(2*(3.0/2.0*14)*V_m)*R_gas*Temp*d_grain**2/(D_v + np.pi*delta*D_b/d_grain)
-
+    
 def eta_disl(Temp, strain_rate_II, stress_II, eval_type):
     n = 4.0           # -
     p = 0.0           # -

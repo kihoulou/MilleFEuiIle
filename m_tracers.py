@@ -1,6 +1,7 @@
 from dolfin import *
-from m_parameters import *
+from m_parameters_docs import *
 import time
+import random
 
 comm = MPI.comm_world
 rank = MPI.rank(comm)
@@ -16,8 +17,6 @@ class Tracers:
         
         self.stress_dev_tensor  = ElemClass.stress_dev_tensor
         self.plastic_strain     = ElemClass.plastic_strain
-        self.ocean_material     = ElemClass.ocean_material
-        self.surface_material   = ElemClass.surface_material
         self.h_top              = ElemClass.h_top
         self.xm                 = ElemClass.xm
         self.number_of_tracers  = ElemClass.number_of_tracers
@@ -49,15 +48,15 @@ class Tracers:
             self.moving_tracers = []
             self.tracers_to_find = []
             
-            if (reload_tracers == False):
-                if (self.only_melt_tracers == False):
+            if (reload == False):
+                if (self.only_melt_tracers == False and initial_topography == False):
                     self.introduce_tracers()
                 else:
                     for j in range(self.mesh.num_cells()):
                         self.tracers_in_cells.append([])
                     
-            else:
-                self.load_tracers()
+            # else:
+            #     self.load_tracers()
 
     def save_tracers(self, step):
         
@@ -75,21 +74,19 @@ class Tracers:
                             dev_stress_xx   = self.tracers[j][4],\
                             dev_stress_xz   = self.tracers[j][5],\
                             plastic_strain  = self.tracers[j][6],\
-                            ocean_material  = self.tracers[j][7],\
-                            surface_material= self.tracers[j][8],\
-                            original_depth  = self.tracers[j][9],\
-                            composition     = self.tracers[j][10],\
-                            melt_fraction   = self.tracers[j][11][0],\
-                            origin          = self.tracers[j][12],\
-                            id              = self.tracers[j][13])
+                            original_depth  = self.tracers[j][7],\
+                            composition     = self.tracers[j][8],\
+                            melt_fraction   = self.tracers[j][9][0],\
+                            origin          = self.tracers[j][10],\
+                            ID              = self.tracers[j][11])
                 file.close()
     
     def save_header_tracer(self, file):
 
-        file.write((2*"%s\t\t")%("x_pos (m)", "y_pos (m)"))   
+        file.write((2*"%s\t")%("x_pos (m)", "y_pos (m)"))   
 
         for arg in Tracers_header:
-            file.write(("%s\t\t")%(arg))
+            file.write(("%s\t")%(arg))
         file.write("\n")
 
     def save_indiv_tracer(self, file, j, **kwargs):
@@ -204,19 +201,6 @@ class Tracers:
                     y_pos = origin_y - sign*l*dz - dz/2.0
 
                     if (Cell(self.mesh, j).contains(Point(x_pos, y_pos)) == True):
-
-                        # --- Assign a layer of near-surface ice ---
-                        if (y_pos > height - sm_thickness):
-                            surf_mat = 1.0
-                        else:
-                            surf_mat = 0.0
-
-                        # --- Assign a layer of freshly crystallized ice ---
-                        if (y_pos < om_thickness):
-                            ocean_mat = 1.0
-                        else:
-                            ocean_mat = 0.0
-
                         # --- Assign chemical composition ---
                         if (len(materials) == 0):
                             comp = []
@@ -268,7 +252,13 @@ class Tracers:
                         # --- Create an ID that will be unique ---
                         unique_ID = tracer_no*size + rank
 
-                        self.tracers.append([x_pos, y_pos, j, rank, 0.0, 0.0, 0.0, ocean_mat, surf_mat, y_pos, comp, [0.0, 0.0], 0.0, unique_ID])
+                         #--- Pre-damaged region ---
+                        if (49e3 < x_pos < 50e3):
+                            ps = 0.0
+                        else:
+                            ps = 0.0
+
+                        self.tracers.append([x_pos, y_pos, j, rank, 0.0, 0.0, ps, y_pos, comp, [0.0, 0.0], 0.0, unique_ID])
 
                         # 0) x-position                     \
                         # 1) y-position                      \
@@ -279,8 +269,6 @@ class Tracers:
                         # 4) tau_xx
                         # 5) tau_xz
                         # 6) plastic strain
-                        # 7) ocean material 
-                        # 8) surface material
                         # 9) original depth of the tracer
                         # 10) composition [mat1, mat2, ...]
                         # 11) [melt fraction, delta_T]
@@ -292,21 +280,58 @@ class Tracers:
 
     def load_tracers(self):
 
-        infile = open("data_"+reload_name+"/tracers/step_"+str(reload_tracers_step)+".dat", "r") 
+        infile = open("data_" + reload_name + "/tracers/step_" + str(reload_step) + ".dat", "r") 
         lines = infile.readlines() 
         tracer_no=0
 
         if (rank == 0):
             print("Reading tracers...")
+            print("This might take a moment - each tracer (in total " + str(len(lines)) + ") has to be assigned to a cell (in total " + str(self.mesh.num_cells()) + ").")
 
         for j in range(self.mesh.num_cells()):
             self.tracers_in_cells.append([])
 
         header = True
+        count = 0
+        
+        decile = 0.1
         for line in lines:
+            count += 1
+
+            if (count/len(lines) >= decile):
+                if (rank == 0):
+                    print("Percent done:", int(decile*100))
+                decile += 0.1
+
             sline = line.split("\t")
 
-            if (header==True):
+            if (header == True):
+                # --- Read the indices of the columns ---
+                if (plasticity == True):
+                    eps_plast_idx = sline.index("eps_p (-)")
+
+                if (elasticity == True):
+                    tau_xx_idx = sline.index("s_xx (Pa)")
+                    tau_xz_idx = sline.index("s_xz (Pa)")
+
+                if (internal_melting == True):
+                    xm_idx = sline.index("xm (-)")
+                
+                try:
+                    origin_idx = sline.index("origin\t")
+                except:
+                    origin_idx = 0
+
+                try:
+                    y_pos_orig_idx = sline.index("y_orig (m)")
+                except:
+                    y_pos_orig_idx = 0
+
+                try:
+                    ID_idx = sline.index("ID\t")
+                except:
+                    ID_idx = 0
+
                 header = False
                 continue
 
@@ -314,22 +339,44 @@ class Tracers:
             y_pos = float(sline[1])
 
             try:
-                # Test to see whether the point belongs to this rank
-                test = self.Temp(Point(x_pos,y_pos))
+                if (plasticity == True):
+                    eps_plast = float(sline[eps_plast_idx])
+                else: 
+                    eps_plast = 0.0
 
-                tau_xx = float(sline[2])
-                tau_xz = float(sline[3])
-                eps_plast = float(sline[4])
-                ocean_mat = float(sline[5])
-                surf_mat = float(sline[6])
-                y_pos_orig = float(sline[7])
-                comp = float(sline[8])
-                mf = float(sline[9])
-                origin = float(sline[10])
+                if (elasticity == True):
+                    tau_xx = float(sline[tau_xx_idx])
+                    tau_xz = float(sline[tau_xz_idx])
+                else:
+                    tau_xx = 0.0
+                    tau_xz = 0.0
+                
+                if (internal_melting == True):
+                    xm = float(sline[xm_idx])
+                else:
+                    xm = 0.0
+
+                if (len(materials) > 0):
+                    comp = 0.0# float(sline[8])
+
+                if (origin_idx > 0):
+                    origin = float(sline[origin_idx])
+                else:
+                    origin = 0
+                
+                if (y_pos_orig > 0):
+                    y_pos_orig = float(sline[y_pos_orig_idx])
+                else:
+                    y_pos_orig = 0
+                
+                if (ID_idx > 0):
+                    unique_ID = tracer_no*size + rank
+                else:
+                    unique_ID = 0
 
                 for j in range(self.mesh.num_cells()):
                     if (Cell(self.mesh, j).contains(Point(x_pos, y_pos))):
-                        self.tracers.append([x_pos, y_pos, j, rank, rank, tau_xx, tau_xz, eps_plast, ocean_mat, surf_mat, y_pos_orig, comp, mf, origin])
+                        self.tracers.append([x_pos, y_pos, j, rank, tau_xx, tau_xz, eps_plast, y_pos_orig, comp, [xm, 0.0], origin, unique_ID])
                         self.tracers_in_cells[j].append(tracer_no)
                         tracer_no += 1 
                         break # (once found, quit searching)
@@ -409,8 +456,8 @@ class Tracers:
                     self.tracers_in_cells[self.tracers[j][2]].remove(j)
                     self.vacancy.append(j)
                     self.tracers[j] = []
-
-        if (tracers_total > 0):
+                    
+        if (tracers_total - vacancies_total > 0):
             print("\t---> rank", rank, "is advecting", "{:.1f}%.".format((tracers_process - vacancies_process) / (tracers_total - vacancies_total)*100.0))
         else:
             if (rank == 0):
@@ -642,6 +689,10 @@ class Tracers:
                 comp_cell.append(comp)
                 if (0.0 < comp < 1.0):
                     skip_cell = True
+                    
+                if (centroid.y() < height/z_div): # Do not skip the cell in the bottommost row, add a ocean tracer there
+                    skip_cell = False
+                    comp_cell = [0.0, 1.0, 0.0]
 
             # Empty cell case
             if (empty_cells_allowed == True):
@@ -668,8 +719,6 @@ class Tracers:
             stress_dev_xx_cell      = self.stress_dev_tensor(Point(centroid.x(),centroid.y()))[0]
             stress_dev_xz_cell      = self.stress_dev_tensor(Point(centroid.x(),centroid.y()))[1]
             eps_plast_cell          = self.plastic_strain(Point(centroid.x(),centroid.y()))
-            om_cell                 = self.ocean_material(Point(centroid.x(),centroid.y()))
-            sm_cell                 = self.surface_material(Point(centroid.x(),centroid.y()))
             xm_cell                 = self.xm(Point(centroid.x(),centroid.y()))
             topo_height             = self.h_top(Point(centroid.x(),centroid.y()))
 
@@ -708,21 +757,9 @@ class Tracers:
                             x_pos = centroid.x() + 0.5*r_in*sin(tracer_angle*deg2rad)
                             y_pos = centroid.y() + 0.5*r_in*cos(tracer_angle*deg2rad)
 
-                            # --- Ocean material ---
-                            if (y_pos < om_thickness or om_cell == 1.0):
-                                om = 1.0
-                            else:
-                                om = 0.0
-
-                            # --- Surface material ---
-                            if (y_pos > ((height + topo_height) - sm_thickness) or sm_cell == 1.0):
-                                sm = 1.0
-                            else:
-                                sm = 0.0
-
                             # --- Surface material and stripes ---
                             # The tracers that most likely falsely enter through the top boundary
-                            if (y_pos > (height + topo_height) - sm_thickness):
+                            if (y_pos > height + topo_height):
                                 original_y = height*self.height_fraction(Point(x_pos, y_pos))
                                 origin = 2.0 # Added and distinguish from others
 
@@ -732,7 +769,7 @@ class Tracers:
                                 origin = 1.0 # Treat it like added
 
                             self.tracers.append([x_pos, y_pos, j, rank, stress_dev_xx_cell, stress_dev_xz_cell,\
-                                eps_plast_cell, om, sm, original_y, comp_cell, [xm_cell, 0.0], origin, 0.0])
+                                eps_plast_cell, original_y, comp_cell, [xm_cell, 0.0], origin, 0.0])
                             
                             self.tracers_in_cells[j].append(len(self.tracers) - 1)  
 
@@ -779,22 +816,64 @@ class Tracers:
 
                         if (Cell(self.mesh, j).contains(Point(x_pos, y_pos)) == True):
 
-                            # --- Ocean material ---
-                            if (y_pos < om_thickness or om_cell == 1.0):
-                                om = 1.0
-                            else:
-                                om = 0.0
-
-                            # --- Surface material ---
-                            if (y_pos > ((height + topo_height) - sm_thickness) or sm_cell == 1.0):
-                                sm = 1.0
-                            else:
-                                sm = 0.0
-
                             original_y = height*self.height_fraction(Point(x_pos, y_pos))
                             origin = 0.0
 
                             self.tracers.append([x_pos, y_pos, j, rank, stress_dev_xx_cell, stress_dev_xz_cell,\
-                                eps_plast_cell, om, sm, original_y, comp_cell, [xm_cell, 0.0], origin, 0.0])
+                                eps_plast_cell, original_y, comp_cell, [xm_cell, 0.0], origin, 0.0])
                             
                             self.tracers_in_cells[j].append(len(self.tracers) - 1)
+
+    def introduce_tracers_unstructured(self):   
+         
+        for j in range(self.mesh.num_cells()):                
+            cell_j      = Cell(self.mesh,j).get_vertex_coordinates()
+
+            x_min   = min(cell_j[0], min(cell_j[2], cell_j[4]))
+            x_max   = max(cell_j[0], max(cell_j[2], cell_j[4]))
+            y_min   = min(cell_j[1], min(cell_j[3], cell_j[5]))
+            y_max   = max(cell_j[1], max(cell_j[3], cell_j[5]))
+            
+            dx = x_max - x_min
+            dy = y_max - y_min
+            
+            count = 0
+            while (count < 10):
+                x_pos = x_min + dx*random.random()
+                y_pos = y_min + dy*random.random()
+
+                eps_pl = 1e-2*random.random()
+
+                if (Cell(self.mesh, j).contains(Point(x_pos, y_pos)) == True):
+                    self.tracers.append([x_pos, y_pos, j, rank, 0.0, 0.0, eps_pl, 0.0, 0.0, [0.0, 0.0], 0.0, 0.0])
+                    self.tracers_in_cells[j].append(len(self.tracers) - 1)
+                    count += 1
+
+    def add_tracers_unstructured(self):            
+        for j in range(self.mesh.num_cells()):       
+            centroid    = Cell(self.mesh, j).midpoint()         
+            cell_j      = Cell(self.mesh,j).get_vertex_coordinates()
+
+            x_min   = min(cell_j[0], min(cell_j[2], cell_j[4]))
+            x_max   = max(cell_j[0], max(cell_j[2], cell_j[4]))
+            y_min   = min(cell_j[1], min(cell_j[3], cell_j[5]))
+            y_max   = max(cell_j[1], max(cell_j[3], cell_j[5]))
+            
+            dx = x_max - x_min
+            dy = y_max - y_min
+
+            stress_dev_xx_cell      = self.stress_dev_tensor(Point(centroid.x(),centroid.y()))[0]
+            stress_dev_xz_cell      = self.stress_dev_tensor(Point(centroid.x(),centroid.y()))[1]
+            eps_plast_cell          = self.plastic_strain(Point(centroid.x(),centroid.y()))
+            xm_cell                 = self.xm(Point(centroid.x(),centroid.y()))
+            
+            count = 0
+            while (len(self.tracers_in_cells[j]) < 10):
+                x_pos = x_min + dx*random.random()
+                y_pos = y_min + dy*random.random()
+
+                if (Cell(self.mesh, j).contains(Point(x_pos, y_pos)) == True):
+                    self.tracers.append([x_pos, y_pos, j, rank, stress_dev_xx_cell, stress_dev_xz_cell,\
+                                eps_plast_cell, 0.0, 0.0, [xm_cell, 0.0], 1.0, 0.0])
+                    self.tracers_in_cells[j].append(len(self.tracers) - 1)
+                    count += 1
