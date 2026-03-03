@@ -8,8 +8,12 @@
    :caption: Demos
    :glob:
 
+   file_tree
    thermalconvection
    thermalconvectionphase
+   thermalcompconvection
    melting
    tectonics
+   .. relaxation
+   .. reloading
    

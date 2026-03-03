@@ -1,4 +1,4 @@
-3. Thermal convection with melting
+4. Thermal convection with melting
 --------------------------------------
 
 Because of specific formulas for density and constant thermal properties of ice used in the study, the modules with rheology and material properties need to be modified in addition to the parameter file.
@@ -212,9 +212,34 @@ Other options can be left as they are.
 
 |
 
+^^^^^^^^^^^^^^^^^^^^^^^
+Rheology
+^^^^^^^^^^^^^^^^^^^^^^^
+We will modify the formula for temperature-dependent viscosity, therefore we will specify the viscosity type here.
+
+.. code-block:: python
+    :emphasize-lines: 1
+
+    viscosity_type == "temp-dep"
+
+|
+
 ----------------------------
 Rheology file modification
 ----------------------------
+
+Here we adopt the viscosity for the mixture of ice and melt from Tobie et al. (2003):
+
+.. math::
+        
+    \eta(T) = \eta_0\left(-\frac{14}{170}(T - T_{\rm bot})\right)\cdot\exp(-45\chi)
+
+.. code-block:: python
+    :emphasize-lines: 3
+
+    if (viscosity_type == "temp-dep"):
+        T_bot = BC_heat_transfer[1][1]
+        eta_v = eta_0*exp(-14.0*(Temp - T_bot)/170.0)*exp(-45.0*xm)
 
 -----------------------------------------------
 Material properties file modification

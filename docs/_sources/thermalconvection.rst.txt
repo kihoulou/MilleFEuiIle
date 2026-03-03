@@ -7,6 +7,12 @@
 
     Thermal convection in an ice shell.
 
+-----------------
+Download
+-----------------
+
+Here you can download the complete :download:`parameter file <code/MilleFEuiIle.zip>`\  and the :download:`matplotlib script <scripts/plot_convection.py>`\ for the animation.
+
 ----------------------------
 Parameter file line by line
 ----------------------------
@@ -446,10 +452,3 @@ The grain size and parameters for plasticity are inactive.
     # --- Characteristic time scale for the microscopic healing processes ---
     healing_timescale = 300*kyr
 
-|
-
------------------
-Download
------------------
-
-Here you can download the complete :download:`parameter file <code/MilleFEuiIle.zip>`\  and the :download:`plotting script <scripts/plot_convection.py>`\ for the animation.

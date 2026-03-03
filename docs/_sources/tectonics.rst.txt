@@ -1,4 +1,4 @@
-4. Tectonic extension
+5. Tectonic extension
 ----------------------
 
 .. Figure:: gif/3_convection_visc.gif

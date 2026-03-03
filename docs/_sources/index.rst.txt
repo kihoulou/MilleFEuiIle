@@ -13,7 +13,7 @@
 The scope of *MilleFEuiIle*
 ----------------------------
 
-*MilleFEuiIle* [mil·fœj], a short for **M**\ ulti-\ **I**\ nstrumenta\ **L** **L**\ agrangian-\ **E**\ ulerian **FE**\ niCS-\ **U**\ sing
+**MilleFEuiIle** [*mil·fœj*], a short for **M**\ ulti-\ **I**\ nstrumenta\ **L** **L**\ agrangian-\ **E**\ ulerian **FE**\ niCS-\ **U**\ sing
 **I**\ ce-\ **I** **L**\ ayer **E**\ xplorer, is a computational code built 
 upon the open-source finite-element python library `FEniCS <https://fenicsproject.org/>`_, developed to solve thermo-mechanical 
 evolution of ice shells of icy bodies. Combining finite element method and Lagrangian markers, 
@@ -31,8 +31,8 @@ evolution of ice shells of icy bodies. Combining finite element method and Lagra
 Installation and running
 -------------------------
 
-You can download the most recent version of MilleFEuiIle :download:`here <code/MilleFEuiIle.zip>`\ . It 
-is built on `FEniCS 2019.2.0 <https://fenicsproject.org/download/archive/>`_, which is currently installed at the `cluster <https://geo.mff.cuni.cz/pocitace.htm>`_ of the Department of Geophysics.
+You can download the most recent version of MilleFEuiIle `here <https://doi.org/10.5281/zenodo.18641506>`_ , which is
+built up on `FEniCS 2019.2.0 <https://fenicsproject.org/download/archive/>`_ .
 
 To launch at *N* cores, type into the command line
 
@@ -48,7 +48,7 @@ and runs the simulation on background
 .. code-block:: bash
    :emphasize-lines: 1
 
-   bash run_code &
+   bash run_MilleFEuiIle.sh &
 
 |
 
@@ -63,14 +63,18 @@ For visualization of the mesh data, use `Paraview <https://www.paraview.org/>`_,
 Citation
 -------------------------
 
-Thermal convection, free surface, **phase boundary evolution**:
+For the **latest released version of the code**:
 
-* **Kihoulou, M.**, Čadek, O., Kvorka, J., Kalousová, K., Choblet, G. and Tobie, G. (2023). Topographic response to ocean heat flux anomaly on the icy moons of Jupiter and Saturn. *Icarus* **391**, 115337, `https://doi.org/10.1016/j.icarus.2022.115337 <https://doi.org/10.1016/j.icarus.2022.115337>`_
+* Kihoulou, M. (2026). MilleFEuiIle (*Multi-InstrumentaL Lagrangian-Eulerian FEniCS-Using Ice-I Layer Explorer*) (1.0.0). Zenodo. `https://doi.org/10.5281/zenodo.18641506 <https://doi.org/10.5281/zenodo.18641506>`_ 
+
+For thermal convection, free surface, **phase boundary evolution**:
+
+* Kihoulou, M., Čadek, O., Kvorka, J., Kalousová, K., Choblet, G. and Tobie, G. (2023). Topographic response to ocean heat flux anomaly on the icy moons of Jupiter and Saturn. *Icarus* **391**, 115337, `https://doi.org/10.1016/j.icarus.2022.115337 <https://doi.org/10.1016/j.icarus.2022.115337>`_
  
 
-Thermal convection, free surface, **tectonic deformation**:
+For thermal convection, free surface, **tectonic deformation**:
 
-* **Kihoulou, M.**, Choblet, G., Tobie, G., Kalousová, K. and Čadek, O. (2025). Subduction-like process in Europa’s ice shell triggered by enhanced eccentricity periods. *Science Advances* **11**, eadq8719, `https://www.science.org/doi/10.1126/sciadv.adq8719 <https://www.science.org/doi/10.1126/sciadv.adq8719>`_
+* Kihoulou, M., Choblet, G., Tobie, G., Kalousová, K. and Čadek, O. (2025). Subduction-like process in Europa’s ice shell triggered by enhanced eccentricity periods. *Science Advances* **11**, eadq8719, `https://www.science.org/doi/10.1126/sciadv.adq8719 <https://www.science.org/doi/10.1126/sciadv.adq8719>`_
 
 |
 

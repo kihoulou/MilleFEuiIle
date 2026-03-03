@@ -10,7 +10,7 @@
 
 
 -----------------------
-Parameter file
+Parameter file modification
 -----------------------
 
 Compared to the thermal convection in the previous section, we need the bottom boundary to deform,

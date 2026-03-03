@@ -7,17 +7,17 @@
 <meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
 <meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>m_material_properties.py | MilleFEuiIle  documentation</title>
-<meta content="m_material_properties.py | MilleFEuiIle  documentation" property="og:title"/>
-<meta content="m_material_properties.py | MilleFEuiIle  documentation" name="twitter:title"/>
+<title>File tree | MilleFEuiIle  documentation</title>
+<meta content="File tree | MilleFEuiIle  documentation" property="og:title"/>
+<meta content="File tree | MilleFEuiIle  documentation" name="twitter:title"/>
 <link href="_static/pygments.css?v=e72c8e07" rel="stylesheet" type="text/css"/>
 <link href="_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
 <link href="_static/custom.css?v=94e1fba4" rel="stylesheet" type="text/css"/>
 <link href="_static/mf_logo_white.svg" rel="icon"/>
 <link href="search.html" rel="search" title="Search"/>
 <link href="genindex.html" rel="index" title="Index"/>
-<link href="m_melting.html" rel="next" title="m_melting.py"/>
-<link href="m_incompatibility.html" rel="prev" title="m_incompatibility.py"/>
+<link href="thermalconvection.html" rel="next" title="1. Thermal convection"/>
+<link href="demos.html" rel="prev" title="Demos"/>
 <script>
     <!-- Prevent Flash of wrong theme -->
       const userPreference = localStorage.getItem('darkMode');
@@ -75,8 +75,8 @@
 <div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
 <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
 <ul class="current">
-<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="demos.html"><strong>Demos</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
-<li class="toctree-l2"><a class="reference internal" href="file_tree.html"><strong>File tree</strong></a></li>
+<li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="demos.html"><strong>Demos</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul class="current" x-show="expanded">
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><strong>File tree</strong></a></li>
 <li class="toctree-l2"><a class="reference internal" href="thermalconvection.html">1. Thermal convection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="thermalconvectionphase.html">2. Thermal convection with phase transition</a></li>
 <li class="toctree-l2"><a class="reference internal" href="thermalcompconvection.html">3. Thermo-compositional convection</a></li>
@@ -84,7 +84,7 @@
 <li class="toctree-l2"><a class="reference internal" href="tectonics.html">5. Tectonic extension</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="modules.html"><strong>MilleFEuille modules</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul class="current" x-show="expanded">
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="modules.html"><strong>MilleFEuille modules</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
 <li class="toctree-l2"><a class="reference internal" href="m_boundary_conditions.html">m_boundary_conditions.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_check.html">m_check.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_constants.html">m_constants.py</a></li>
@@ -93,7 +93,7 @@
 <li class="toctree-l2"><a class="reference internal" href="m_filenames.html">m_filenames.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_interpolation.html">m_interpolation.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_incompatibility.html">m_incompatibility.py</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">m_material_properties.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="m_material_properties.html">m_material_properties.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_melting.html">m_melting.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_mesh.html">m_mesh.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_parameters.html">m_parameters.py</a></li>
@@ -123,78 +123,80 @@
 <path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
 </svg>
 </a>
-<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap" href="modules.html"><strong>MilleFEuille modules</strong></a>
-<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">m_material_properties.py</span>
+<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap" href="demos.html"><strong>Demos</strong></a>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap"><strong>File tree</strong></span>
 </nav>
 <div id="content" role="main">
-<section id="module-m_material_properties">
-<span id="m-material-properties-py"></span><h1>m_material_properties.py<a class="headerlink" href="#module-m_material_properties" title="Link to this heading"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="m_material_properties.cp">
-<span class="sig-prename descclassname"><span class="pre">m_material_properties.</span></span><span class="sig-name descname"><span class="pre">cp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Temp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">composition</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_material_properties.cp" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_material_properties.cp'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><p>Evaluates the specific heat capacity at constant pressure <span class="math notranslate nohighlight">\(c_p\)</span>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>Temp</strong> – temperature (<span class="math notranslate nohighlight">\(T\)</span>)</p></li>
-<li><p><strong>composition</strong> – material composition (<span class="math notranslate nohighlight">\(C\)</span>)</p></li>
+<section id="file-tree">
+<h1><strong>File tree</strong><a class="headerlink" href="#file-tree" title="Link to this heading"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h1>
+<p>When running the code, the following tree is created:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">/data_name
+</span><span id="line-2">├── /HDF5
+</span><span id="line-3">│   ├── /meshes
+</span><span id="line-4">│   ├── data.h5
+</span><span id="line-5">│   ├── data_timestamp.dat
+</span><span id="line-6">│   ├── subdomains.pvd, *.pvtu, *.vtu
+</span><span id="line-7">│   └── mesh.h5, mesh.xdmf
+</span><span id="line-8">├── /anim
+</span><span id="line-9">├── /img
+</span><span id="line-10">├── /paraview
+</span><span id="line-11">│   ├── /initial_condition
+</span><span id="line-12">│   ├── *.h5, *.xdmf
+</span><span id="line-13">├── /source_code
+</span><span id="line-14">├── /tracers
+</span><span id="line-15">├── empty_cells.dat
+</span><span id="line-16">├── picard_iter.dat
+</span><span id="line-17">└── statistics.dat
+</span></code></pre></div>
+</div>
+<p>Below, the data in individual directories are described.</p>
+<section id="hdf5">
+<h2>/HDF5<a class="headerlink" href="#hdf5" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#hdf5'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
+<ul class="simple">
+<li><p>The directory <code class="docutils literal notranslate"><span class="pre">meshes</span></code> contains files named <code class="docutils literal notranslate"><span class="pre">mesh_*.h5</span></code>, which is an HDF5 file containing the mesh for each time output. These files can be used for plotting through <em>matplotlib</em> and cannot be opened in Paraview.</p></li>
+<li><p>The file <code class="docutils literal notranslate"><span class="pre">data.h5</span></code> contains functions defined in <code class="docutils literal notranslate"><span class="pre">Paraview_Output</span></code> parameter, but always at least those that are needed for restarting the computation. Data from this file are used for plotting and reloading the simulation.</p></li>
+<li><p>The file <code class="docutils literal notranslate"><span class="pre">data_timestamp.dat</span></code> contains information about the steps when the data were written (time, simulation step, position in HDF5 file)</p></li>
+<li><p>Files starting <code class="docutils literal notranslate"><span class="pre">subdomains*</span></code> contain Paraview-readable format of the subdomains, which enables to check whether the boundaries were defined and recognized correctly.</p></li>
+<li><p>Files <code class="docutils literal notranslate"><span class="pre">mesh.h5</span></code> and <code class="docutils literal notranslate"><span class="pre">mesh.xdmf</span></code> contain mesh in paraview-readable format.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A user-defined function of temperature and composition.</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="m_material_properties.k">
-<span class="sig-prename descclassname"><span class="pre">m_material_properties.</span></span><span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Temp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">composition</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_material_properties.k" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_material_properties.k'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><p>Evaluates the thermal conductivity <span class="math notranslate nohighlight">\(k\)</span>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>Temp</strong> – temperature (<span class="math notranslate nohighlight">\(T\)</span>)</p></li>
-<li><p><strong>composition</strong> – material composition (<span class="math notranslate nohighlight">\(C\)</span>)</p></li>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+</section>
+<section id="anim-and-img">
+<h2>/anim and /img<a class="headerlink" href="#anim-and-img" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#anim-and-img'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
+<p>These are auxiliary directories that can be used in case of plotting images and making animations from the results.</p>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+</section>
+<section id="paraview">
+<h2>/paraview<a class="headerlink" href="#paraview" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#paraview'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
+<ul class="simple">
+<li><p>Contains pairs of <code class="docutils literal notranslate"><span class="pre">*.xdmf</span></code> and <code class="docutils literal notranslate"><span class="pre">*.h5</span></code> for each of the physical quantities specified in <code class="docutils literal notranslate"><span class="pre">Paraview_Output</span></code> (again at least those that are needed for restarting the computation).</p></li>
+<li><p>The directory  <code class="docutils literal notranslate"><span class="pre">initial_condition</span></code> contains quantities that were used as an initial condition and specified in <code class="docutils literal notranslate"><span class="pre">Paraview_Output_Ini</span></code></p></li>
 </ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A user-defined function of temperature and composition.</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="m_material_properties.rho">
-<span class="sig-prename descclassname"><span class="pre">m_material_properties.</span></span><span class="sig-name descname"><span class="pre">rho</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Temp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">composition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xm</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_material_properties.rho" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_material_properties.rho'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><p>Evaluates the density <span class="math notranslate nohighlight">\(\rho\)</span>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>Temp</strong> – temperature (<span class="math notranslate nohighlight">\(T\)</span>)</p></li>
-<li><p><strong>composition</strong> – material composition (<span class="math notranslate nohighlight">\(C\)</span>)</p></li>
-<li><p><strong>xm</strong> – melt fraction (<span class="math notranslate nohighlight">\(\chi\)</span>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p>For ice <span class="math notranslate nohighlight">\(\rho = (1 - \chi)\rho_i(T) + \chi\rho_w\)</span></p></li>
-<li><p>Another user-defined function of temperature, composition and melt fraction. 
-Formulas used in the benchmarks are predefined and commented.</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="m_material_properties.rho_ice_water">
-<span class="sig-prename descclassname"><span class="pre">m_material_properties.</span></span><span class="sig-name descname"><span class="pre">rho_ice_water</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Temp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xm</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_material_properties.rho_ice_water" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_material_properties.rho_ice_water'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+</section>
+<section id="source-code">
+<h2>/source_code<a class="headerlink" href="#source-code" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#source-code'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
+<p>Contains all parts of the source code needed for reproduction of the results.</p>
+</section>
+<section id="tracers">
+<h2>/tracers<a class="headerlink" href="#tracers" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tracers'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
+<p>Contains files with tracer properties for each step of output specified in <code class="docutils literal notranslate"><span class="pre">Tracers_Output</span></code>.</p>
+</section>
 </section>
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
-<li><a :data-current="activeSection === '#m_material_properties.cp'" class="reference internal" href="#m_material_properties.cp"><code class="docutils literal notranslate"><span class="pre">cp()</span></code></a></li>
-<li><a :data-current="activeSection === '#m_material_properties.k'" class="reference internal" href="#m_material_properties.k"><code class="docutils literal notranslate"><span class="pre">k()</span></code></a></li>
-<li><a :data-current="activeSection === '#m_material_properties.rho'" class="reference internal" href="#m_material_properties.rho"><code class="docutils literal notranslate"><span class="pre">rho()</span></code></a></li>
-<li><a :data-current="activeSection === '#m_material_properties.rho_ice_water'" class="reference internal" href="#m_material_properties.rho_ice_water"><code class="docutils literal notranslate"><span class="pre">rho_ice_water()</span></code></a></li>
+<li><a :data-current="activeSection === '#hdf5'" class="reference internal" href="#hdf5">/HDF5</a></li>
+<li><a :data-current="activeSection === '#anim-and-img'" class="reference internal" href="#anim-and-img">/anim and /img</a></li>
+<li><a :data-current="activeSection === '#paraview'" class="reference internal" href="#paraview">/paraview</a></li>
+<li><a :data-current="activeSection === '#source-code'" class="reference internal" href="#source-code">/source_code</a></li>
+<li><a :data-current="activeSection === '#tracers'" class="reference internal" href="#tracers">/tracers</a></li>
 </ul>
 </div>
 </aside>
@@ -212,6 +214,5 @@ Formulas used in the benchmarks are predefined and commented.</p></li>
 <script src="_static/doctools.js?v=9bcbadda"></script>
 <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
 <script defer="defer" src="_static/theme.js?v=073f68d9"></script>
-<script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </body>
 </html>
