@@ -1,41 +1,61 @@
 from dolfin import *
-from m_parameters_docs import *
+from m_parameters import *
 from m_constants import *
 from m_postproc import *
 from pathlib import Path
 import os 
 
 class SaveFiles:
-    def __init__(self, MeshClass, ElemClass):
+    def __init__(self, MeshClass, ElemClass, use_tracers):
 
         self.name = name
         if (Path("data_" + name).is_dir() == True):
             if (protect_directory == False):
                     if (rank == 0):
-                        os.system("rm -r data_" + name + "/HDF5/*")
-                        os.system("rm data_" + name + "/img/*")
-                        os.system("rm data_" + name + "/anim/*")
-                        os.system("rm data_" + name + "/paraview/*.xdmf")
-                        os.system("rm data_" + name + "/paraview/*.h5")
-                        os.system("rm data_" + name + "/paraview/initial_condition/*.xdmf")
-                        os.system("rm data_" + name + "/paraview/initial_condition/*.h5")
-                        os.system("rm data_" + name + "/source_code/*.py")
-                        os.system("rm data_" + name + "/boundary_data/*.dat")
-                        os.system("rm data_" + name + "/tracers/*.dat")
+                        os.system("rm -r data_" + name + "/*")
             else:
                 self.name += "_new"
                 if (rank == 0):
                     print("\nWarning:\nName collision detected. New directory name is", str("data_" + self.name), ".\n")
 
         MPI.barrier(comm)
-        directories = ["HDF5", "anim", "img", "tracers", "paraview", "paraview/initial_condition", "source_code"]
+        directories = ["HDF5",
+                       "anim",
+                       "img",
+                       "topography",
+                       "tracers",
+                       "tracers/trajectories",
+                       "paraview",
+                       "paraview/initial_condition",
+                       "source_code"]
+        
         for dir in directories:
             Path("data_" + self.name + "/" + dir).mkdir(parents = True, exist_ok = True)
 
         # --- Save the source code ---
         if (rank == 0):
             os.system("cp  main.py data_" + name + "/source_code")
-            os.system("cp  m_*.py data_" + name + "/source_code")
+            os.system("cp  run_MilleFEuiIle.sh data_" + name + "/source_code")
+
+            files = ["boundary_conditions",
+                     "check",
+                     "constants",
+                     "elements",
+                     "equations",
+                     "filenames", 
+                     "incompatibility",
+                     "interpolation",
+                     "material_properties",
+                     "melting",
+                     "mesh",
+                     "parameters",
+                     "postproc",
+                     "rheology",
+                     "timestep",
+                     "tracers"]
+            
+            for f in files:
+                os.system("cp  m_" + f + ".py data_" + name + "/source_code")
             
         self.sDG0 = ElemClass.sDG0
         self.Temp = ElemClass.Temp
@@ -46,7 +66,6 @@ class SaveFiles:
         self.comp_2 = ElemClass.comp_2
         self.heating = ElemClass.heating
         self.visc = ElemClass.visc
-        self.log10_visc = ElemClass.log10_visc
         self.number_of_tracers = ElemClass.number_of_tracers
         self.mesh_ranks = ElemClass.mesh_ranks
         self.xm = ElemClass.xm
@@ -68,10 +87,12 @@ class SaveFiles:
         self.shear_modulus = ElemClass.shear_modulus
         self.heating_shear = ElemClass.heating_shear
         self.cohesion = ElemClass.cohesion
+        self.mechanisms = ElemClass.mechanisms
+        self.diff_coef = ElemClass.diff_coef
 
         self.mesh = MeshClass.mesh
         self.boundary_parts = MeshClass.boundary_parts
-        self.save_mesh()
+        self.save_mesh_XDMF()
 
         self.Paraview_Dict = {}
         self.Paraview_Dict_Ini = {}
@@ -80,7 +101,7 @@ class SaveFiles:
         # --- Initialize the text files ---
         file = open("data_" + self.name + "/statistics.dat","w")
 
-        if (time_units == 1.0):
+        if (time_units_string == "-"):
             file.write((2*"%s")%("Time (-)\t\t", "Step\t"))
         else:
             file.write((2*"%s")%("Time (" + time_units_string + ")\t\t", "Step\t"))
@@ -91,8 +112,9 @@ class SaveFiles:
         file.write("\n")
         file.close()
 
-        file = open("data_" + self.name + "/empty_cells.dat", "w")
-        file.close()
+        if (use_tracers == True):
+            file = open("data_" + self.name + "/empty_cells.dat", "w")
+            file.close()
 
         # --- Initialize the HDF5 files ---
         self.data_file = {}
@@ -109,23 +131,7 @@ class SaveFiles:
             self.Paraview_Dict_Ini[Paraview_Output_Ini[i]].parameters["flush_output"] = True
             self.Paraview_Dict_Ini[Paraview_Output_Ini[i]].parameters["rewrite_function_mesh"] = True
 
-            if (Paraview_Output_Ini[i] == "temperature"):
-                self.Function_Dict[Paraview_Output_Ini[i]] = self.Temp
-
-            if (Paraview_Output_Ini[i] == "topography_top"):
-                self.Function_Dict[Paraview_Output_Ini[i]] = self.h_top
-
-            if (Paraview_Output_Ini[i] == "topography_bottom"):
-                self.Function_Dict[Paraview_Output_Ini[i]] = self.h_bot
-
-            if (Paraview_Output_Ini[i] == "tracers"):
-                self.Function_Dict[Paraview_Output_Ini[i]] = self.number_of_tracers
-
-            if (Paraview_Output_Ini[i] == "density"):
-                self.Function_Dict[Paraview_Output_Ini[i]] = self.density
-
-            if (Paraview_Output_Ini[i] == "melt_fraction"):
-                self.Function_Dict[Paraview_Output_Ini[i]] = self.xm
+            self.assign_dictionaries(Paraview_Output_Ini, self.Function_Dict, i)
 
         # --- Initialize Paraview files and fill dictionaries ---
         for i in range(len(Paraview_Output)):
@@ -133,94 +139,102 @@ class SaveFiles:
             self.Paraview_Dict[Paraview_Output[i]].parameters["flush_output"] = True
             self.Paraview_Dict[Paraview_Output[i]].parameters["rewrite_function_mesh"] = True
 
-            if (Paraview_Output[i] == "temperature"):
-                self.Function_Dict[Paraview_Output[i]] = self.Temp
+            self.assign_dictionaries(Paraview_Output, self.Function_Dict, i)
+
             
-            if (Paraview_Output[i] == "velocity"):
-                self.Function_Dict[Paraview_Output[i]] = self.v_k
+    def assign_dictionaries(self, Paraview_Output, Function_Dict, i):
+        if (Paraview_Output[i] == "temperature"):
+            Function_Dict[Paraview_Output[i]] = self.Temp
+        
+        if (Paraview_Output[i] == "velocity"):
+            Function_Dict[Paraview_Output[i]] = self.v_k
 
-            if (Paraview_Output[i] == "pressure"):
-                self.Function_Dict[Paraview_Output[i]] = self.p_k
+        if (Paraview_Output[i] == "pressure"):
+            Function_Dict[Paraview_Output[i]] = self.p_k
 
-            if (Paraview_Output[i] == "strain_rate_inv"):
-                self.Function_Dict[Paraview_Output[i]] = self.strain_rate_inv
+        if (Paraview_Output[i] == "strain_rate_inv"):
+            Function_Dict[Paraview_Output[i]] = self.strain_rate_inv
 
-            if (Paraview_Output[i] == "composition_0"):
-                self.Function_Dict[Paraview_Output[i]] = self.comp_0
+        if (Paraview_Output[i] == "composition_0"):
+            Function_Dict[Paraview_Output[i]] = self.comp_0
 
-            if (Paraview_Output[i] == "composition_1"):
-                self.Function_Dict[Paraview_Output[i]] = self.comp_1
+        if (Paraview_Output[i] == "composition_1"):
+            Function_Dict[Paraview_Output[i]] = self.comp_1
 
-            if (Paraview_Output[i] == "composition_2"):
-                self.Function_Dict[Paraview_Output[i]] = self.comp_2
+        if (Paraview_Output[i] == "composition_2"):
+            Function_Dict[Paraview_Output[i]] = self.comp_2
 
-            if (Paraview_Output[i] == "tracers"):
-                self.Function_Dict[Paraview_Output[i]] = self.number_of_tracers
+        if (Paraview_Output[i] == "tracers"):
+            Function_Dict[Paraview_Output[i]] = self.number_of_tracers
 
-            if (Paraview_Output[i] == "ranks"):
-                self.Function_Dict[Paraview_Output[i]] = self.mesh_ranks
+        if (Paraview_Output[i] == "ranks"):
+            Function_Dict[Paraview_Output[i]] = self.mesh_ranks
 
-            if (Paraview_Output[i] == "viscosity_log"):
-                self.Function_Dict[Paraview_Output[i]] = self.log10_visc
+        if (Paraview_Output[i] == "viscosity"):
+            Function_Dict[Paraview_Output[i]] = self.visc
+        
+        if (Paraview_Output[i] == "tidal_heating"):
+            Function_Dict[Paraview_Output[i]] = self.heating
+        
+        if (Paraview_Output[i] == "melt_fraction"):
+            Function_Dict[Paraview_Output[i]] = self.xm
 
-            if (Paraview_Output[i] == "viscosity"):
-                self.Function_Dict[Paraview_Output[i]] = self.visc
-            
-            if (Paraview_Output[i] == "tidal_heating"):
-                self.Function_Dict[Paraview_Output[i]] = self.heating
-            
-            if (Paraview_Output[i] == "melt_fraction"):
-                self.Function_Dict[Paraview_Output[i]] = self.xm
+        if (Paraview_Output[i] == "mesh_displacement"):
+            Function_Dict[Paraview_Output[i]] = self.u_mesh
 
-            if (Paraview_Output[i] == "mesh_displacement"):
-                self.Function_Dict[Paraview_Output[i]] = self.u_mesh
+        if (Paraview_Output[i] == "mesh_velocity"):
+            Function_Dict[Paraview_Output[i]] = self.v_mesh
 
-            if (Paraview_Output[i] == "mesh_velocity"):
-                self.Function_Dict[Paraview_Output[i]] = self.v_mesh
+        if (Paraview_Output[i] == "topography_bottom"):
+            Function_Dict[Paraview_Output[i]] = self.h_bot
 
-            if (Paraview_Output[i] == "topography_bottom"):
-                self.Function_Dict[Paraview_Output[i]] = self.h_bot
+        if (Paraview_Output[i] == "topography_top"):
+            Function_Dict[Paraview_Output[i]] = self.h_top
+        
+        if (Paraview_Output[i] == "normal_bottom"):
+            Function_Dict[Paraview_Output[i]] = self.n_bot
+        
+        if (Paraview_Output[i] == "iteration_error"):
+            Function_Dict[Paraview_Output[i]] = self.iteration_error
 
-            if (Paraview_Output[i] == "topography_top"):
-                self.Function_Dict[Paraview_Output[i]] = self.h_top
-            
-            if (Paraview_Output[i] == "normal_bottom"):
-                self.Function_Dict[Paraview_Output[i]] = self.n_bot
-            
-            if (Paraview_Output[i] == "iteration_error"):
-                self.Function_Dict[Paraview_Output[i]] = self.iteration_error
+        if (Paraview_Output[i] == "plastic_strain"):
+            Function_Dict[Paraview_Output[i]] = self.plastic_strain
 
-            if (Paraview_Output[i] == "plastic_strain"):
-                self.Function_Dict[Paraview_Output[i]] = self.plastic_strain
+        if (Paraview_Output[i] == "yield_stress"):
+            Function_Dict[Paraview_Output[i]] = self.yield_stress
 
-            if (Paraview_Output[i] == "yield_stress"):
-                self.Function_Dict[Paraview_Output[i]] = self.yield_stress
+        if (Paraview_Output[i] == "stress_dev_inv"):
+            Function_Dict[Paraview_Output[i]] = self.stress_dev_inv
+        
+        if (Paraview_Output[i] == "stress_dev_inv_k"):
+            Function_Dict[Paraview_Output[i]] = self.stress_dev_inv_k
 
-            if (Paraview_Output[i] == "stress_dev_inv"):
-                self.Function_Dict[Paraview_Output[i]] = self.stress_dev_inv
-            
-            if (Paraview_Output[i] == "stress_dev_inv_k"):
-                self.Function_Dict[Paraview_Output[i]] = self.stress_dev_inv_k
+        if (Paraview_Output[i] == "yield_function"):
+            Function_Dict[Paraview_Output[i]] = self.yield_function
 
-            if (Paraview_Output[i] == "yield_function"):
-                self.Function_Dict[Paraview_Output[i]] = self.yield_function
+        if (Paraview_Output[i] == "eta_v"):
+            Function_Dict[Paraview_Output[i]] = self.eta_v
 
-            if (Paraview_Output[i] == "eta_v"):
-                self.Function_Dict[Paraview_Output[i]] = self.eta_v
+        if (Paraview_Output[i] == "density"):
+            Function_Dict[Paraview_Output[i]] = self.density
 
-            if (Paraview_Output[i] == "density"):
-                self.Function_Dict[Paraview_Output[i]] = self.density
+        if (Paraview_Output[i] == "z_function"):
+            Function_Dict[Paraview_Output[i]] = self.z_function
 
-            if (Paraview_Output[i] == "z_function"):
-                self.Function_Dict[Paraview_Output[i]] = self.z_function
+        if (Paraview_Output[i] == "shear_modulus"):
+            Function_Dict[Paraview_Output[i]] = self.shear_modulus
 
-            if (Paraview_Output[i] == "shear_modulus"):
-                self.Function_Dict[Paraview_Output[i]] = self.shear_modulus
+        if (Paraview_Output[i] == "cohesion"):
+            Function_Dict[Paraview_Output[i]] = self.cohesion
 
-            if (Paraview_Output[i] == "cohesion"):
-                self.Function_Dict[Paraview_Output[i]] = self.cohesion
+        if (Paraview_Output[i] == "mechanisms"):
+            Function_Dict[Paraview_Output[i]] = self.mechanisms
+
+        if (Paraview_Output[i] == "diff_coef"):
+            Function_Dict[Paraview_Output[i]] = self.diff_coef
     
-    def write_statistic(self, t, step, stat_output, **kwargs):
+
+    def write_statistic(self, t, step, stat_output, time_units, **kwargs):
         
         file = open("data_" + self.name + "/statistics.dat", "a")
         if (rank == 0):
@@ -264,17 +278,17 @@ class SaveFiles:
             file.write("\n")
         file.close()
         
-    def Save_Paraview(self, t):
+    def save_paraview(self, t, time_units):
         for i in range(len(Paraview_Output)):
             self.Function_Dict[Paraview_Output[i]].rename(Paraview_Output[i], "")
             self.Paraview_Dict[Paraview_Output[i]].write(self.Function_Dict[Paraview_Output[i]], float(t)/time_units)
 
-    def Save_Paraview_Ini(self):
+    def save_paraview_ini(self):
         for i in range(len(Paraview_Output_Ini)):
             self.Function_Dict[Paraview_Output_Ini[i]].rename(Paraview_Output_Ini[i], "")
             self.Paraview_Dict_Ini[Paraview_Output_Ini[i]].write(self.Function_Dict[Paraview_Output_Ini[i]])
 
-    def Save_HDF5(self, step_output, step, dt, t):
+    def save_HDF5(self, step_output, step, dt, t, time_units):
         for i in range(len(Paraview_Output)):
             self.data_file['data'].write(self.Function_Dict[Paraview_Output[i]], "/" + Paraview_Output[i], step) 
         
@@ -285,12 +299,11 @@ class SaveFiles:
             stat_hdf5.write((2*"%d\t\t"+2*"%.5E\t\t"+"\n")%(step_output - 1, step, float(dt)/time_units, float(t)/time_units))
             stat_hdf5.close()
 
-        # --- If the mesh is moving, save also the mesh ---
-        # if (BC_vel_top == "free_surface" or BC_vel_bot == "free_surface"):
-        self.Save_Mesh(step_output)
+        # --- Always save the mesh as well - used for reloading ---
+        self.save_mesh_HDF5(step_output)
 
 
-    def Load_HDF5(self, t, dt, name, *args):
+    def load_HDF5(self, t, dt, time_units, name, *args):
 
         files_hdf5_in = {}
         files_hdf5_in['data'] = HDF5File(comm, reload_name + "/HDF5/data.h5", "r")
@@ -305,12 +318,13 @@ class SaveFiles:
 
         i = 0
         for arg in args:
-            dataset = "/" + name + "/vector_%d" % (step)
+
+            dataset = "/" + name + "/vector_" + str(step)
             files_hdf5_in['data'].read(arg, dataset)
             i += 1
 
         # --- Read the time and timestep ---
-        sline = (lines[step]).split("\t\t")
+        sline = (lines[step + 1]).split("\t\t") #  +1 because of the header
         dt.assign(float(sline[2])*time_units)
         if (restart_time == True):
             t.assign(0.0)
@@ -319,7 +333,7 @@ class SaveFiles:
 
         file_time.close()
 
-    def save_mesh(self):
+    def save_mesh_XDMF(self):
         mesh_file = XDMFFile(comm, "data_" + self.name + "/HDF5/mesh.xdmf")
         mesh_file.write(self.mesh)
         mesh_file.close()
@@ -327,7 +341,8 @@ class SaveFiles:
         file = File("data_" + self.name + "/HDF5/subdomains.pvd")
         file.write(self.boundary_parts)
 
-    def Save_Mesh(self, step_output):
+    def save_mesh_HDF5(self, step_output):
         mesh_file = HDF5File(comm, "data_" + self.name + "/HDF5/meshes/mesh_" + str(int(step_output - 1)) + ".h5", "w")
         mesh_file.write(self.mesh, "/mesh")
+        mesh_file.write(self.boundary_parts, "/subdomains")
         mesh_file.close()

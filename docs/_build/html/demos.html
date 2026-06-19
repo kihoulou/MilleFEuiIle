@@ -7,17 +7,17 @@
 <meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
 <meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Demos | MilleFEuiIle  documentation</title>
-<meta content="Demos | MilleFEuiIle  documentation" property="og:title"/>
-<meta content="Demos | MilleFEuiIle  documentation" name="twitter:title"/>
+<title>Tutorials | MilleFEuiIle  documentation</title>
+<meta content="Tutorials | MilleFEuiIle  documentation" property="og:title"/>
+<meta content="Tutorials | MilleFEuiIle  documentation" name="twitter:title"/>
 <link href="_static/pygments.css?v=e72c8e07" rel="stylesheet" type="text/css"/>
 <link href="_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
 <link href="_static/custom.css?v=94e1fba4" rel="stylesheet" type="text/css"/>
 <link href="_static/mf_logo_white.svg" rel="icon"/>
 <link href="search.html" rel="search" title="Search"/>
 <link href="genindex.html" rel="index" title="Index"/>
-<link href="file_tree.html" rel="next" title="File tree"/>
-<link href="index.html" rel="prev" title="The scope of MilleFEuiIle"/>
+<link href="demo1.html" rel="next" title="1. Thermal convection"/>
+<link href="filetree.html" rel="prev" title="Getting started"/>
 <script>
     <!-- Prevent Flash of wrong theme -->
       const userPreference = localStorage.getItem('darkMode');
@@ -75,16 +75,18 @@
 <div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
 <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
 <ul class="current">
-<li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="current reference internal expandable" href="#"><strong>Demos</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
-<li class="toctree-l2"><a class="reference internal" href="file_tree.html"><strong>File tree</strong></a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermalconvection.html">1. Thermal convection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermalconvectionphase.html">2. Thermal convection with phase transition</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermalcompconvection.html">3. Thermo-compositional convection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="melting.html">4. Thermal convection with melting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tectonics.html">5. Tectonic extension</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filetree.html"><strong>Getting started</strong></a></li>
+<li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="current reference internal expandable" href="#"><strong>Tutorials</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="demo1.html">1. Thermal convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo2.html">2. Thermal convection - parametric study</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo3.html">3. Thermal convection with phase transition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo4.html">4. Thermo-compositional convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo5.html">5. Thermal convection with melting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo6.html">6. Tectonic extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo7.html">7. Tectonic compression</a></li>
 </ul>
 </li>
-<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="modules.html"><strong>MilleFEuille modules</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="modules.html"><strong>Computational modules</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
 <li class="toctree-l2"><a class="reference internal" href="m_boundary_conditions.html">m_boundary_conditions.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_check.html">m_check.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_constants.html">m_constants.py</a></li>
@@ -102,6 +104,11 @@
 <li class="toctree-l2"><a class="reference internal" href="m_timestep.html">m_timestep.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_tracers.html">m_tracers.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="main.html">main.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="modules2.html"><strong>Plotting modules</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="plot_demo.html">plot_demo*.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_MilleFEuiIle.html">plot_MilleFEuiIle.py</a></li>
 </ul>
 </li>
 </ul>
@@ -123,78 +130,94 @@
 <path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
 </svg>
 </a>
-<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap"><strong>Demos</strong></span>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap"><strong>Tutorials</strong></span>
 </nav>
 <div id="content" role="main">
-<section id="demos">
-<span id="id1"></span><h1><strong>Demos</strong><a class="headerlink" href="#demos" title="Link to this heading"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h1>
+<section id="tutorials">
+<span id="demos"></span><h1><strong>Tutorials</strong><a class="headerlink" href="#tutorials" title="Link to this heading"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h1>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Demos</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="file_tree.html"><strong>File tree</strong></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="file_tree.html#hdf5">/HDF5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="file_tree.html#anim-and-img">/anim and /img</a></li>
-<li class="toctree-l2"><a class="reference internal" href="file_tree.html#paraview">/paraview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="file_tree.html#source-code">/source_code</a></li>
-<li class="toctree-l2"><a class="reference internal" href="file_tree.html#tracers">/tracers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demo1.html">1. Thermal convection</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="demo1.html#download">Download</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo1.html#bash-script">Bash script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo1.html#parameter-file-line-by-line">Parameter file line by line</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="demo1.html#files-settings">Files settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo1.html#time-settings">Time settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo1.html#mesh-settings">Mesh settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo1.html#material-composition">Material composition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo1.html#stokes-problem-settings">Stokes problem settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo1.html#heat-transfer-settings">Heat transfer settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo1.html#rheology">Rheology</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="thermalconvection.html">1. Thermal convection</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="thermalconvection.html#download">Download</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermalconvection.html#parameter-file-line-by-line">Parameter file line by line</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="thermalconvection.html#output-files-settings">Output files settings</a></li>
-<li class="toctree-l3"><a class="reference internal" href="thermalconvection.html#reloading-options">Reloading options</a></li>
-<li class="toctree-l3"><a class="reference internal" href="thermalconvection.html#simulation-duration">Simulation duration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="thermalconvection.html#tracers-options">Tracers options</a></li>
-<li class="toctree-l3"><a class="reference internal" href="thermalconvection.html#mesh-geometry">Mesh geometry</a></li>
-<li class="toctree-l3"><a class="reference internal" href="thermalconvection.html#material-composition">Material composition</a></li>
-<li class="toctree-l3"><a class="reference internal" href="thermalconvection.html#stokes-problem-settings">Stokes problem settings</a></li>
-<li class="toctree-l3"><a class="reference internal" href="thermalconvection.html#thermal-solver-settings">Thermal solver settings</a></li>
-<li class="toctree-l3"><a class="reference internal" href="thermalconvection.html#rheology">Rheology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo1.html#reloading">Reloading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo1.html#plotting">Plotting</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="demo2.html">2. Thermal convection - parametric study</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="demo2.html#download">Download</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo2.html#bash-script-modification">Bash script modification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo2.html#parameter-file-modification">Parameter file modification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo2.html#plotting">Plotting</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="thermalconvectionphase.html">2. Thermal convection with phase transition</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="thermalconvectionphase.html#parameter-file-modification">Parameter file modification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermalconvectionphase.html#visualization-of-streamlines">Visualization of streamlines</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermalconvectionphase.html#download">Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demo3.html">3. Thermal convection with phase transition</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="demo3.html#download">Download</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo3.html#parameter-file-modification">Parameter file modification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo3.html#visualization-of-streamlines">Visualization of streamlines</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="thermalcompconvection.html">3. Thermo-compositional convection</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="thermalcompconvection.html#download">Download</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermalcompconvection.html#material-properties-file-modification">Material properties file modification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermalcompconvection.html#parameter-file-modification">Parameter file modification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demo4.html">4. Thermo-compositional convection</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="demo4.html#download">Download</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo4.html#material-properties-file-modification">Material properties file modification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo4.html#parameter-file-modification">Parameter file modification</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="melting.html">4. Thermal convection with melting</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="melting.html#parameter-file-line-by-line">Parameter file line by line</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="melting.html#output-files-settings">Output files settings</a></li>
-<li class="toctree-l3"><a class="reference internal" href="melting.html#reloading-options">Reloading options</a></li>
-<li class="toctree-l3"><a class="reference internal" href="melting.html#simulation-duration">Simulation duration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="melting.html#tracers-options">Tracers options</a></li>
-<li class="toctree-l3"><a class="reference internal" href="melting.html#mesh-geometry">Mesh geometry</a></li>
-<li class="toctree-l3"><a class="reference internal" href="melting.html#material-composition">Material composition</a></li>
-<li class="toctree-l3"><a class="reference internal" href="melting.html#rheology">Rheology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demo5.html">5. Thermal convection with melting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="demo5.html#download">Download</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo5.html#parameter-file-line-by-line">Parameter file line by line</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="demo5.html#output-files-settings">Output files settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo5.html#reloading-options">Reloading options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo5.html#simulation-duration">Simulation duration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo5.html#tracers-options">Tracers options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo5.html#mesh-geometry">Mesh geometry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo5.html#material-composition">Material composition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo5.html#rheology">Rheology</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="melting.html#rheology-file-modification">Rheology file modification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="melting.html#material-properties-file-modification">Material properties file modification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo5.html#rheology-file-modification">Rheology file modification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo5.html#material-properties-file-modification">Material properties file modification</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="tectonics.html">5. Tectonic extension</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tectonics.html#parameter-file-line-by-line">Parameter file line by line</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="tectonics.html#reloading-options">Reloading options</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tectonics.html#simulation-duration">Simulation duration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tectonics.html#tracers-options">Tracers options</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tectonics.html#mesh-geometry">Mesh geometry</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tectonics.html#material-composition">Material composition</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tectonics.html#stokes-problem-settings">Stokes problem settings</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tectonics.html#thermal-solver-settings">Thermal solver settings</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tectonics.html#time-step-settings">Time step settings</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tectonics.html#rheology">Rheology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demo6.html">6. Tectonic extension</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="demo6.html#download">Download</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="demo6.html#files-settings">Files settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo6.html#time-settings">Time settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo6.html#mesh-settings">Mesh settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo6.html#material-composition">Material composition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo6.html#stokes-problem-settings">Stokes problem settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo6.html#heat-transfer-settings">Heat transfer settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo6.html#rheology">Rheology</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="demo6.html#plotting">Plotting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="demo7.html">7. Tectonic compression</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="demo7.html#download">Download</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo7.html#parameter-file-line-by-line">Parameter file line by line</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="demo7.html#output-files-settings">Output files settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo7.html#reloading-options">Reloading options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo7.html#simulation-duration">Simulation duration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo7.html#tracers-options">Tracers options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo7.html#mesh-geometry">Mesh geometry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo7.html#material-composition">Material composition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo7.html#rheology">Rheology</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="demo7.html#rheology-file-modification">Rheology file modification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo7.html#material-properties-file-modification">Material properties file modification</a></li>
 </ul>
 </li>
 </ul>

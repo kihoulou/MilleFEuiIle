@@ -1,4 +1,4 @@
-from m_parameters_docs import *
+from m_parameters import *
 
 HEADER = '\033[95m'
 OKBLUE = '\033[94m'
@@ -17,6 +17,13 @@ def check_compatibility():
     if (rank == 0):
         print("\nPerforming check for incompatible parameters...")
 
+    # if (periodic_BCs == True and BC_Stokes_problem[2][0] != BC_Stokes_problem[3][0]):
+    #     if (rank == 0):
+    #         count += 1
+    #         print("\t" + f"{HEADER}Periodic_BCs == 'True'{ENDC},"\
+    #               + " change " + f"{WARNING}'nonlinear_heat_equation' --> True{ENDC}")
+    #     exit_code = True
+
     if (BC_heat_transfer[0][0] == "radiation" and nonlinear_heat_equation == False):
         if (rank == 0):
             count += 1
@@ -31,12 +38,12 @@ def check_compatibility():
                   + " change " + f"{WARNING}'init_cond_profile' --> True{ENDC}")
         exit_code = True
 
-    if (initial_topography == True and (BC_Stokes_problem[0][0] == "free_slip" or BC_Stokes_problem[1][0] == "free_slip")):
-        if (rank == 0):
-            count += 1
-            print("\tBecause of " + f"{HEADER}initial_topography == True{ENDC},"\
-                  + " change " + f"{WARNING}BC_Stokes_problem[0 or 1][0] --> 'no_slip' or 'free_surface'{ENDC}")
-        exit_code = True
+    # if (initial_topography == True and (BC_Stokes_problem[0][0] == "free_slip" or BC_Stokes_problem[1][0] == "free_slip")):
+    #     if (rank == 0):
+    #         count += 1
+    #         print("\tBecause of " + f"{HEADER}initial_topography == True{ENDC},"\
+    #               + " change " + f"{WARNING}BC_Stokes_problem[0 or 1][0] --> 'no_slip' or 'free_surface'{ENDC}")
+    #     exit_code = True
     
     if (exit_code == True):
         if (rank == 0):

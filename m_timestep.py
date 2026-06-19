@@ -2,7 +2,7 @@ from dolfin import *
 import numpy as np
 
 from m_constants import *
-from m_parameters_docs import *
+from m_parameters import *
 from m_material_properties import *
 
 comm = MPI.comm_world
@@ -62,7 +62,11 @@ def time_step(mesh, v, v_mesh, H_max, composition, Temp, unit_scalar, t):
         # --- Conductive time step ---
         if (solve_energy_problem == True):
             temp_aver = assemble(Temp*dx)/assemble(unit_scalar*dx)
-            dt_cond = cfl*x_min**2*rho_s*cp(temp_aver, composition)/k(temp_aver, composition)
+            if (len(materials) == 0):
+                dt_cond = cfl*x_min**2*rho_s*cp(temp_aver, None)/k(temp_aver, None)
+            else:
+                # --- Insert the cp and k values manually, as they depend on the materials ---
+                dt_cond = cfl*x_min**2*rho_s*2100.0/0.5
             dt_list.append(dt_cond)
 
         # --- Mesh displacement time step ---
@@ -71,9 +75,4 @@ def time_step(mesh, v, v_mesh, H_max, composition, Temp, unit_scalar, t):
             dt_mesh = cfl*(height/1e3)/(v_max_mesh + 1e-15)
             dt_list.append(dt_mesh)
         
-        # --- Internal heating time step ---
-        if (tidal_dissipation == True):
-            dt_H = cfl*rho_s*cp(temp_aver, composition)*dT_max/H_max
-            dt_list.append(dt_H)
-
         return min(dt_list)

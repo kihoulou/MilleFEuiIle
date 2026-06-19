@@ -2,7 +2,7 @@ from dolfin import *
 import numpy as np
 
 from m_constants import *
-from m_parameters_docs import *
+from m_parameters import *
 from m_material_properties import *
 
 comm = MPI.comm_world
@@ -73,6 +73,7 @@ def time_step(mesh, v, v_mesh, H_max, composition, Temp, unit_scalar, t):
         
         # --- Internal heating time step ---
         if (tidal_dissipation == True):
+            dT_max = 1.0
             dt_H = cfl*rho_s*cp(temp_aver, composition)*dT_max/H_max
             dt_list.append(dt_H)
 

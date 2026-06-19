@@ -1,7 +1,7 @@
 from dolfin import *
 import numpy
 import os 
-from m_parameters_docs import *
+from m_parameters import *
 
 def rho_ice_water(Temp, xm):
         a0 = 128.2147
@@ -16,6 +16,7 @@ def rho_ice_water(Temp, xm):
 
         return (1.0-xm)*rho_s*mm/VV + xm*rho_m
 
+
 def rho(Temp, composition, xm):
         # Density of ice following Rottger et al. (1994) and Feistel and Wagner (2006)
         a0 = 128.2147
@@ -28,39 +29,15 @@ def rho(Temp, composition, xm):
         VV = a0 + a3*Temp**3 + a4*Temp**4  + a5*Temp**5 + a6*Temp**6 + a7*Temp**7
         mm = a0 + a3*T_ref**3 + a4*T_ref**4  + a5*T_ref**5 + a6*T_ref**6 + a7*T_ref**7
 
-        # --- Van Keken RT-instability benchmark ---
-        # return -1*composition[0] 
+        # --- Default ice with melt ---
+        return (1.0-xm)*rho_s*mm/VV + xm*rho_m
 
-        # --- Shear bands benchmark ---
-        # return rho_s
+        # --- Demo 4 ---
+        # return ((1.0-xm)*rho_s*mm/VV + xm*rho_m)*(composition[0] + 1.004*composition[1])
 
-        # --- Rising plume benchmark ---
-        # return rho_mantle*composition[0] + rho_lid*composition[1] + rho_plume*composition[2]
-
-        # --- Ice with melt ---
-        if (len(materials) == 0):
-                # With melt
-                return (1.0-xm)*rho_s*mm/VV + xm*rho_m
-                # return rho_s*(1.0 - 1.6e-4*(Temp-T_ref)) + xm*rho_s*(1.0-rho_s/rho_m) #Tobie et al. (2003)
-        else:
-                # With salt and melt
-                return ((1.0-xm)*rho_s*mm/VV + xm*rho_m)*(composition[0] + 1.005*composition[1])
-
-        # return rho_s*(1.0-alpha_exp*(Temp-T_ref)) + xm*rho_s*(1.0-rho_s/rho_l) # Tobie et al. (2003)
-        # return (1.0-(xm+5e-2))*rho_s*(1.0-alpha_exp*(Temp-T_ref)) + (xm+5e-2)*rho_m # Klara PhD. (2015)
-        #     return -Ra*Temp - Rb*composition[0] 
-
-    # return Ra/(2.5e-5*1e3) - Ra*Temp
-#     return rho_mantle*composition[0] + rho_lid*composition[1] + rho_plume*composition[2]
-        # return 2700.0
-        
 def k(Temp, composition):
         k_H2O = 612.0/Temp
         return k_H2O
-
-        # k_CH4 = 0.5
-        # phi = Expression("(tanh(-(x[1] - h + ch)/2.0) + 1.0)/2.0", ch=3e3, h=height, degree=2) 
-        # return k_CH4 + phi*(k_H2O-k_CH4)
 
 def cp(Temp, composition):
         return 185.0 + 7.037*Temp

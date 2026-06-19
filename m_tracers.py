@@ -1,7 +1,8 @@
 from dolfin import *
-from m_parameters_docs import *
+from m_parameters import *
 import time
 import random
+
 
 comm = MPI.comm_world
 rank = MPI.rank(comm)
@@ -9,7 +10,7 @@ size = MPI.size(comm)
 
 class Tracers:
 
-    def __init__(self, MeshClass, ElemClass, FilesClass):        
+    def __init__(self, MeshClass, ElemClass, FilesClass, use_tracers):        
         self.mesh = MeshClass.mesh
         self.moving_mesh = MeshClass.moving_mesh
         
@@ -26,11 +27,6 @@ class Tracers:
 
         self.name = FilesClass.name
 
-        # --- Determine whether to use tracers or not ---
-        self.use_tracers = False
-        if (plasticity == True or elasticity == True or internal_melting == True or len(materials) > 0):
-            self.use_tracers = True
-            
         # --- Only melt tracers exception ---
         self.only_melt_tracers = False
         if (internal_melting == True):
@@ -38,9 +34,13 @@ class Tracers:
                 self.only_melt_tracers = False
             else:
                 self.only_melt_tracers = True
+
+        self.only_tracked_tracers = False
+        if (plasticity == False and elasticity == False and internal_melting == False and len(materials) == 0 and len(save_tracer_trajectory) > 0):
+            self.only_tracked_tracers = True
                 
         # --- If the tracers are needed, initialize them ---
-        if (self.use_tracers == True):
+        if (use_tracers == True):
             self.tracers = []
             self.vacancy = []
             self.tracers_in_cells = []
@@ -49,18 +49,23 @@ class Tracers:
             self.tracers_to_find = []
             
             if (reload == False):
-                if (self.only_melt_tracers == False and initial_topography == False):
+                # --- Puts the tracers everywhere ---
+                if (self.only_melt_tracers == False and self.only_tracked_tracers == False and initial_topography == False):
                     self.introduce_tracers()
+
+                 # --- Puts the tracers listed in the parameter file ---
+                if (len(save_tracer_trajectory) > 0):
+                    self.introduce_tracked_tracers()
+
                 else:
                     for j in range(self.mesh.num_cells()):
-                        self.tracers_in_cells.append([])
-                    
-            # else:
-            #     self.load_tracers()
+                        self.tracers_in_cells.append([])                    
+            else:
+                pass # Tracers loaded in main.py
 
-    def save_tracers(self, step):
+    def save_tracers(self, step, p_k, Temp):
         
-        file = open("data_" + self.name + "/tracers/step_" + str(step) + ".dat","a")
+        file = open("data_" + self.name + "/tracers/step_" + str(step - 1) + ".dat","a")
         if (rank == 0):
             self.save_header_tracer(file)
         file.close()
@@ -68,8 +73,8 @@ class Tracers:
         MPI.barrier(comm)
         for j in range (0, len(self.tracers)): 
             if (j not in self.vacancy):
-                file = open("data_" + self.name + "/tracers/step_" + str(step) + ".dat","a")
-                self.save_indiv_tracer(file, j,\
+                file = open("data_" + self.name + "/tracers/step_" + str(step - 1) + ".dat","a")
+                self.save_indiv_tracer(file, j, p_k, Temp,\
                             rank            = self.tracers[j][3],\
                             dev_stress_xx   = self.tracers[j][4],\
                             dev_stress_xz   = self.tracers[j][5],\
@@ -89,7 +94,7 @@ class Tracers:
             file.write(("%s\t")%(arg))
         file.write("\n")
 
-    def save_indiv_tracer(self, file, j, **kwargs):
+    def save_indiv_tracer(self, file, j, p_k, Temp, **kwargs):
 
         file.write((2*"%.7E\t")%(self.tracers[j][0], self.tracers[j][1]))   
 
@@ -99,8 +104,16 @@ class Tracers:
                     if (arg == "composition"):
                         for i in range(len(kwargs[key])):
                             file.write(("%.5E\t")%(kwargs[key][i]))
+                    
+                    elif (arg == "pressure"):
+                        file.write(("%.5E\t")%(p_k(Point(self.tracers[j][0], self.tracers[j][1]))))            
+                    
+                    elif (arg == "temperature"):
+                        file.write(("%.5E\t")%(Temp(Point(self.tracers[j][0], self.tracers[j][1]))))
+
                     else:
                         file.write(("%.5E\t")%(kwargs[key]))
+                        
         file.write("\n")
         
 
@@ -121,6 +134,24 @@ class Tracers:
 
         ranks = np.array(ranks)                                                            
         self.number_of_tracers.vector().set_local(ranks)
+
+    def introduce_tracked_tracers(self):
+        for j in range(self.mesh.num_cells()):
+            self.tracers_in_cells.append([])
+
+        # --- Add the tracers whose trajectory we want to follow ---
+        for k in range(len(save_tracer_trajectory)):
+            x_pos = save_tracer_trajectory[k][0]
+            y_pos = save_tracer_trajectory[k][1]
+            unique_ID = save_tracer_trajectory[k][2]
+
+            j = self.mesh.bounding_box_tree().compute_first_entity_collision(Point(x_pos, y_pos))
+            try: 
+                if (Cell(self.mesh, j).contains(Point(x_pos, y_pos)) and j <= self.mesh.num_cells()):
+                    self.tracers.append([x_pos, y_pos, j, rank, 0.0, 0.0, 0.0, y_pos, [], [0.0, 0.0], 0.0, unique_ID])
+                    self.tracers_in_cells[j].append(len(self.tracers) - 1)
+            except:
+                pass
 
     def introduce_tracers(self):
 
@@ -189,7 +220,6 @@ class Tracers:
                 
             lim = int(sqrt(tracers_per_cell*4.0))
 
-            # self.tracers_in_cells.append([])
 
             dx = x_extent/(lim + 1.0)
             dz = z_extent/(lim + 1.0)
@@ -239,15 +269,15 @@ class Tracers:
                                 i += 1
 
                         # Check whether the materials are assigned correctly
-                        sum_comp = 0.0
-                        if (len(comp) > 0):
-                            for ii in range(0, len(comp)):
-                                sum_comp += comp[ii]
+                        # sum_comp = 0.0
+                        # if (len(comp) > 0):
+                        #     for ii in range(0, len(comp)):
+                        #         sum_comp += comp[ii]
                         
-                            if (sum_comp != 1.0):
-                                print("Sum of the compositions on a tracer does not equal 1!")
-                                print("Exiting.")
-                                MPI.comm_world.Abort()
+                        #     if (sum_comp != 1.0):
+                        #         print("Sum of the compositions on a tracer does not equal 1!")
+                        #         print("Exiting.")
+                        #         MPI.comm_world.Abort()
 
                         # --- Create an ID that will be unique ---
                         unique_ID = tracer_no*size + rank
@@ -278,15 +308,35 @@ class Tracers:
                         self.tracers_in_cells[j].append(tracer_no)
                         tracer_no +=1   
 
+    def save_trajectory(self, t, time_units, step):
+        for j in range (0, len(self.tracers)): 
+            if (j not in self.vacancy):
+                for k in range(len(save_tracer_trajectory)):
+                    tracer_ID = save_tracer_trajectory[k][2]
+                    if (self.tracers[j][-1] == tracer_ID):
+                        
+                        file = open("data_" + self.name + "/tracers/trajectories/tracer_" + str(tracer_ID) + ".dat","a")
+                        file.write(("%.7E\t" + "%d\t" + 2*"%.7E\t" + "\n")%(float(t)/time_units, step, self.tracers[j][0], self.tracers[j][1]))
+                        file.close()
+
     def load_tracers(self):
 
-        infile = open("data_" + reload_name + "/tracers/step_" + str(reload_step) + ".dat", "r") 
+        file_time = open(reload_name + "/HDF5/data_timestamp.dat")
+        lines = file_time.readlines()
+        if (reload_step == "last"):
+            step = len(lines) - 2
+        else:
+            step = reload_step
+        file_time.close()
+
+        infile = open(reload_name + "/tracers/step_" + str(step) + ".dat", "r") 
         lines = infile.readlines() 
-        tracer_no=0
+        tracer_no = 0
 
         if (rank == 0):
-            print("Reading tracers...")
-            print("This might take a moment - each tracer (in total " + str(len(lines)) + ") has to be assigned to a cell (in total " + str(self.mesh.num_cells()) + ").")
+            print("\n\t"+"------------------------------")
+            print("\t"+"Reading tracers...")
+            print("\t"+"This might take a moment - each tracer (in total " + str(len(lines)) + ") has to be assigned to a cell (in total " + str(self.mesh.num_cells()) + ").")
 
         for j in range(self.mesh.num_cells()):
             self.tracers_in_cells.append([])
@@ -300,7 +350,7 @@ class Tracers:
 
             if (count/len(lines) >= decile):
                 if (rank == 0):
-                    print("Percent done:", int(decile*100))
+                    print("\t"+"Percent done:", int(decile*100))
                 decile += 0.1
 
             sline = line.split("\t")
@@ -318,7 +368,7 @@ class Tracers:
                     xm_idx = sline.index("xm (-)")
                 
                 try:
-                    origin_idx = sline.index("origin\t")
+                    origin_idx = sline.index("origin")
                 except:
                     origin_idx = 0
 
@@ -328,9 +378,14 @@ class Tracers:
                     y_pos_orig_idx = 0
 
                 try:
-                    ID_idx = sline.index("ID\t")
+                    ID_idx = sline.index("ID")
                 except:
                     ID_idx = 0
+
+                try:
+                    comp_idx = sline.index("composition")
+                except:
+                    comp_idx = 0
 
                 header = False
                 continue
@@ -338,61 +393,63 @@ class Tracers:
             x_pos = float(sline[0])
             y_pos = float(sline[1])
 
-            try:
-                if (plasticity == True):
-                    eps_plast = float(sline[eps_plast_idx])
-                else: 
-                    eps_plast = 0.0
+            eps_plast = 0.0
+            if (plasticity == True):
+                eps_plast = float(sline[eps_plast_idx])
 
-                if (elasticity == True):
-                    tau_xx = float(sline[tau_xx_idx])
-                    tau_xz = float(sline[tau_xz_idx])
-                else:
-                    tau_xx = 0.0
-                    tau_xz = 0.0
-                
-                if (internal_melting == True):
-                    xm = float(sline[xm_idx])
-                else:
-                    xm = 0.0
+            tau_xx = 0.0
+            tau_xz = 0.0
+            if (elasticity == True):
+                tau_xx = float(sline[tau_xx_idx])
+                tau_xz = float(sline[tau_xz_idx])
+            
+            xm = 0.0
+            if (internal_melting == True):
+                xm = float(sline[xm_idx])
+            
+            comp_idx
+            comp = []
+            if (len(materials) > 0):
+                for k in range(len(materials)):
+                    comp.append(float(sline[comp_idx + k]))
 
-                if (len(materials) > 0):
-                    comp = 0.0# float(sline[8])
-
-                if (origin_idx > 0):
-                    origin = float(sline[origin_idx])
-                else:
-                    origin = 0
-                
-                if (y_pos_orig > 0):
-                    y_pos_orig = float(sline[y_pos_orig_idx])
-                else:
-                    y_pos_orig = 0
-                
-                if (ID_idx > 0):
-                    unique_ID = tracer_no*size + rank
-                else:
-                    unique_ID = 0
-
-                for j in range(self.mesh.num_cells()):
-                    if (Cell(self.mesh, j).contains(Point(x_pos, y_pos))):
-                        self.tracers.append([x_pos, y_pos, j, rank, tau_xx, tau_xz, eps_plast, y_pos_orig, comp, [xm, 0.0], origin, unique_ID])
-                        self.tracers_in_cells[j].append(tracer_no)
-                        tracer_no += 1 
-                        break # (once found, quit searching)
+            origin = 0
+            if (origin_idx > 0):
+                origin = float(sline[origin_idx])
+            
+            y_pos_orig = y_pos
+            if (y_pos_orig_idx > 0):
+                y_pos_orig = float(sline[y_pos_orig_idx])
+                            
+            unique_ID = tracer_no*size + rank
+            if (ID_idx > 0):
+                unique_ID = float(sline[ID_idx])
+            
+            # --- Find the cell number to which the tracer belongs ---
+            j = self.mesh.bounding_box_tree().compute_first_entity_collision(Point(x_pos, y_pos))
+            
+            # --- Put the tracer in the cell ---
+            try: # To eliminate the ranks that do not contain the cell (i.e., returned a nonsence j)
+                if (Cell(self.mesh, j).contains(Point(x_pos, y_pos)) and j <= self.mesh.num_cells()):
+                    self.tracers.append([x_pos, y_pos, j, rank, tau_xx, tau_xz, eps_plast, y_pos_orig, comp, [xm, 0.0], origin, unique_ID])
+                    self.tracers_in_cells[j].append(tracer_no)
+                    tracer_no += 1 
             except:
                 pass
+        
+        if (rank == 0):
+            print("\t"+"------------------------------")
 
         MPI.barrier(comm)
         infile.close()
 
     def advect_tracers(self, v, v_mesh, dt):
         
-        self.start_advection = time.time()
-        tracers_process = len(self.tracers)
-        vacancies_process = len(self.vacancy)
+        self.start_advection    = time.time()
+        tracers_process         = len(self.tracers)
+        vacancies_process       = len(self.vacancy)
 
-        tracers_total = MPI.sum(comm, tracers_process)
+        tracers_total   = MPI.sum(comm, tracers_process)
         vacancies_total = MPI.sum(comm, vacancies_process)
 
         if (rank == 0):
@@ -602,7 +659,7 @@ class Tracers:
     def delete_and_find(self):
 
         if (rank == 0):
-            print("")
+            print("\n\t-----------------------------------")
             print("\tSorting moving tracers...")
         
         # self.check_tracers()
@@ -658,9 +715,10 @@ class Tracers:
         self.check_tracers()
         if (rank == 0):
             print("\tDone.")
+            print("\t-----------------------------------")
             print("")
 
-    def add_tracers(self, t, step):
+    def add_tracers(self, t, step, time_units):
 
         # --- Search the mesh for empty cells ---
         case = 0
@@ -690,9 +748,9 @@ class Tracers:
                 if (0.0 < comp < 1.0):
                     skip_cell = True
                     
-                if (centroid.y() < height/z_div): # Do not skip the cell in the bottommost row, add a ocean tracer there
-                    skip_cell = False
-                    comp_cell = [0.0, 1.0, 0.0]
+                # if (centroid.y() < height/z_div): # Do not skip the cell in the bottommost row, add a ocean tracer there
+                #     skip_cell = False
+                #     comp_cell = [0.0, 1.0, 0.0]
 
             # Empty cell case
             if (empty_cells_allowed == True):
@@ -838,14 +896,48 @@ class Tracers:
             dy = y_max - y_min
             
             count = 0
-            while (count < 10):
-                x_pos = x_min + dx*random.random()
-                y_pos = y_min + dy*random.random()
-
-                eps_pl = 1e-2*random.random()
+            while (count < tracers_per_cell):
+                x_pos = x_min + 0.75*dx*random.random()
+                y_pos = y_min + 0.75*dy*random.random()
 
                 if (Cell(self.mesh, j).contains(Point(x_pos, y_pos)) == True):
-                    self.tracers.append([x_pos, y_pos, j, rank, 0.0, 0.0, eps_pl, 0.0, 0.0, [0.0, 0.0], 0.0, 0.0])
+                    if (len(materials) == 0):
+                            comp = []
+
+                    else:
+                        comp = [0.0]*len(materials)
+                        i = 0
+
+                        for mat in materials:
+                            if (mat[0] == "circle"):
+                                if (sqrt((x_pos - mat[1])**2 + (y_pos - mat[2])**2) < mat[3]):
+                                    for ii in range(0, i): # Erase previous composition
+                                        comp[ii] = 0.0
+                                        
+                                    comp[i] = 1.0
+
+                            if (mat[0] == "rectangle"):
+                                if ((mat[1] <= x_pos <= mat[2]) and (mat[3] <= y_pos <= mat[4])):
+                                    for ii in range(0, i): # Erase previous composition
+                                        comp[ii] = 0.0
+
+                                    comp[i] = 1.0
+
+                            if (mat[0] == "interface"):
+                                if (mat[1] == "below" and y_pos <= interface(x_pos)):
+                                    for ii in range(0, i): # Erase previous composition
+                                        comp[ii] = 0.0
+
+                                    comp[i] = 1.0
+
+                                if (mat[1] == "above" and y_pos >= interface(x_pos)):
+                                    for ii in range(0, i): # Erase previous composition
+                                        comp[ii] = 0.0
+
+                                    comp[i] = 1.0
+                            i += 1
+
+                    self.tracers.append([x_pos, y_pos, j, rank, 0.0, 0.0, 0.0, 0.0, comp, [0.0, 0.0], 0.0, 0.0])
                     self.tracers_in_cells[j].append(len(self.tracers) - 1)
                     count += 1
 

@@ -1,0 +1,107 @@
+.. _filetree:
+
+**Getting started**
+======================
+
+Installation and running
+-------------------------
+
+1. Install `FEniCS 2019.2.0 <https://fenicsproject.org/download/archive/>`_ .
+
+2. Download MilleFEuiIle from `GitHub repository <https://github.com/kihoulou/MilleFEuiIle>`_ or `Zenodo <https://doi.org/10.5281/zenodo.18641506>`_ .
+
+3. Follow the :ref:`Tutorials <1_convection>`.
+
+4. Launch the code using the predefined **bash script** ``run_MilleFEuiIle.sh``. 
+
+.. code-block:: bash
+   :emphasize-lines: 1
+
+   bash run_MilleFEuiIle.sh &
+
+In the script, define the name of the **current parameter file** (e.g., ``m_parameters_europa.py``), 
+the **number of cores** to be used for the computation, the way of **queueing** in case of a parametric study, 
+orthe **maximum number of cores** the script can occupy.
+
+
+The script then renames the main file and the terminal output accordingly (``main_europa.py``, ``europa.out`` and ``europa_e.out``),
+and runs the simulation on **background** or **foreground**, as selected.
+
+|
+
+Visualization
+-------------------------
+For visualization of the mesh data, use `Paraview <https://www.paraview.org/>`_, or the example matplotlib scripts in :ref:`demos`.
+
+|
+
+File tree
+-------------------------
+
+When running the code, the following tree is created:
+
+::
+
+    /data_name
+    ├── /HDF5         
+    │   ├── /meshes
+    │   ├── data.h5
+    │   ├── data_timestamp.dat
+    │   ├── subdomains.pvd, *.pvtu, *.vtu
+    │   └── mesh.h5, mesh.xdmf
+    ├── /anim
+    ├── /img
+    ├── /paraview        
+    │   ├── /initial_condition
+    │   ├── *.h5, *.xdmf
+    ├── /source_code
+    ├── /tracers
+    ├── empty_cells.dat (if applicable)
+    ├── picard_iter.dat (if applicable)
+    └── statistics.dat
+
+Below, the data in individual directories are described.
+
+^^^^^^^^^^^^^^^^^^^^^^^
+/HDF5
+^^^^^^^^^^^^^^^^^^^^^^^
+
+* The directory ``meshes`` contains files named ``mesh_*.h5``, which is an HDF5 file containing the mesh for each time output. These files can be used for plotting through *matplotlib* and cannot be opened in Paraview.
+* The file ``data.h5`` contains functions defined in ``Paraview_Output`` parameter, but always at least those that are needed for restarting the computation. Data from this file are used for plotting and reloading the simulation.
+* The file ``data_timestamp.dat`` contains information about the steps when the data were written (time, simulation step, position in HDF5 file)
+* Files starting ``subdomains*`` contain Paraview-readable format of the subdomains, which enables to check whether the boundaries were defined and recognized correctly.
+* Files ``mesh.h5`` and ``mesh.xdmf`` contain mesh in Paraview-readable format.
+
+|
+
+^^^^^^^^^^^^^^^^^^^^^^^
+/anim and /img
+^^^^^^^^^^^^^^^^^^^^^^^
+
+These are auxiliary directories that are used in case of plotting images and making animations from the results.
+When running the plotting scripts provided with the tutorials, images are placed to ``data_name/img/``, while animations to ``data_name/anim/``.
+
+|
+
+^^^^^^^^^^^^^^^^^^^^^^^
+/paraview
+^^^^^^^^^^^^^^^^^^^^^^^
+
+* Contains pairs of ``*.xdmf`` and ``*.h5`` for each of the physical quantities specified in ``Paraview_Output`` (again at least those that are needed for restarting the computation).
+* The directory  ``initial_condition`` contains quantities that were used as an initial condition and specified in ``Paraview_Output_Ini``
+
+|
+
+^^^^^^^^^^^^^^^^^^^^^^^
+/source_code
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Contains all parts of the source code needed for reproduction of the results.
+
+
+
+^^^^^^^^^^^^^^^^^^^^^^^
+/tracers
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Contains files with all tracers' coordinates and carried properties. 

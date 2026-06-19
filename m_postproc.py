@@ -1,5 +1,5 @@
 from dolfin import *
-from m_parameters_docs import *
+from m_parameters import *
      
 
 # Root-mean-square velocity

@@ -4,7 +4,7 @@ import math
 import os 
 from random import uniform
 import sys
-from m_parameters_docs import *
+from m_parameters import *
 from m_material_properties import *
 
 comm = MPI.comm_world
@@ -26,9 +26,7 @@ def tracer_counting(mesh, tracers_in_cells, tracers):
     return n1, n2
 
 
-def composition_interpolation(mesh, tracers_in_cells, tracers, column, function):    
-# def composition_interpolation(mesh, tracers_in_cells, tracers, column, function, n_tracers_orig, n_tracers_current):    
-
+def composition_interpolation(mesh, tracers_in_cells, tracers, column, function, n_tracers_orig, n_tracers_current):    
     ranks = []
     for j in range(mesh.num_cells()):
         weight_cell = 0.0
@@ -38,10 +36,10 @@ def composition_interpolation(mesh, tracers_in_cells, tracers, column, function)
             for i in range(0, len(tracers_in_cells[j])):
                 tracer_no = tracers_in_cells[j][i]
             
-                # if (weight_tracers_by_ratio == True):
-                #     weight_tracer = n_tracers_orig[column]/n_tracers_current[column]
-                # else:
-                weight_tracer = 1.0
+                if (weight_tracers_by_ratio == True):
+                    weight_tracer = n_tracers_orig[column]/n_tracers_current[column]
+                else:
+                    weight_tracer = 1.0
                 
                 value_cell += weight_tracer*tracers[tracer_no][8][column]
                 weight_cell += weight_tracer
@@ -195,6 +193,7 @@ def stress_update(mesh, tracers_in_cells, tracers, visc, strain_rate_tensor, z_f
             tracers[tracer_no][5]  += z_tracer*(2*visc_tracer*e_xz - tracers[tracer_no][5])
  
 def stress_reduction(mesh, tracers_in_cells, tracers, yield_function, yield_stress, stress_invariant):
+    if rank == 0 : print("\n\tReducing stres when yielding\n", flush = True)
     for j in range(mesh.num_cells()):
         for i in range(0,len(tracers_in_cells[j])):
             tracer_no = tracers_in_cells[j][i]
@@ -204,7 +203,7 @@ def stress_reduction(mesh, tracers_in_cells, tracers, yield_function, yield_stre
 
             yield_function_tracer = yield_function(Point(px,py))
             
-            if (yield_function_tracer >= -1e-3):
+            if (yield_function_tracer >= 0.0):
                 yield_stress_tracer = yield_stress(Point(px,py))
                 stress_invariant_tracer = stress_invariant(Point(px,py))
 

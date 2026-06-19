@@ -1,19 +1,18 @@
 .. _demos:
 
-**Demos**
+**Tutorials**
 ================
 
 .. toctree::
    :maxdepth: 0
-   :caption: Demos
+   :caption: Tutorials
    :glob:
 
-   file_tree
-   thermalconvection
-   thermalconvectionphase
-   thermalcompconvection
-   melting
-   tectonics
-   .. relaxation
-   .. reloading
+   demo1
+   demo2
+   demo3
+   demo4
+   demo5
+   demo6
+   demo7
    

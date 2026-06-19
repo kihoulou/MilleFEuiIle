@@ -1,5 +1,5 @@
 from dolfin import *
-from m_parameters_docs import *
+from m_parameters import *
 from m_elements import *
 from m_material_properties import *
 from m_rheology import *
@@ -8,9 +8,10 @@ from m_timestep import *
 from m_mesh import *
 from m_interpolation import *
 import numpy as np
+import time
 
 class Equations:
-    def __init__(self, MeshClass, ElemClass, TracersClass, MeltingClass, FilesClass, t):
+    def __init__(self, MeshClass, ElemClass, TracersClass, MeltingClass, FilesClass, t, use_tracers, size):
 
         self.sCG2   = ElemClass.sCG2
         self.sCG1   = ElemClass.sCG1
@@ -24,7 +25,11 @@ class Equations:
         self.t = t
         self.x = MeshClass.x
 
-        if (TracersClass.use_tracers == True):
+        # --- Internal counter of steps and Picard iterations for Equation class
+        self.step = Constant(0)
+        self.Picard_iter = Constant(0)
+
+        if (use_tracers == True):
             self.tracers = TracersClass.tracers
             self.tracers_in_cells = TracersClass.tracers_in_cells
             self.only_melt_tracers = TracersClass.only_melt_tracers
@@ -35,13 +40,12 @@ class Equations:
             self.compute_melting    = MeltingClass.compute_melting
 
         self.mesh   = MeshClass.mesh
+        self.bound_mesh   = MeshClass.bound_mesh
         self.ds     = MeshClass.ds
         self.boundary_parts = MeshClass.boundary_parts
 
-        if (viscosity_type == "GK_2001" or plasticity == True):
-            self.nonlinear_rheology = True
-        else:
-            self.nonlinear_rheology = False
+        self.x_div_top, self.x_div_bot = count_nodes(self.bound_mesh)
+        self.x_div_top = int(MPI.sum(comm, self.x_div_top) - size)
 
         if (len(BC_Stokes_problem[2]) == 2 or len(BC_Stokes_problem[3]) == 2):
             if (BC_Stokes_problem[2][1] == "time_dependent" or BC_Stokes_problem[3][1] == "time_dependent"):
@@ -60,22 +64,21 @@ class Equations:
         self.normal = FacetNormal(MeshClass.mesh)
 
         # --- Trial and test functions ---
-        self._Temp  = ElemClass._Temp
-        self.Temp_  = ElemClass.Temp_
-        self.Temp   = ElemClass.Temp
-        self.delta_T   = ElemClass.delta_T
-        self.Temp_k = ElemClass.Temp_k
+        self._Temp      = ElemClass._Temp
+        self.Temp_      = ElemClass.Temp_
+        self.Temp       = ElemClass.Temp
+        self.delta_T    = ElemClass.delta_T
+        self.Temp_k     = ElemClass.Temp_k
 
-        self.xm     = ElemClass.xm
-        self.xm_k   = ElemClass.xm_k
+        self.xm             = ElemClass.xm
+        self.xm_k           = ElemClass.xm_k
         self.melting_rate   = ElemClass.melting_rate
-        self.heating = ElemClass.heating
-        self.heating_shear = ElemClass.heating_shear
-        self.visc       = ElemClass.visc
-        self.eta_v       = ElemClass.eta_v
-        self.log10_visc = ElemClass.log10_visc
-        self.delta_T = ElemClass.delta_T
-        self.cohesion = ElemClass.cohesion
+        self.heating        = ElemClass.heating
+        self.heating_shear  = ElemClass.heating_shear
+        self.visc           = ElemClass.visc
+        self.eta_v          = ElemClass.eta_v
+        self.delta_T        = ElemClass.delta_T
+        self.cohesion       = ElemClass.cohesion
 
         self.stress_dev_inv      = ElemClass.stress_dev_inv
         self.stress_dev_inv_k    = ElemClass.stress_dev_inv_k
@@ -90,17 +93,17 @@ class Equations:
         self.stress_dev_tensor      = ElemClass.stress_dev_tensor
         self.vorticity_tensor       = ElemClass.vorticity_tensor
 
-        self.u = ElemClass.u
-        self.n_bot = ElemClass.n_bot
+        self.u      = ElemClass.u
+        self.n_bot  = ElemClass.n_bot
         self.comp_0 = ElemClass.comp_0
         self.comp_1 = ElemClass.comp_1
         self.comp_2 = ElemClass.comp_2
         self.composition = [self.comp_0, self.comp_1, self.comp_2]
 
-        self.q_ice = ElemClass.q_ice
-        self.q_water = ElemClass.q_water
+        self.q_ice      = ElemClass.q_ice
+        self.q_water    = ElemClass.q_water
 
-        self.density     = ElemClass.density
+        self.density    = ElemClass.density
 
         self.plastic_strain     = ElemClass.plastic_strain
         self.yield_stress       = ElemClass.yield_stress
@@ -110,6 +113,7 @@ class Equations:
 
         self.number_of_tracers  = Function(self.sDG0)
         self.mesh_ranks          = Function(self.sDG0)
+        self.diff_coef           = ElemClass.diff_coef
 
         if (time_step_strategy == "constant"):
             self.dt = Constant(dt_const)
@@ -142,7 +146,7 @@ class Equations:
         self.v_top_aver = Constant(1.0)
 
         # --- Top and bottom boundary topography ---        
-        # self.h_top1     = Function(self.sCG1)
+        self.h_top1     = Function(self.sCG1)
 
         self._h_top     = ElemClass._h_top
         self.h_top_     = ElemClass.h_top_
@@ -155,6 +159,9 @@ class Equations:
         self.h_bot_k    = ElemClass.h_bot_k
 
         self.iteration_error     = ElemClass.iteration_error
+
+        self.epsII_manual = False
+        self.sYII_manual = False
 
         # --- Mesh displacement ---
         # Mesh displecement
@@ -194,6 +201,9 @@ class Equations:
         self.v_mesh = ElemClass.v_mesh
         self.u_mesh = ElemClass.u_mesh
 
+        self.diff_coef_max = Constant(0.0)
+
+
         self.top_left = Point_Fixed_Pressure()
         self.bc_temp    = apply_temperature_BC(self.sCG2, self.boundary_parts)
         self.bc_stokes  = apply_velocity_BC(self.V, self.boundary_parts, self.top_left, self.t)
@@ -208,16 +218,19 @@ class Equations:
         self.equation_free_surface_bottom()
         self.equation_mesh_displacement()
     
+        self.equation_topography_diffusion()
+    
     def equation_heat_ini(self):
         # --- Equation ---
         eq_energy_ini =  k(self.Temp, self.composition)*inner(nabla_grad(self.Temp), nabla_grad(self.Temp_))*dx
 
         if (BC_heat_transfer[0][0] == "radiation"):
-            eq_energy_ini += - (1.0 - albedo)*insolation*self.Temp_*self.ds(1)\
+            eq_energy_ini += - (1.0 - albedo)*(insol_1AU/dist_AU**2)*self.Temp_*self.ds(1)\
                         + pow(self.Temp, 4)*emis*SB_const*self.Temp_*self.ds(1)
             
         if (initial_tidal_dissipation == True):
-            eq_energy_ini += -tidal_heating(self.visc)*self.Temp_*dx
+            eq_energy_ini += -tidal_heating(self.p_k, self.Temp, self.v_k, self.stress_dev_inv, self.xm, self.composition, self.plastic_strain,
+                self.step, self.Picard_iter, self.stress_dev_inv_k, self.dt, self.sr_min)*self.Temp_*dx
             
         J_eq_energy_ini = derivative(eq_energy_ini, self.Temp)
         problem_energy_ini = NonlinearVariationalProblem(eq_energy_ini, self.Temp, self.bc_temp, J_eq_energy_ini)
@@ -245,10 +258,11 @@ class Equations:
                         + k(self.Temp_k, self.composition)*dot(nabla_grad(self.Temp_k), nabla_grad(self.Temp_))))*dx
 
             if (tidal_dissipation == True):
-                    eq_energy += - tidal_heating(self.visc)*self.Temp_*dx
+                    eq_energy += - tidal_heating(self.p_k, self.Temp, self.v_k, self.stress_dev_inv, self.xm, self.composition, self.plastic_strain,
+                self.step, self.Picard_iter, self.stress_dev_inv_k, self.dt, self.sr_min)*self.Temp_*dx
 
             if (BC_heat_transfer[0][0] == "radiation"):
-                eq_energy += - (1.0 - albedo)*insolation*self.Temp_*self.ds(1)\
+                eq_energy += - (1.0 - albedo)*(insol_1AU/dist_AU**2)*self.Temp_*self.ds(1)\
                             + pow(self.Temp, 4)*emis*SB_const*self.Temp_*self.ds(1)
 
             J_eq_energy = derivative(eq_energy, self.Temp)
@@ -272,7 +286,8 @@ class Equations:
                         + k(self.Temp_k, self.composition)*dot(nabla_grad(self.Temp_k), nabla_grad(self.Temp_))))*dx
             
             if (tidal_dissipation == True):
-                    eq_energy += -tidal_heating(self.visc)*self.Temp_*dx
+                    eq_energy += -tidal_heating(self.p_k, self.Temp, self.v_k, self.stress_dev_inv, self.xm, self.composition, self.plastic_strain,
+                self.step, self.Picard_iter, self.stress_dev_inv_k, self.dt, self.sr_min)*self.Temp_*dx
 
             problem_energy = LinearVariationalProblem(lhs(eq_energy), rhs(eq_energy), self.Temp, self.bc_temp)
             self.solver_energy  = LinearVariationalSolver(problem_energy)
@@ -280,13 +295,25 @@ class Equations:
     def equation_Stokes(self):
         self.eq_cont = div(self._v)*self.p_*dx
 
-        if (elasticity == False):
+        if (plasticity == False and elasticity == False): # using "eta_eff()" instead of "visc" is faster for solely viscous problems
+            self.eq_momentum = (self._p*div(self.v_)
+                - rho(self.Temp, self.composition, self.xm)*g*dot(self.e_z, self.v_)
+                - eta_ductile(self.Temp, self.v_k, None, self.xm, self.composition, self.step, self.Picard_iter, "mesh")
+                * inner(2.0*sym(nabla_grad(self._v)), nabla_grad(self.v_).T))*dx   
+
+        if (plasticity == False and elasticity == True):    
+            self.eq_momentum = (self._p*div(self.v_)
+                - rho(self.Temp, self.composition, self.xm)*g*dot(self.e_z, self.v_)
+                - self.dt/(self.dt + eta_ductile(self.Temp, self.v_k, None, self.xm, self.composition, self.step, self.Picard_iter, "mesh")/G(self.composition))*eta_ductile(self.Temp, self.v_k, None, self.xm, self.composition, self.step, self.Picard_iter, "mesh")
+                *inner(2.0*sym(nabla_grad(self._v)), nabla_grad(self.v_).T)\
+                - (1.0 - self.dt/(self.dt + eta_ductile(self.Temp, self.v_k, None, self.xm, self.composition, self.step, self.Picard_iter, "mesh")/G(self.composition)))*inner(self.stress_dev_tensor, nabla_grad(self.v_).T))*dx
+            
+        if (plasticity == True and elasticity == False):
             self.eq_momentum = (self._p*div(self.v_)
                 - rho(self.Temp, self.composition, self.xm)*g*dot(self.e_z, self.v_)
                 - self.visc*inner(2.0*sym(nabla_grad(self._v)), nabla_grad(self.v_).T))*dx     
             
-        else:
-
+        if (plasticity == True and elasticity == True):
             self.eq_momentum = (self._p*div(self.v_)
                 - rho(self.Temp, self.composition, self.xm)*g*dot(self.e_z, self.v_)
                 - z(self.visc, self.shear_modulus, self.dt)*self.visc*inner(2.0*sym(nabla_grad(self._v)), nabla_grad(self.v_).T)\
@@ -311,10 +338,8 @@ class Equations:
         - (dot(nabla_grad(self._h_top), self.normal) * self.h_top_)*self.ds(1) \
         - ((self._h_top - self.h_top_k + self.dt * (self._h_top.dx(0) * self.v_k[0] - self.v_k[1]))\
         * (dot(nabla_grad(self.h_top_), self.normal) - self.h_top_ / (self.gamma * self.h_e_top)))*self.ds(1)
-    
-        bc_fs_top = []
 
-        free_surface_top = LinearVariationalProblem(lhs(eq_fs_top), rhs(eq_fs_top), self.h_top, bc_fs_top)
+        free_surface_top = LinearVariationalProblem(lhs(eq_fs_top), rhs(eq_fs_top), self.h_top, [])
         self.solver_free_surface_top = LinearVariationalSolver(free_surface_top)
 
     def equation_free_surface_bottom(self):
@@ -324,20 +349,17 @@ class Equations:
         - (dot(nabla_grad(self._h_bot), -self.normal) * self.h_bot_)*self.ds(2) \
         - (self._h_bot - self.h_bot_k + self.dt*(self._h_bot.dx(0) * (self.v_k[0] + self.u[0]) - (self.v_k[1] + self.u[1])))\
         * (dot(nabla_grad(self.h_bot_), -self.normal) - self.h_bot_ / (self.gamma*self.h_e_bot)) *self.ds(2)
-        
-        bc_fs_bot = []
 
-        free_surface_bot = LinearVariationalProblem(lhs(eq_fs_bot), rhs(eq_fs_bot), self.h_bot, bc_fs_bot)
+        free_surface_bot = LinearVariationalProblem(lhs(eq_fs_bot), rhs(eq_fs_bot), self.h_bot, [])
         self.solver_free_surface_bot = LinearVariationalSolver(free_surface_bot)
 
-    # def Equation_topography_diffusion(self):
+    def equation_topography_diffusion(self):
 
-    #     # --- Topography diffusion equation ---
-    #     eq_surf_diff = (_h_top-h_top1)/dt*h_top_*dx + diff_coef*dot(nabla_grad(_h_top),nabla_grad(h_top_))*dx
-    #     bc_sd = []
+        # --- Topography diffusion equation ---
+        eq_surf_diff = (self._h_top - self.h_top1)/self.dt*self.h_top_*dx + self.diff_coef*dot(nabla_grad(self._h_top), nabla_grad(self.h_top_))*dx
 
-    #     problem_surf_diff = LinearVariationalProblem(lhs(eq_surf_diff),rhs(eq_surf_diff),h_top,bc_sd)
-    #     solver_surf_diff = LinearVariationalSolver(problem_surf_diff)
+        problem_surf_diff = LinearVariationalProblem(lhs(eq_surf_diff), rhs(eq_surf_diff), self.h_top, [])
+        self.solver_surf_diff = LinearVariationalSolver(problem_surf_diff)
 
     def equation_mesh_displacement(self):
 
@@ -355,14 +377,11 @@ class Equations:
         self.solver_surf_move = LinearVariationalSolver(problem_surf_move)
 
     def solve_initial_heat_equation(self):
-        
         if (rank == 0):
             print("\n\t Solving initial condition for temperature...\n")
 
         if (initial_tidal_dissipation == True):
             try:
-                # --- Estimate the intial viscosity for the tidal heating and solve the initial condition ---
-                self.update_viscosity(0, 0)
                 self.solver_energy_ini.solve()
 
             except:
@@ -399,63 +418,68 @@ class Equations:
             self.Temp.assign(project(self.Temp + self.delta_T, self.sCG2))
             
             melt_interpolation(self.mesh, self.tracers_in_cells, self.tracers, 0, self.xm)
-            
-            # Evaluate melting/crystallization rate
-            self.melting_rate.assign(project(rho_m*(self.xm - self.xm_k)/self.dt*rho_s/rho_m, self.sDG0))
 
             if (self.only_melt_tracers == True):
                 self.delete_melt_tracers()            
             # --- END melt algorithm ---
+
         else:
             self.solver_energy.solve()
+            if (rank == 0):
+                print("\n\t Solving energy balance done\n")
 
         self.Temp_k.assign(self.Temp)
-        self.q_ice.assign(project(-k(self.Temp, self.composition)*nabla_grad(self.Temp), self.vCG1))
+        self.q_top.assign(assemble(dot(-k(self.Temp, self.composition)*nabla_grad(self.Temp), self.normal)*self.ds(1)) / self.top_length)
 
-    def solve_Stokes_problem(self, step, FilesClass):
-        # self.heating.assign(project(tidal_heating(self.visc), self.sDG0))
+    def solve_Stokes_problem(self, FilesClass, nonlinear_rheology):
+
+        # --- Update the viscosity before the next Stokes problem solver (now tracers are advected) ---
+        if (plasticity == True):
+            self.update_viscosity()
+
+        if (elasticity == True):
+            if (len(materials) == 0):
+                if (float(self.step) == 0):
+                    self.shear_modulus.assign(project(G(self.composition), self.sDG0))
+                else:
+                    pass
+            else:
+                self.shear_modulus.assign(project(G(self.composition), self.sDG0))
+            self.z_function.assign(project(z(self.visc, self.shear_modulus, self.dt), self.sDG0))
 
         # --- If there is the phase transition, estimate first phase change velocity
         #     as it is in the stabilization term ---
         if (BC_Stokes_problem[1][0] == "free_surface" and phase_transition == True):
+            if (rank == 0): "Estimating phase change velocity."
             self.compute_u()
         
-        Picard_iter = 0
+        self.Picard_iter = Constant(0.0)
         v_error = 1.0
-
-        # --- After the tracers are advected (from the previous loop) ---
-        # scalar_interpolation(self.mesh, self.tracers_in_cells, self.tracers, 6, "ARITM", self.plastic_strain)
-
-        if (elasticity == True):
-            self.shear_modulus.assign(project(G(self.composition), self.sDG0))
-
-        self.update_viscosity(step, Picard_iter)
-
-        if (elasticity == True):
-            self.z_function.assign(project(z(self.visc, self.shear_modulus, self.dt), self.sDG0))
 
         # --- Redefine the solver in case of time-dependent BC ---
         if (self.BC_Stokes_problem_time_dep == True):
+            if rank == 0 : print("Applying time-dependent BC.", flush = True)
             self.bc_stokes  = apply_velocity_BC(self.V, self.boundary_parts, self.top_left, self.t)
             self.problem_stokes = LinearVariationalProblem(lhs(self.eq_cont + self.eq_momentum),rhs(self.eq_cont + self.eq_momentum), self.pv, self.bc_stokes)
             self.solver_stokes = LinearVariationalSolver(self.problem_stokes)
 
         # --- Picard iterations of Stokes solver ---  
-        if (rank == 0):
-            print("\n\t Solving Stokes problem...\n")
+        if rank == 0 : print("\n\t Solving Stokes problem...\n", flush = True)
 
-        while (Picard_iter < Picard_iter_max and v_error > Picard_iter_error):
+        while (float(self.Picard_iter) < Picard_iter_max and v_error > Picard_iter_error):
 
-            self.solver_stokes.solve()       
-            if (rank == 0):
-                print("\n\t Done.\n") 
+            # --- Solve the Stokes problem ---
+            self.solver_stokes.solve()   
+            if rank == 0 : print("\n\t Done.\n", flush = True)    
 
+            # --- Decouple the pressure and velocity ---
             if (stokes_elements == "Mini"):
                 self.p_out, self.v_out, self.vb = self.pv.split(True)
 
             if (stokes_elements == "TH"):
                 self.p_out, self.v_out = self.pv.split(True)
         
+            # --- Find the constant velocity in case of both bottom and top free surface condition ---
             if (BC_Stokes_problem[0][0] == "free_surface" and BC_Stokes_problem[1][0] == "free_surface"):
 
                 if (stokes_null == "volume"):
@@ -466,10 +490,14 @@ class Equations:
                     self.v_top_aver.assign(assemble(self.v_out[1]*self.ds(1))/assemble(self.unit_scalar*self.ds(1)))
                     self.v_out.assign(project(self.v_out - self.v_top_aver*self.e_z, self.vCG1))
 
-            if (self.nonlinear_rheology == True):
+                if (stokes_null == "none"):
+                    pass
+
+            # --- If the rheology is nonlinear (stress-dependent viscosity, plasticity), compute the error of the iteration ---
+            if (nonlinear_rheology == True):
                 self.iteration_error.assign(project(sqrt(dot(self.v_out - self.v_k, self.v_out - self.v_k)/dot(self.v_k, self.v_k)), self.sCG1))
-        
-                if (step == 0 and Picard_iter == 0):
+                
+                if (float(self.step) == 0 and float(self.Picard_iter) == 0):
                     v_error = 1.0
                 else:
                     if (error_type == "maximum"):
@@ -479,56 +507,119 @@ class Equations:
                         v_error = assemble(self.iteration_error*dx)/assemble(self.unit_scalar*dx)
 
                 if (rank == 0):
-                    print("\n\tPicard iteration %d. Error = %6.3E\n" % (Picard_iter, v_error))
+                    print("\n\tPicard iteration %d. Error = %6.3E\n" % (float(self.Picard_iter), v_error))
 
                     file = open("data_" + self.name + "/picard_iter.dat","a")
-                    file.write(("%.5E\t"+"%.5E"+"\n")%(step + Picard_iter/Picard_iter_max, v_error))    
+                    file.write(("%.5E\t"+"%.5E"+"\n")%(self.step + self.Picard_iter/Picard_iter_max, v_error))    
                     file.close() 
-                
-                self.strain_rate_inv.assign(project(strain_rate_II(self.v_out), self.sDG0))
                 
                 self.p_k.assign(self.p_out)
                 self.v_k.assign(self.v_out)
 
-                if (elasticity == True and viscosity_type == "GK_2001"):
-                    get_new_stress_iter(self.mesh, self.Temp, self.xm, self.stress_dev_inv,\
-                                        self.stress_dev_inv_k, self.strain_rate_inv, self.composition,\
-                                        self.shear_modulus, step, Picard_iter, self.dt)
+                # --- In the first iteration, determine which way of computing strain rate is faster ---                    
+                if (nonlinear_rheology == True and float(self.step) == 0 and float(self.Picard_iter) == 0):
+                    manual_start = time.time()
+                    strain_rate_II_fast(self.mesh, self.v_k, self.strain_rate_inv)
+                    manual_end = time.time()
 
-                Picard_iter += 1
-                
-                self.update_viscosity(step, Picard_iter)
-                if (elasticity == True):
+                    MPI.barrier(comm)
+
+                    auto_start = time.time()
+                    self.strain_rate_inv.assign(project(strain_rate_II(self.v_k), self.sDG0))
+                    auto_end = time.time()
+                    
+                    MPI.barrier(comm)
+
+                    manual_time = MPI.max(comm, manual_end) - MPI.min(comm, manual_start)
+                    auto_time = MPI.max(comm, auto_end) - MPI.min(comm, auto_start)
+
+                    if (manual_time < auto_time):
+                        self.epsII_manual == True
+                        if rank == 0 : print("Computing strain rate invariant manually", flush = True)
+                    else:
+                        self.epsII_manual == False
+                        if rank == 0 : print("Computing strain rate invariant using assign.project()", flush = True)
+
+                if (plasticity == False and elasticity == False):
+                    pass
+
+                if (plasticity == False and elasticity == True):
+                    if (self.epsII_manual == True):
+                        strain_rate_II_fast(self.mesh, self.v_k, self.strain_rate_inv)
+                    else:
+                        self.strain_rate_inv.assign(project(strain_rate_II(self.v_k), self.sDG0))
+
+                    get_new_stress_iter(self.mesh, self.Temp, self.xm, self.stress_dev_inv,\
+                                    self.stress_dev_inv_k, self.strain_rate_inv, self.composition,\
+                                    self.step, self.Picard_iter, self.dt)
+                    
+                    self.update_viscosity()
                     self.z_function.assign(project(z(self.visc, self.shear_modulus, self.dt), self.sDG0))
+
+                if (plasticity == True and elasticity == False):
+                    self.update_viscosity()
+
+                if (plasticity == True and elasticity == True):
+                    if (self.epsII_manual == True):
+                        strain_rate_II_fast(self.mesh, self.v_k, self.strain_rate_inv)
+                    else:
+                        self.strain_rate_inv.assign(project(strain_rate_II(self.v_k), self.sDG0))
+
+                    get_new_stress_iter(self.mesh, self.Temp, self.xm, self.stress_dev_inv,\
+                                    self.stress_dev_inv_k, self.strain_rate_inv, self.composition,\
+                                    self.step, self.Picard_iter, self.dt)
+                    
+                    self.update_viscosity()
+
+                    self.z_function.assign(project(z(self.visc, self.shear_modulus, self.dt), self.sDG0))
+                    # z_fast(self.mesh, self.visc, self.dt, self.z_function)
+                
+                self.Picard_iter.assign(float(self.Picard_iter + 1))
 
             else:
-                self.strain_rate_inv.assign(project(strain_rate_II(self.v_out), self.sDG0))
-                if (elasticity == True):
-                    self.z_function.assign(project(z(self.visc, self.shear_modulus, self.dt), self.sDG0))
 
                 self.p_k.assign(self.p_out)
                 self.v_k.assign(self.v_out)
                 break
 
-        self.density.assign(project(rho(self.Temp, self.composition, self.xm), self.sDG0))
+        self.step.assign(float(self.step + 1))
+
+        if (plasticity == True and elasticity == False): # Because of plastic strain integration
+            if (self.epsII_manual == True):
+                strain_rate_II_fast(self.mesh, self.v_k, self.strain_rate_inv)
+            else:
+                self.strain_rate_inv.assign(project(strain_rate_II(self.v_k), self.sDG0))
+
         if (time_step_position == "stokes"):
+            if rank == 0 : print("Prescribing time step (after Stokes).", flush = True)
             self.dt.assign(time_step(self.mesh, self.v_k, self.v_mesh, H_max, self.composition, self.Temp, self.unit_scalar, self.t))
 
         # --- Estimate the visco-elastic stress (local iterations) ---
         if (elasticity == True):
             get_new_stress(self.mesh, self.Temp, self.xm, self.stress_dev_inv,\
                         self.stress_dev_inv_k, self.strain_rate_inv, self.composition,\
-                        self.shear_modulus, step, Picard_iter, self.dt)
-        else:
-            self.stress_dev_inv.assign(project(2*self.visc*strain_rate_II(self.v_out), self.sDG0))
-
+                        self.step, self.Picard_iter, self.dt)
+            
         if (plasticity == True):
+            if (elasticity == False):
+                self.stress_dev_inv.assign(project(2*self.visc*strain_rate_II(self.v_out), self.sDG0))
+            else:
+                pass # (Already done above during above)
+
             self.yield_stress.assign(project(sigma_yield(self.p_k, self.plastic_strain, self.composition), self.sDG0)) 
             self.yield_function.assign(project(self.stress_dev_inv - self.yield_stress, self.sDG0))
 
             # --- Integrate plastic strain on tracers ---
             plastic_strain_integration(self.mesh, self.tracers_in_cells, self.tracers, self.dt, self.yield_function, self.strain_rate_inv)
-            
+
+    def update_viscosity(self):
+        if (plasticity == True):
+            self.sr_min.assign(MPI.min(comm, self.strain_rate_inv.vector().min()))
+
+        self.visc.assign(project(eta_eff(self.p_k, self.Temp, self.v_k,\
+                                        self.stress_dev_inv, self.xm, self.composition, self.plastic_strain,\
+                                        self.step, self.Picard_iter, self.stress_dev_inv_k, self.dt, self.sr_min), self.sDG0))
+        
     def update_stress(self):
         # --- Update stress on tracers ---
         self.strain_rate_tensor.assign(project(sym(nabla_grad(self.v_k)), self.tDG0))
@@ -545,21 +636,11 @@ class Equations:
         stress_rotation(self.mesh, self.tracers_in_cells, self.tracers, self.vorticity_tensor, self.dt)
 
         stress_interpolation(self.mesh, self.tracers_in_cells, self.tracers, self.stress_dev_tensor)
+        self.stress_dev_inv.assign(project(tensor_2nd_invariant(self.stress_dev_tensor), self.sDG0))
         self.stress_dev_inv_k.assign(project(tensor_2nd_invariant(self.stress_dev_tensor), self.sDG0))
 
         if (rank==0):
             print("Done.")
-
-    def update_viscosity(self, step, Picard_iter):
-        if (plasticity == True):
-            self.sr_min.assign(MPI.min(comm, self.strain_rate_inv.vector().min()))
-
-        self.visc.assign(project(eta_eff(self.p_k, self.Temp, self.strain_rate_inv,\
-                                        self.stress_dev_inv, self.xm, self.composition, self.plastic_strain,\
-                                        step, Picard_iter, self.stress_dev_inv_k, self.shear_modulus, self.dt, self.sr_min), self.sDG0))
-        
-        if (elasticity == True):
-            self.shear_modulus.assign(project(G(self.composition), self.sDG0))
 
     def compute_u(self):
         self.q_ice.assign(project(-k(self.Temp, self.composition)*nabla_grad(self.Temp), self.vCG1))
@@ -567,13 +648,35 @@ class Equations:
         self.q_water.assign(project((self.q_ice_aver - DAL_factor*self.h_bot)*self.e_z, self.vCG1))
         self.u.assign(project(-dot(self.n_bot, self.q_ice - self.q_water)*self.n_bot/(Lt*rho_s), self.vCG1))
 
-    def solve_topography_evolution(self):
-        if (rank == 0):
-            print("\n\t Solving topography evolution...\n")
+    def solve_topography_evolution(self, oscillations_detected):
+        if rank == 0: print("\n\tSolving topography evolution...", flush = True)
 
         # --- Compute the top topography evolution ---
         if (BC_Stokes_problem[0][0] == "free_surface"):
             self.solver_free_surface_top.solve()
+
+                # --- Automatic detection of oscillations ---
+            if (adaptive_smoothing == True):
+
+                # --- If there is no oscillation, then look for it ---
+                if (oscillations_detected == False or smooth_step > 10):
+                    detect_oscillations(self.mesh, self.bound_mesh, self.diff_coef, self.x_div_top)
+                    self.diff_coef_max.assign(MPI.max(comm, self.diff_coef.vector().max()))
+                    smooth_step = 0
+
+                # --- If there is an oscillation, let the boundary smooth for 10 time steps and then look again ---
+                if (float(self.diff_coef_max) > 0.0):
+                    oscillations_detected = True
+                    smooth_step += 1
+
+                    self.h_top1.assign(self.h_top)
+                    self.solver_surf_diff.solve()
+
+                    if rank == 0: print("\nSurface diffusion ON. Smooth step", smooth_step, "/10.", flush = True)
+
+                else:
+                    oscillations_detected = False
+                    if rank == 0: print("\nSurface diffusion OFF.", flush = True)
 
         # --- Upwards-facing normal vector to the bottom boundary ---
         self.n_bot.assign(project((self.e_z - self.e_x*dot(nabla_grad(self.h_bot), self.e_x))/sqrt(1.0 + dot(nabla_grad(self.h_bot), self.e_x)**2), self.vCG1))

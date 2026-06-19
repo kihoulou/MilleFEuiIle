@@ -75,16 +75,18 @@
 <div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
 <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
 <ul class="current">
-<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="demos.html"><strong>Demos</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
-<li class="toctree-l2"><a class="reference internal" href="file_tree.html"><strong>File tree</strong></a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermalconvection.html">1. Thermal convection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermalconvectionphase.html">2. Thermal convection with phase transition</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermalcompconvection.html">3. Thermo-compositional convection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="melting.html">4. Thermal convection with melting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tectonics.html">5. Tectonic extension</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filetree.html"><strong>Getting started</strong></a></li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="demos.html"><strong>Tutorials</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="demo1.html">1. Thermal convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo2.html">2. Thermal convection - parametric study</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo3.html">3. Thermal convection with phase transition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo4.html">4. Thermo-compositional convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo5.html">5. Thermal convection with melting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo6.html">6. Tectonic extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo7.html">7. Tectonic compression</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="modules.html"><strong>MilleFEuille modules</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul class="current" x-show="expanded">
+<li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="modules.html"><strong>Computational modules</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul class="current" x-show="expanded">
 <li class="toctree-l2"><a class="reference internal" href="m_boundary_conditions.html">m_boundary_conditions.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_check.html">m_check.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_constants.html">m_constants.py</a></li>
@@ -102,6 +104,11 @@
 <li class="toctree-l2"><a class="reference internal" href="m_timestep.html">m_timestep.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_tracers.html">m_tracers.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="main.html">main.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="modules2.html"><strong>Plotting modules</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="plot_demo.html">plot_demo*.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_MilleFEuiIle.html">plot_MilleFEuiIle.py</a></li>
 </ul>
 </li>
 </ul>
@@ -123,7 +130,7 @@
 <path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
 </svg>
 </a>
-<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap" href="modules.html"><strong>MilleFEuille modules</strong></a>
+<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap" href="modules.html"><strong>Computational modules</strong></a>
 <div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">m_equations.py</span>
 </nav>
 <div id="content" role="main">
@@ -131,24 +138,19 @@
 <span id="m-equations-py"></span><h1>m_equations.py<a class="headerlink" href="#module-m_equations" title="Link to this heading"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="m_equations.Equations">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">m_equations.</span></span><span class="sig-name descname"><span class="pre">Equations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MeshClass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ElemClass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">TracersClass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MeltingClass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FilesClass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">m_equations.</span></span><span class="sig-name descname"><span class="pre">Equations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MeshClass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ElemClass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">TracersClass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MeltingClass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FilesClass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_tracers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_equations.Equations.compute_u">
 <span class="sig-name descname"><span class="pre">compute_u</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.compute_u" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.compute_u'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Updates the heat fluxes <span class="math notranslate nohighlight">\(\boldsymbol{q}_{\rm ice}\)</span>  and <span class="math notranslate nohighlight">\(\boldsymbol{q}_{\rm ocean}\)</span> and computes
-new phase transition velocity <span class="math notranslate nohighlight">\(\boldsymbol{u}\)</span>.</p>
-</dd>
-</dl>
+<dd><p>Updates the heat fluxes <span class="math notranslate nohighlight">\(\boldsymbol{q}_{ice}\)</span>  and <span class="math notranslate nohighlight">\(\boldsymbol{q}_{ocean}\)</span> and computes new phase transition velocity <span class="math notranslate nohighlight">\(\boldsymbol{u}\)</span>.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_equations.Equations.equation_Stokes">
 <span class="sig-name descname"><span class="pre">equation_Stokes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.equation_Stokes" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.equation_Stokes'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Defines the weak form of the Stokes problem</p>
+<dd class="field-odd"><p>Defines the weak form, <code class="docutils literal notranslate"><span class="pre">LinearVariationalProblem</span></code> and <code class="docutils literal notranslate"><span class="pre">LinearVariationalSolver</span></code>  of the Stokes problem</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p></p>
@@ -240,7 +242,7 @@ are added</p>
 <span class="sig-name descname"><span class="pre">equation_heat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.equation_heat" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.equation_heat'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Defines the weak form of the time-dependent heat transfer equation.</p>
+<dd class="field-odd"><p>Defines the weak form, <code class="docutils literal notranslate"><span class="pre">LinearVariationalProblem</span></code> and <code class="docutils literal notranslate"><span class="pre">LinearVariationalSolver</span></code>  of the time-dependent heat transfer equation.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p></p>
@@ -328,27 +330,51 @@ are added</p>
 </ul>
 </dd></dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="m_equations.Equations.equation_topography_diffusion">
+<span class="sig-name descname"><span class="pre">equation_topography_diffusion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.equation_topography_diffusion" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.equation_topography_diffusion'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Defines the weak form, <code class="docutils literal notranslate"><span class="pre">LinearVariationalProblem</span></code> and <code class="docutils literal notranslate"><span class="pre">LinearVariationalSolver</span></code> of the equation for top topography diffusion.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+<div class="math notranslate nohighlight">
+\[\begin{split}0 = &amp;\int_\Omega \frac{h_{top} - h^\prime_{top}}{\Delta t}\hat{h}_{top}\ + k_{diff}\ (\nabla h_{top} \cdot \nabla \hat{h}_{top})\ \textrm{d}\Omega\\\end{split}\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(h_{top}\)</span> is the top topography trial function</p></li>
+<li><p><span class="math notranslate nohighlight">\(h^\prime_{top}\)</span> is the top topography function from the free surface equation <a class="reference internal" href="#m_equations.Equations.equation_free_surface_top" title="m_equations.Equations.equation_free_surface_top"><code class="xref py py-func docutils literal notranslate"><span class="pre">m_equations.Equations.equation_free_surface_top()</span></code></a>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{h}_{top}\)</span> is the top topography test function</p></li>
+</ul>
+</dd></dl>
+<dl class="py method">
 <dt class="sig sig-object py" id="m_equations.Equations.rotate_and_interpolate_stress">
 <span class="sig-name descname"><span class="pre">rotate_and_interpolate_stress</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.rotate_and_interpolate_stress" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.rotate_and_interpolate_stress'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
 <dd><p>Computes the vorticity tensor <span class="math notranslate nohighlight">\(\boldsymbol{W} = (\nabla \boldsymbol{v} - (\nabla \boldsymbol{v})^T)/2\)</span>, rotates the elastic stress and interpolates it at the mesh. See <a class="reference internal" href="m_interpolation.html#m_interpolation.stress_rotation" title="m_interpolation.stress_rotation"><code class="xref py py-func docutils literal notranslate"><span class="pre">m_interpolation.stress_rotation()</span></code></a>.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_equations.Equations.solve_Stokes_problem">
-<span class="sig-name descname"><span class="pre">solve_Stokes_problem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FilesClass</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.solve_Stokes_problem" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.solve_Stokes_problem'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><p>Solves the Stokes problem.</p>
+<span class="sig-name descname"><span class="pre">solve_Stokes_problem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">FilesClass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlinear_rheology</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.solve_Stokes_problem" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.solve_Stokes_problem'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd><p>Solves the Stokes problem <a class="reference internal" href="#m_equations.Equations.equation_Stokes" title="m_equations.Equations.equation_Stokes"><code class="xref py py-func docutils literal notranslate"><span class="pre">m_equations.Equations.equation_Stokes()</span></code></a>.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_equations.Equations.solve_heat_equation">
 <span class="sig-name descname"><span class="pre">solve_heat_equation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.solve_heat_equation" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.solve_heat_equation'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>Solves the heat transfer problem <a class="reference internal" href="#m_equations.Equations.equation_heat" title="m_equations.Equations.equation_heat"><code class="xref py py-func docutils literal notranslate"><span class="pre">m_equations.Equations.equation_heat()</span></code></a>.</p>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_equations.Equations.solve_initial_heat_equation">
 <span class="sig-name descname"><span class="pre">solve_initial_heat_equation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.solve_initial_heat_equation" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.solve_initial_heat_equation'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>Solves the initial condition fot the heat transfer problem <a class="reference internal" href="#m_equations.Equations.equation_heat_ini" title="m_equations.Equations.equation_heat_ini"><code class="xref py py-func docutils literal notranslate"><span class="pre">m_equations.Equations.equation_heat_ini()</span></code></a>.</p>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_equations.Equations.solve_topography_evolution">
-<span class="sig-name descname"><span class="pre">solve_topography_evolution</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.solve_topography_evolution" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.solve_topography_evolution'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">solve_topography_evolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oscillations_detected</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.solve_topography_evolution" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.solve_topography_evolution'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd><p>Solves the evolution of the top and bottom boundary, and evaluates the mesh velocity. If needed, performs smoothing of the top topography or evaluation of the 
+bottom interface melting.</p>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_equations.Equations.thermal_perturbation">
 <span class="sig-name descname"><span class="pre">thermal_perturbation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.thermal_perturbation" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.thermal_perturbation'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
@@ -372,15 +398,13 @@ are added</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_equations.Equations.update_stress">
 <span class="sig-name descname"><span class="pre">update_stress</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.update_stress" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.update_stress'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd></dd></dl>
+<dd><p>Updates the strain rate tensor, deviatoric stress components <span class="math notranslate nohighlight">\(\sigma_{xx}\)</span>  and <span class="math notranslate nohighlight">\(\sigma_{xz}\)</span>  on tracers, and
+reduces the stress wherever the material is yielding.</p>
+</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="m_equations.Equations.update_viscosity">
-<span class="sig-name descname"><span class="pre">update_viscosity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Picard_iter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.update_viscosity" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.update_viscosity'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Updates the viscosity fuction</p>
-</dd>
-</dl>
+<span class="sig-name descname"><span class="pre">update_viscosity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_equations.Equations.update_viscosity" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_equations.Equations.update_viscosity'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd><p>Updates the viscosity and assigns it to the finite-element function <code class="docutils literal notranslate"><span class="pre">visc</span></code>.</p>
 </dd></dl>
 </dd></dl>
 </section>
@@ -395,6 +419,7 @@ are added</p>
 <li><a :data-current="activeSection === '#m_equations.Equations.equation_heat'" class="reference internal" href="#m_equations.Equations.equation_heat"><code class="docutils literal notranslate"><span class="pre">Equations.equation_heat()</span></code></a></li>
 <li><a :data-current="activeSection === '#m_equations.Equations.equation_heat_ini'" class="reference internal" href="#m_equations.Equations.equation_heat_ini"><code class="docutils literal notranslate"><span class="pre">Equations.equation_heat_ini()</span></code></a></li>
 <li><a :data-current="activeSection === '#m_equations.Equations.equation_mesh_displacement'" class="reference internal" href="#m_equations.Equations.equation_mesh_displacement"><code class="docutils literal notranslate"><span class="pre">Equations.equation_mesh_displacement()</span></code></a></li>
+<li><a :data-current="activeSection === '#m_equations.Equations.equation_topography_diffusion'" class="reference internal" href="#m_equations.Equations.equation_topography_diffusion"><code class="docutils literal notranslate"><span class="pre">Equations.equation_topography_diffusion()</span></code></a></li>
 <li><a :data-current="activeSection === '#m_equations.Equations.rotate_and_interpolate_stress'" class="reference internal" href="#m_equations.Equations.rotate_and_interpolate_stress"><code class="docutils literal notranslate"><span class="pre">Equations.rotate_and_interpolate_stress()</span></code></a></li>
 <li><a :data-current="activeSection === '#m_equations.Equations.solve_Stokes_problem'" class="reference internal" href="#m_equations.Equations.solve_Stokes_problem"><code class="docutils literal notranslate"><span class="pre">Equations.solve_Stokes_problem()</span></code></a></li>
 <li><a :data-current="activeSection === '#m_equations.Equations.solve_heat_equation'" class="reference internal" href="#m_equations.Equations.solve_heat_equation"><code class="docutils literal notranslate"><span class="pre">Equations.solve_heat_equation()</span></code></a></li>

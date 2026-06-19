@@ -75,16 +75,18 @@
 <div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
 <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
 <ul class="current">
-<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="demos.html"><strong>Demos</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
-<li class="toctree-l2"><a class="reference internal" href="file_tree.html"><strong>File tree</strong></a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermalconvection.html">1. Thermal convection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermalconvectionphase.html">2. Thermal convection with phase transition</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermalcompconvection.html">3. Thermo-compositional convection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="melting.html">4. Thermal convection with melting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tectonics.html">5. Tectonic extension</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filetree.html"><strong>Getting started</strong></a></li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="demos.html"><strong>Tutorials</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="demo1.html">1. Thermal convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo2.html">2. Thermal convection - parametric study</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo3.html">3. Thermal convection with phase transition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo4.html">4. Thermo-compositional convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo5.html">5. Thermal convection with melting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo6.html">6. Tectonic extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo7.html">7. Tectonic compression</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="modules.html"><strong>MilleFEuille modules</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul class="current" x-show="expanded">
+<li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="modules.html"><strong>Computational modules</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul class="current" x-show="expanded">
 <li class="toctree-l2"><a class="reference internal" href="m_boundary_conditions.html">m_boundary_conditions.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_check.html">m_check.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_constants.html">m_constants.py</a></li>
@@ -102,6 +104,11 @@
 <li class="toctree-l2"><a class="reference internal" href="m_timestep.html">m_timestep.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_tracers.html">m_tracers.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="main.html">main.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="modules2.html"><strong>Plotting modules</strong><button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="plot_demo.html">plot_demo*.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_MilleFEuiIle.html">plot_MilleFEuiIle.py</a></li>
 </ul>
 </li>
 </ul>
@@ -123,7 +130,7 @@
 <path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
 </svg>
 </a>
-<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap" href="modules.html"><strong>MilleFEuille modules</strong></a>
+<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap" href="modules.html"><strong>Computational modules</strong></a>
 <div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">m_melting.py</span>
 </nav>
 <div id="content" role="main">
@@ -138,13 +145,13 @@
 <dt class="sig sig-object py" id="m_melting.Melting.add_melt_tracers">
 <span class="sig-name descname"><span class="pre">add_melt_tracers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_melting.Melting.add_melt_tracers" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_melting.Melting.add_melt_tracers'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
 <dd><p>If the temperature in the domain is within a given range below the melting temperature <span class="math notranslate nohighlight">\((T &gt; T_{\rm melt} - dT_{\rm melt\_thresh}\)</span>,
-see <code class="docutils literal notranslate"><span class="pre">T_melt</span></code> and <code class="docutils literal notranslate"><span class="pre">dT_melt_thresh</span></code> in <code class="docutils literal notranslate"><span class="pre">m_parameters.py</span></code>), 
+see <code class="docutils literal notranslate"><span class="pre">T_melt</span></code> and <code class="docutils literal notranslate"><span class="pre">dT_melt_tresh</span></code> in <code class="docutils literal notranslate"><span class="pre">m_parameters.py</span></code>), 
 the number of tracers is checked. If the number of tracers is lower than 10, the tracers are added.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>T_melt</strong> – the melting temperature</p></li>
-<li><p><strong>dT_melt_thresh</strong> – a threshold for adding or removing tracers when melting</p></li>
+<li><p><strong>dT_melt_tresh</strong> – a threshold for adding or removing tracers when melting</p></li>
 </ul>
 </dd>
 </dl>
@@ -167,7 +174,7 @@ domain where <span class="math notranslate nohighlight">\(T &gt; T_{\rm melt} - 
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>T_melt</strong> – melting temperature</p></li>
 <li><p><strong>Lt</strong> – latent heat</p></li>
-<li><p><strong>cp</strong><strong>(</strong><strong>)</strong> – specific heat defined by <code class="xref py py-func docutils literal notranslate"><span class="pre">m_material_parameters.cp()</span></code></p></li>
+<li><p><strong>cp</strong><strong>(</strong><strong>)</strong> – specific heat defined by <a class="reference internal" href="m_material_properties.html#m_material_properties.cp" title="m_material_properties.cp"><code class="xref py py-func docutils literal notranslate"><span class="pre">m_material_properties.cp()</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -176,13 +183,13 @@ domain where <span class="math notranslate nohighlight">\(T &gt; T_{\rm melt} - 
 <dt class="sig sig-object py" id="m_melting.Melting.delete_melt_tracers">
 <span class="sig-name descname"><span class="pre">delete_melt_tracers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#m_melting.Melting.delete_melt_tracers" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_melting.Melting.delete_melt_tracers'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
 <dd><p>If the temperature in the domain drops enough below the melting temperature <span class="math notranslate nohighlight">\((T &lt; T_{\rm melt} - dT_{\rm melt\_thresh}\)</span>,
-see <code class="docutils literal notranslate"><span class="pre">T_melt</span></code> and <code class="docutils literal notranslate"><span class="pre">dT_melt_thresh</span></code> in <code class="docutils literal notranslate"><span class="pre">m_parameters.py</span></code>), 
+see <code class="docutils literal notranslate"><span class="pre">T_melt</span></code> and <code class="docutils literal notranslate"><span class="pre">dT_melt_tresh</span></code> in <code class="docutils literal notranslate"><span class="pre">m_parameters.py</span></code>), 
 the tracers are removed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>T_melt</strong> – melting temperature</p></li>
-<li><p><strong>dT_melt_thresh</strong> – threshold for adding or removing tracers when melting</p></li>
+<li><p><strong>dT_melt_tresh</strong> – threshold for adding or removing tracers when melting</p></li>
 </ul>
 </dd>
 </dl>

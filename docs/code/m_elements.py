@@ -1,9 +1,21 @@
 from dolfin import *
-from m_parameters_docs import *
+from m_parameters import *
 
 class Elements:
     
     def __init__(self, MeshClass):
+        class PeriodicBoundaryLR(SubDomain):
+            # Left boundary is "target domain"
+            def inside(self, x,on_boundary):
+                return bool(x[0] < DOLFIN_EPS and x[0] > -DOLFIN_EPS and on_boundary)
+
+            # Map right boundary to left boundary
+            def map(self, x, y):
+                y[0] = length - x[0]
+                y[1] = x[1]
+
+        pbc_ns = PeriodicBoundaryLR()
+
         self.mesh = MeshClass.mesh
         
         sDG0_elem = FiniteElement("DG", self.mesh.ufl_cell(), 0) 
@@ -13,24 +25,38 @@ class Elements:
         self.tDG0 = FunctionSpace(self.mesh, tDG0_elem)
 
         vCG1_elem = VectorElement("Lagrange", self.mesh.ufl_cell(), 1)  
-        self.vCG1 = FunctionSpace(self.mesh, vCG1_elem)
-
         vCG2_elem = VectorElement("Lagrange", self.mesh.ufl_cell(), 2)
-        self.vCG2 = FunctionSpace(self.mesh, vCG2_elem)
-
+        
         sCG1_elem = FiniteElement("Lagrange", self.mesh.ufl_cell(), 1)
-        self.sCG1 = FunctionSpace(self.mesh, sCG1_elem)
-
         sCG2_elem = FiniteElement("Lagrange", self.mesh.ufl_cell(), 2)
-        self.sCG2 = FunctionSpace(self.mesh, sCG2_elem)
+
+        if (periodic_BCs == True):
+            self.sCG1 = FunctionSpace(self.mesh, sCG1_elem, constrained_domain = pbc_ns)
+            self.sCG2 = FunctionSpace(self.mesh, sCG2_elem, constrained_domain = pbc_ns)
+
+            self.vCG1 = FunctionSpace(self.mesh, vCG1_elem, constrained_domain = pbc_ns)
+            self.vCG2 = FunctionSpace(self.mesh, vCG2_elem, constrained_domain = pbc_ns)
+            
+        else:
+            self.sCG1 = FunctionSpace(self.mesh, sCG1_elem)
+            self.sCG2 = FunctionSpace(self.mesh, sCG2_elem)
+            
+            self.vCG1 = FunctionSpace(self.mesh, vCG1_elem)
+            self.vCG2 = FunctionSpace(self.mesh, vCG2_elem)
 
         if (stokes_elements == "Mini"):
             vB_elem  = VectorElement("B", self.mesh.ufl_cell(), self.mesh.topology().dim() + 1)
-            self.V = FunctionSpace(self.mesh, MixedElement([sCG1_elem, vCG1_elem, vB_elem]))
+            if (periodic_BCs == True):
+                self.V = FunctionSpace(self.mesh, MixedElement([sCG1_elem, vCG1_elem, vB_elem]), constrained_domain = pbc_ns)
+            else:
+                self.V = FunctionSpace(self.mesh, MixedElement([sCG1_elem, vCG1_elem, vB_elem]))
             self.stokes_space = self.sCG1
             
         if (stokes_elements == "TH"):
-            self.V = FunctionSpace(self.mesh, MixedElement([sCG1_elem, vCG2_elem]))
+            if (periodic_BCs == True):
+                self.V = FunctionSpace(self.mesh, MixedElement([sCG1_elem, vCG2_elem]), constrained_domain = pbc_ns)
+            else:
+                self.V = FunctionSpace(self.mesh, MixedElement([sCG1_elem, vCG2_elem]))
             self.stokes_space = self.sCG2
 
         self._Temp  = TrialFunction(self.sCG2)
@@ -45,7 +71,6 @@ class Elements:
         self.heating_shear = Function(self.sDG0)
         self.visc = Function(self.sDG0)
         self.eta_v = Function(self.sDG0)
-        self.log10_visc = Function(self.sDG0)
         self.delta_T = Function(self.sDG0)
 
         self.plastic_strain     = Function(self.sDG0)
@@ -67,6 +92,9 @@ class Elements:
         self.stress_dev_inv_k     = Function(self.sDG0)
         self.strain_rate_inv     = Function(self.sDG0)
         self.cohesion            = Function(self.sDG0)
+        self.mechanisms            = Function(self.sDG0)
+        self.diff_coef             = Function(self.sDG0)
+
         
         self.iteration_error     = Function(self.sCG1)
 

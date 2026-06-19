@@ -28,35 +28,13 @@ evolution of ice shells of icy bodies. Combining finite element method and Lagra
 
 |
 
-Installation and running
--------------------------
+Support
+--------------------------
 
-You can download the most recent version of MilleFEuiIle `here <https://doi.org/10.5281/zenodo.18641506>`_ , which is
-built up on `FEniCS 2019.2.0 <https://fenicsproject.org/download/archive/>`_ .
+Information on the methodology and the benchmarks performed can be found in Chapter 4 of my `dissertation thesis. <https://geo.mff.cuni.cz/theses/2025-Kihoulou-PhD.pdf>`_
 
-To launch at *N* cores, type into the command line
-
-.. code-block:: bash
-   :emphasize-lines: 1
-
-   mpirun -n N main.py > log.out 2> log_e.out&
-
-You can also use the predefined **bash script**, where the number of cores and the name of the current parameter file can be preset (e.g., ``m_parameters_europa.py``).
-The script renames the main file and the terminal output accordingly (``main_europa.py``, ``europa.out`` and ``europa_e.out``),
-and runs the simulation on background
-
-.. code-block:: bash
-   :emphasize-lines: 1
-
-   bash run_MilleFEuiIle.sh &
-
-|
-
-Visualization
--------------------------
-For visualization of the mesh data, use `Paraview <https://www.paraview.org/>`_, or the example matplotlib scripts in :ref:`demos`.
-
-
+This page was last updated on |today| and is still under development. With any questions, issues or ideas, please contact 
+me at `martin.kihoulou@mff.cuni.cz <mailto:martin.kihoulou@mff.cuni.cz>`_\ .
 
 |
 
@@ -78,21 +56,13 @@ For thermal convection, free surface, **tectonic deformation**:
 
 |
 
-Support
---------------------------
-
-Information on the methodology and the benchmarks can be found in my `dissertation thesis. <https://geo.mff.cuni.cz/theses/2025-Kihoulou-PhD.pdf>`_
-
-This page was last updated on |today| and is still under development. With any questions, issues or ideas, please contact 
-me at `martin.kihoulou@mff.cuni.cz <mailto:martin.kihoulou@mff.cuni.cz>`_\ .
-
-|
-
 Explore
 --------------------------
 .. toctree::
    :maxdepth: 3
    :includehidden:
 
+   filetree
    demos
    modules
+   modules2

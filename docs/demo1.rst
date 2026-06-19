@@ -1,0 +1,562 @@
+.. _1_convection:
+
+1. Thermal convection 
+=======================
+
+.. figure:: code/demo1/demo1.gif
+
+    Thermal convection in an ice shell.
+
+-----------------
+Download
+-----------------
+
+Here you can download the :download:`bash script <code/demo1/run_MilleFEuiIle_demo1.sh>`\, the :download:`parameter file <code/demo1/m_parameters_demo1.py>`\ and the :download:`matplotlib script <code/demo1/plot_demo1.py>`\ for the animation.
+Detailed explanation is given below.
+
+----------------------------
+Bash script
+----------------------------
+
+We set the bash script in such a way that it runs the simulation on 4 cores in the background,
+with the parameter file named ``m_parameters_demo1.py``.
+
+.. code-block:: shell
+    :emphasize-lines: 2, 5, 11, 17, 20
+
+    # --- Number of cores ---
+    n_cores=4
+
+    # --- Maximum number of cores the script can take ---
+    n_cores_max=8
+
+    # --- Running on background or foreground ---
+    # background=0 -> running on foreground and output to screen
+    # background=1 -> running on background and output to file
+    # >>> Note that a choice loop=1 or loop=2 below always write to file
+    background=1
+
+    # --- Loop over parameters? ---
+    # loop=0 -> script launches the code once
+    # loop=1 -> script launches a parametric sweep with one simulation at a time, running at n_cores cores
+    # loop=2 -> script launches as much as possible until n_cores_max, launches next as the previous ones end
+    loop=0
+
+    # --- Unique extension to parameter and main file (m_parameters_*.py) ---
+    name="demo1"
+
+----------------------------
+Parameter file line by line
+----------------------------
+
+The parameter file contains all parameters that can be set. Only some of them 
+are needed for every setting, therefore here only the active ones are highlighted.
+
+^^^^^^^^^^^^^^^^^^^^^^^
+Files settings
+^^^^^^^^^^^^^^^^^^^^^^^
+
+We start with the directory name 
+
+.. code-block:: python
+    :emphasize-lines: 2
+
+    # --- Name of the directory with results ---
+    name = "demo_convection"
+
+The directory protection will be turned off, meaning that when lauched repeatedly,
+the results will be overwritten each time
+
+.. code-block:: python
+    :emphasize-lines: 2
+
+    # Protection from overwriting the directory above
+    protect_directory = False
+
+We will start the simulation from scratch, therefore reloading will be turned off.
+The ``reload_name``, ``reload_step``, and ``restart_time`` parameters are now inactive.
+
+.. code-block:: python
+    :emphasize-lines: 2
+
+    # --- Whether or not to load HDF5 data from reload_name/HDF5/data.h5 --- 
+    reload 		= False
+
+    # --- Name of the directory from which the data will be reloaded ---
+    reload_name 		= ""
+
+    # ---  Time stamp of the HDF5 file which will be loaded ---
+    reload_step			= 10
+
+^^^^^^^^^^^^^^^^^^^^^^^
+Time settings
+^^^^^^^^^^^^^^^^^^^^^^^
+
+We choose the time units to millions of years (``time_units_string``). 
+The simulation will run for 20 Myr (``termination_condition``) and 
+an output will be made every 100 kyr (``output_frequency``).
+
+.. There has to be an empty line afterwards
+.. code-block:: python
+    :emphasize-lines: 4
+
+    # --- In what units the time will be? ---
+    # 1.0 - seconds or nondimensional, or yr, kyr or Myr
+    # --- String representation of time_units ---
+    time_units_string = "Myr"
+
+    # --- Criterion for ending the simulation, e.g., ["time", 1*Myr], ["step", 1000] or ["initial_condition", *]---
+    termination_condition = ["time", 20*Myr]
+
+    # --- Output method for Paraview, HDF5 and tracers ---
+    output_frequency = ["time", 100*kyr]
+
+The simulation require no tracers. The ``Tracers_Output`` and ``Tracers_header`` will
+remain empty. (And when the tracers are required, they are filled automatically, but
+custom properties can still be defined)
+
+.. code-block:: python
+    :emphasize-lines: 2, 5
+
+    # --- What properties to save? Must be one of the following (order does not matter):
+    Tracers_Output = [] # KEEP EMPTY, will be filled automatically
+
+    # --- Headers for the columns in the text file for tracers
+    Tracers_header = [] # KEEP EMPTY, will be filled automatically
+
+To visualize the results in Paraview, we will save temperature, velocity, and viscosity.
+For initial condition, we will save only temperature.
+
+.. code-block:: python
+    :emphasize-lines: 2, 4
+
+    # --- What functions to write into Paraview and HDF5 file ---
+    Paraview_Output = ["temperature", "velocity", "viscosity"]
+
+    Paraview_Output_Ini = ["temperature"]
+
+To the statistics text file, the heat flux through the top boundary,
+time (in the units specified above, i.e., Myr)
+and the duration of the time step will be saved. We also choose corresponding headers.
+
+.. code-block:: python
+    :emphasize-lines: 2, 5
+
+    # --- What values to print in a text file every time step? ---
+    stat_output = ["q_top", "time", "timestep"]
+
+    # --- Headers for the columns in the text file
+    stat_header = ["q_top (W/m2)", "Time (h)", "dt (s)"]
+
+|
+
+^^^^^^^^^^^^^^^^^^^^^^^
+Mesh settings
+^^^^^^^^^^^^^^^^^^^^^^^
+
+The computational domain will be 100 km thick and 200 km long. The mesh will be created
+during the inicialization, using crossed geometry of the elements. The basic elements will have 
+the longest side of 2 km and the mesh will not be refined.
+
+.. code-block:: python
+    :emphasize-lines: 2, 5, 8, 11, 14, 17, 20, 23, 26
+
+    # --- Mesh height ---
+    height = 100e3 # m
+
+    # --- Mesh length ---
+    length = 200e3 # m
+
+    # --- Whether to read an external mesh ---
+    loading_mesh = False
+
+    # --- Mesh to be loaded ---
+    mesh_name 	= ""
+
+    # --- Basic mesh resolution if not loading mesh ---
+    z_div = 50
+
+    # --- Number of nodes in horizontal direction ---
+    x_div = int(z_div*(length/height)) # (keeps aspect ratio 1)
+
+    # --- Method of dividing basic squares into mesh triangle elements. ---
+    triangle_types = "crossed" # crossed, left, right, left/right, right/left
+
+    # --- Rectangular mesh refinement ---
+    refinement = []
+
+    # --- Initial topography ---
+    initial_topography = False
+
+    # --- Initial top topography ---
+    h_top_ini = Expression("0.0", l = length, pi = np.pi, degree = 1)
+
+    # --- Initial bottom topography ---
+    h_top_ini = Expression("0.0", l = length, pi = np.pi, degree = 1)
+
+|
+
+^^^^^^^^^^^^^^^^^^^^^^^
+Material composition
+^^^^^^^^^^^^^^^^^^^^^^^
+
+The ice will consist of pure ice, therefore the list ``materials`` will remain empty.
+Other options can be left as they are, as they are inactive.
+
+.. code-block:: python
+    :emphasize-lines: 1
+
+    materials = []
+
+    empty_cells_allowed = False
+
+    empty_cells_composition = 0
+
+    empty_cells_region = [] 
+
+|
+
+^^^^^^^^^^^^^^^^^^^^^^^
+Stokes problem settings
+^^^^^^^^^^^^^^^^^^^^^^^
+
+For the discretization of the velocity, we choose Mini elements
+The time step will be computed from the highest velocity and smallest element side
+in the domain, and assigned after solving the Stokes problem. The CFL coefficient will be 
+0.5. Since the rheology will be Newtonian (only temperature-dependent viscosity), the 
+variables related to Picard iterations can be disregarded.
+
+.. code-block:: python
+    :emphasize-lines: 1,3,5,16
+
+    stokes_elements = "Mini"
+
+    time_step_position = "stokes" #stokes (right after Stokes problem) or "end" (at the end of the time loop)
+
+    time_step_strategy = "domain"
+
+    dt_const = 1.0*kyr
+
+    maximum_time_step = False
+    dt_max = 0.1*Myr
+
+    scaled_time_step = False
+    time_step_scaling = 25 # dt = t / time_step_scaling
+
+    # --- The CFL parameter ---
+    cfl = 0.5
+
+    # ---  Maximum number of Stokes solver Picard iterations ---
+    Picard_iter_max 	= 10
+
+    # --- Minimum relative error in velocity field ---
+    Picard_iter_error 	= 1e-3
+
+    error_type          = "integrated" # "maximum or integrated"
+
+For the boundary conditions we prescribe free slip everywhere. The mesh will not be moving,
+therefore the mesh displacement settings do not matter. Integration method is relevant only
+fir tracers.
+
+.. code-block:: python
+    :emphasize-lines: 2,3,4,5
+
+    # Boundary conditions for velocity (free_slip, no_slip, free surface, velocity, velocity_x, velocity_y)
+    BC_Stokes_problem = [["free_slip"], # top boundary       (1)
+                        ["free_slip"],  # bottom boundary    (2)
+                        ["free_slip"],  # left boundary      (3)
+                        ["free_slip"]]  # right boundary     (4)
+
+    mesh_displacement_laplace = "full"  #"full_laplace" or "z_only"
+
+    # Method for correcting velocity field in case of multiple free surface conditions
+    stokes_null = "boundary"
+
+    integration_method = "RK4" # Euler, RK2, RK4
+
+    tracers_per_cell = 10
+
+    weight_tracers_by_ratio = False
+
+|
+
+^^^^^^^^^^^^^^^^^^^^^^^
+Heat transfer settings
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Since we solve thermal convection, the heat transfer equation needs to be solved. The nonlinearity
+is rather weak (:math:`k` and :math:`c_p`) are temperature dependent, therefore linear solver can be used.
+At the surface and ice-water boudnary, we prescribe temperature, while the lateral boundaries 
+are adiabatic. The reference temperature is set to 265 K. Parameters related to radiative boundary condition
+will not be used.
+
+.. code-block:: python
+    :emphasize-lines: 2,5,8,9,10,11,14
+
+    # --- Solve heat transfer? ---
+    solve_energy_problem = True
+
+    # --- Whether the heat transfer should be solved with nonlinear solver ---
+    nonlinear_heat_equation = False
+
+    # --- Boundary condition for heat transfer equation ---
+    BC_heat_transfer   = [["temp", 90.0],     # top boundary    (1)
+                        ["temp", 265.0],     # bottom boundary (2)
+                        ["heat_flux", 0.0],  # left boundary   (3)
+                        ["heat_flux", 0.0]]  # right boundary  (4)
+
+    # --- Reference temperature ---
+    T_ref 	= 273.0 # K
+
+    # --- Insolation parametes ---
+    emis 	= 0.97         	# Ice emissivity
+    albedo 	= 0.67
+    dist_AU = 5.2			# Object's distance from Sun in AU
+    insolation = insol_1AU/dist_AU**2
+
+|
+
+In the absence of tidal heating, the melting is not expected to occur. As an initial condition,
+a conductive profile will be solved and perturbed by a cosine wave.
+
+.. code-block:: python
+    :emphasize-lines: 3,9,19,22,25,28
+
+    # --- Melting inside the shell ---
+    # --- Whether generate partial melt if the temperature of the solid reaches T_melt ---
+    internal_melting = False
+
+    # --- Melting temperature of the solid ---
+    T_melt = 270.0	# K
+
+    # --- Tidal heating ---
+    tidal_dissipation           = False
+
+    initial_tidal_dissipation   = False
+    heating_model               = "Maxwell" # Maxwell, Andrade or none
+    H_max = 4e-6 # W m^{-3}
+
+    # Andrade parameters
+    alpha_and = 0.2
+
+    # --- Find conductive initial condition ---
+    init_cond_profile = True
+
+    # --- Cosine perturbation of initial temperature ---
+    cos_perturbation = True
+
+    # --- Thermal perturbation amplitude ---
+    perturb_ampl 	= 5 # K
+
+    # --Number of half-cosine waves in lateral direction ---
+    perturb_freq 	= 1 
+
+|
+
+^^^^^^^^^^^^^^^^^^^^^^^
+Rheology
+^^^^^^^^^^^^^^^^^^^^^^^
+
+To mimic Titan's ice shell, we prescribe corresponding gravity and ice physical properties.
+Since the density is directly given by a temperature-dependent formula
+in ``m_material_properties.py``, the thermal expansivity here is inactive.
+
+.. code-block:: python
+    :emphasize-lines: 2,5,8,11
+
+    # --- Gravity acceleratuin ---
+    g 		= 1.3				# m s^-2
+
+    # --- Density of the domain solid ---
+    rho_s 	= 920.0 # kg/m3
+
+    # --- Density of the liquid below the domain ---
+    rho_l 	= 1000.0 # kg/m3
+
+    # --- Density of the melt produced by the solid ---
+    rho_m 	= rho_l # kg/m3
+
+    alpha_exp = 1.6e-4	# K^-1
+
+|
+
+Solving for a viscous flow only, the plasticity and elasticity will not be taken account.
+Since there is a free slip boundary condition at the bottom boundary,
+the phase transition and its parameters are inactive. The top surface is immobile as well,
+therefore adaptive smoothing is inactive.
+
+.. code-block:: python
+    :emphasize-lines: 2,4,7
+
+    # --- Rheology ---
+    elasticity = False
+
+    plasticity = False
+
+    # --- Phase transition at the bottom boundary ----
+    phase_transition = False
+
+    # --- Strength of the phase transition at the ice-water boundary ---
+    DAL_factor 	= 1e-1 # W/m3
+
+    # --- Latent heat of the material ---
+    Lt 			= 334.0e3 # J/kg
+
+    # --- Adaptive topography diffusion and topography diffusion factor ---
+    adaptive_smoothing = False
+    topo_diff = 1e-8*time_scaling
+
+|
+
+The viscosity will be only temperature-dependent, with viscosity at melting temperature
+:math:`10^{15}` Pa s, activation energy 60 kJ/mol, and cut-off value :math:`10^{23}` Pa s.
+The grain size and parameters for plasticity are inactive.
+
+.. code-block:: python
+    :emphasize-lines: 2,5,8,14
+
+    # --- VISCOSITY ---
+    viscosity_type = "temp-dep" # constant, temp-dep, GK_2001 (Goldsby and Kohlstedt, 2001) or composition
+
+    # --- Parameters for constant / temperature-dependent viscosity ---
+    eta_0 = 1e15	# Pa.s
+
+    # --- Activation energy ---
+    Q_activ = 60e3 	# J/mol
+
+    # --- Grain size ---
+    d_grain = 1.0e-3
+
+    # --- Upper cut-off viscosity ---
+    eta_max = 1e23
+
+    # --- Lower cut-off value for plastic viscosity ---
+    eta_min_plast = eta_max/1e6
+    eta_min = 1e10 
+
+    # # --- Elasticity ---
+    # If elasticity is off, we can compute the new viscosity directly from the strain rate (it will be faster)
+    # However, the stress formula + VEP iterations would work too
+    stress_iter_error = 1e-4
+
+    # --- Plasticity ---
+    # --- Angle of internal friction in degrees ---
+    int_friction_angle = 16.0
+    int_friction_angle2 = 0.0
+
+    # --- Cohesion of an undamaged material ---
+    cohesion_strong = 1e6
+
+    # --- Cohesion of a fully damaged material ---
+    cohesion_weak = 0.0
+
+    yield_stress_max, yield_stress_min = 1e8, 0.1
+
+    # --- Value of the plastic strain at which the material starts to accumulate damage ---
+    eps_strong = 0
+
+    # --- Critical value of the plastic strain beyond which the material is considered as fully damaged ---
+    eps_weak = 0.2
+
+    # --- Whether the accumulated plastic strain decreases in time ---
+    healing = False
+
+    # --- Characteristic time scale for the microscopic healing processes ---
+    healing_timescale = 300*kyr
+
+----------------------------
+Reloading
+----------------------------
+
+----------------------------
+Plotting
+----------------------------
+
+In the script ``plot_demo1.py``, we will plot the evolution of the temperature 
+field from the simulation and make an animation.
+
+These are the basic variables that need to be set for the plotting script:
+
+- ``name`` is the directory with the data 
+- ``skip_plotting`` jumps directly to making an animation
+- ``plot_streamlines`` plots streamlines of the velocity field, see the next demo
+- ``plot_comp_tracers`` plots the composition of the tracers
+- ``plot_melt_tracers`` plots the melt fraction on the tracers
+- ``show_time`` shows the time in the top left corner
+- ``plot_scalebar`` plots the scale bar within the image frame
+- ``plot_axes`` plots the axes
+- ``i_start`` determines from which time step the plotting starts
+
+
+.. code-block:: python
+    :emphasize-lines: 1,3,5,7,9,11,13,15,17
+
+    name = "demo_convection"
+
+    skip_plotting = False
+
+    plot_streamlines = False
+
+    plot_tracers = False
+
+    plot_melt_tracers = False
+
+    show_time = True
+
+    plot_scalebar = False
+
+    plot_axes = True
+
+    i_start = 0 
+
+Next, the properties for the axes and color bars are set.
+
+.. code-block:: python
+    :emphasize-lines: 4,5,6,8,9,10,13,14,15
+
+    if (skip_plotting == False):
+        font_size = 14
+
+        x_label = ["0", "100", "200"]
+        x_label_val = [0, 100e3, 200e3]
+        x_label_text = "x (km)"
+
+        z_label = ["0", "100"]
+        z_label_val = [0, 100e3]
+        z_label_text = "z (km)"
+
+        # --- Values for temperature color bar ---
+        c_label = ["90", "185", "265"]
+        c_label_val = [90, 185, 265]
+        c_label_text = "Temperature (K)"
+
+        # --- Values for viscosity color bar ---
+        # c_label = ["14", "18", "23"]
+        # c_label_val = [14, 18, 23]
+        # c_label_text = r"log$_{10}$ viscosity (Pa s)"
+
+        # --- Values for melt fraction color bar ---
+        m_label = ["0", "3", "6"]
+        m_label_val = [0, 3e-2, 6e-2]
+        m_label_text = "Melt fraction (%)"
+
+        .
+        .
+        .
+
+Later, in this part, FEniCS functions are read.
+
+.. code-block:: python
+    :emphasize-lines: 3,5,6,8,9,10,11
+
+    # ---- In each time step, initialize mesh, funciton spaces and functions ---
+    # (necessary when the mesh changes shape)
+    mesh, sCG2, vCG1, sDG0 = initialize(name, hdf5_step)
+
+    Temp = Function(sCG2)
+    v = Function(vCG1)
+
+    Temp, v  = load(name, hdf5_step,
+                    "temperature", Temp,
+                    "velocity", v
+                    )

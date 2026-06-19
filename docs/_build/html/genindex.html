@@ -106,16 +106,18 @@
     <div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
       <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
   <ul>
-<li class="toctree-l1"><a class="reference internal" href="demos.html"><strong>Demos</strong></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="file_tree.html"><strong>File tree</strong></a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermalconvection.html">1. Thermal convection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermalconvectionphase.html">2. Thermal convection with phase transition</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermalcompconvection.html">3. Thermo-compositional convection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="melting.html">4. Thermal convection with melting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tectonics.html">5. Tectonic extension</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filetree.html"><strong>Getting started</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos.html"><strong>Tutorials</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="demo1.html">1. Thermal convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo2.html">2. Thermal convection - parametric study</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo3.html">3. Thermal convection with phase transition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo4.html">4. Thermo-compositional convection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo5.html">5. Thermal convection with melting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo6.html">6. Tectonic extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="demo7.html">7. Tectonic compression</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html"><strong>MilleFEuille modules</strong></a><ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html"><strong>Computational modules</strong></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="m_boundary_conditions.html">m_boundary_conditions.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_check.html">m_check.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_constants.html">m_constants.py</a></li>
@@ -133,6 +135,11 @@
 <li class="toctree-l2"><a class="reference internal" href="m_timestep.html">m_timestep.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="m_tracers.html">m_tracers.py</a></li>
 <li class="toctree-l2"><a class="reference internal" href="main.html">main.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules2.html"><strong>Plotting modules</strong></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="plot_demo.html">plot_demo*.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_MilleFEuiIle.html">plot_MilleFEuiIle.py</a></li>
 </ul>
 </li>
 </ul>
@@ -178,6 +185,8 @@
   <h2 id="A">A</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="m_parameters.html#m_parameters_docs.adaptive_smoothing">adaptive_smoothing (in module m_parameters_docs)</a>
+</li>
       <li><a href="m_melting.html#m_melting.Melting.add_melt_tracers">add_melt_tracers() (m_melting.Melting method)</a>
 </li>
       <li><a href="m_tracers.html#m_tracers.Tracers.add_tracers">add_tracers() (m_tracers.Tracers method)</a>
@@ -188,9 +197,13 @@
   <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
       <li><a href="m_tracers.html#m_tracers.Tracers.advect_tracers">advect_tracers() (m_tracers.Tracers method)</a>
 </li>
+      <li><a href="m_parameters.html#m_parameters_docs.albedo">albedo (in module m_parameters_docs)</a>
+</li>
       <li><a href="m_boundary_conditions.html#m_boundary_conditions.apply_temperature_BC">apply_temperature_BC() (in module m_boundary_conditions)</a>
 </li>
       <li><a href="m_boundary_conditions.html#m_boundary_conditions.apply_velocity_BC">apply_velocity_BC() (in module m_boundary_conditions)</a>
+</li>
+      <li><a href="m_filenames.html#m_filenames.SaveFiles.assign_dictionaries">assign_dictionaries() (m_filenames.SaveFiles method)</a>
 </li>
   </ul></td>
   </tr>
@@ -236,6 +249,8 @@
 </li>
       <li><a href="m_melting.html#m_melting.Melting.compute_melting">compute_melting() (m_melting.Melting method)</a>
 </li>
+      <li><a href="plot_MilleFEuiIle.html#plot_MilleFEuiIle.compute_streamlines">compute_streamlines() (in module plot_MilleFEuiIle)</a>
+</li>
       <li><a href="m_equations.html#m_equations.Equations.compute_u">compute_u() (m_equations.Equations method)</a>
 </li>
       <li><a href="m_parameters.html#m_parameters_docs.cos_perturbation">cos_perturbation (in module m_parameters_docs)</a>
@@ -259,13 +274,23 @@
 </li>
       <li><a href="m_mesh.html#m_mesh.MeshModule.define_boundaries">define_boundaries() (m_mesh.MeshModule method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="plot_demo.html#plot_demo.define_labels">define_labels() (in module plot_demo)</a>
+</li>
+      <li><a href="plot_demo.html#plot_demo.define_streamlines">define_streamlines() (in module plot_demo)</a>
+</li>
       <li><a href="m_tracers.html#m_tracers.Tracers.delete_and_find">delete_and_find() (m_tracers.Tracers method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
       <li><a href="m_melting.html#m_melting.Melting.delete_melt_tracers">delete_melt_tracers() (m_melting.Melting method)</a>
 </li>
       <li><a href="m_mesh.html#m_mesh.detect_oscillations">detect_oscillations() (in module m_mesh)</a>
+</li>
+      <li><a href="m_parameters.html#m_parameters_docs.dist_AU">dist_AU (in module m_parameters_docs)</a>
+</li>
+      <li><a href="m_parameters.html#m_parameters_docs.dt_const">dt_const (in module m_parameters_docs)</a>
+</li>
+      <li><a href="m_parameters.html#m_parameters_docs.dt_max">dt_max (in module m_parameters_docs)</a>
 </li>
       <li><a href="m_parameters.html#m_parameters_docs.dT_melt_tresh">dT_melt_tresh (in module m_parameters_docs)</a>
 </li>
@@ -279,6 +304,8 @@
       <li><a href="m_parameters.html#m_parameters_docs.elasticity">elasticity (in module m_parameters_docs)</a>
 </li>
       <li><a href="m_elements.html#m_elements.Elements">Elements (class in m_elements)</a>
+</li>
+      <li><a href="m_parameters.html#m_parameters_docs.emis">emis (in module m_parameters_docs)</a>
 </li>
       <li><a href="m_parameters.html#m_parameters_docs.empty_cells_allowed">empty_cells_allowed (in module m_parameters_docs)</a>
 </li>
@@ -302,9 +329,11 @@
 </li>
       <li><a href="m_equations.html#m_equations.Equations.equation_mesh_displacement">equation_mesh_displacement() (m_equations.Equations method)</a>
 </li>
+      <li><a href="m_equations.html#m_equations.Equations.equation_Stokes">equation_Stokes() (m_equations.Equations method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
-      <li><a href="m_equations.html#m_equations.Equations.equation_Stokes">equation_Stokes() (m_equations.Equations method)</a>
+      <li><a href="m_equations.html#m_equations.Equations.equation_topography_diffusion">equation_topography_diffusion() (m_equations.Equations method)</a>
 </li>
       <li><a href="m_equations.html#m_equations.Equations">Equations (class in m_equations)</a>
 </li>
@@ -330,6 +359,10 @@
 </li>
       <li><a href="m_parameters.html#m_parameters_docs.eta_min">eta_min (in module m_parameters_docs)</a>
 </li>
+      <li><a href="m_parameters.html#m_parameters_docs.eta_min_plast">eta_min_plast (in module m_parameters_docs)</a>
+</li>
+      <li><a href="plot_MilleFEuiIle.html#plot_MilleFEuiIle.extract_cell_data">extract_cell_data() (in module plot_MilleFEuiIle)</a>
+</li>
   </ul></td>
   </tr>
       </table>
@@ -350,13 +383,17 @@
 </li>
       <li><a href="m_rheology.html#m_rheology.G">G() (in module m_rheology)</a>
 </li>
+      <li><a href="m_parameters.html#m_parameters_docs.G_ice">G_ice (in module m_parameters_docs)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
-      <li><a href="m_parameters.html#m_parameters_docs.G_ice">G_ice (in module m_parameters_docs)</a>
+      <li><a href="m_rheology.html#m_rheology.get_mechanisms">get_mechanisms() (in module m_rheology)</a>
 </li>
       <li><a href="m_rheology.html#m_rheology.get_new_stress">get_new_stress() (in module m_rheology)</a>
 </li>
       <li><a href="m_rheology.html#m_rheology.get_new_stress_iter">get_new_stress_iter() (in module m_rheology)</a>
+</li>
+      <li><a href="m_rheology.html#m_rheology.get_yield_function">get_yield_function() (in module m_rheology)</a>
 </li>
   </ul></td>
   </tr>
@@ -367,6 +404,8 @@
   <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
       <li><a href="m_parameters.html#m_parameters_docs.h_bot_ini">h_bot_ini (in module m_parameters_docs)</a>
 </li>
+      <li><a href="m_parameters.html#m_parameters_docs.H_max">H_max (in module m_parameters_docs)</a>
+</li>
       <li><a href="m_parameters.html#m_parameters_docs.h_top_ini">h_top_ini (in module m_parameters_docs)</a>
 </li>
   </ul></td>
@@ -374,6 +413,8 @@
       <li><a href="m_parameters.html#m_parameters_docs.healing">healing (in module m_parameters_docs)</a>
 </li>
       <li><a href="m_parameters.html#m_parameters_docs.healing_timescale">healing_timescale (in module m_parameters_docs)</a>
+</li>
+      <li><a href="m_parameters.html#m_parameters_docs.heating_model">heating_model (in module m_parameters_docs)</a>
 </li>
       <li><a href="m_parameters.html#m_parameters_docs.height">height (in module m_parameters_docs)</a>
 </li>
@@ -384,16 +425,22 @@
   <h2 id="I">I</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="plot_demo.html#plot_demo.i_start">i_start (in module plot_demo)</a>
+</li>
       <li><a href="m_parameters.html#m_parameters_docs.init_cond_profile">init_cond_profile (in module m_parameters_docs)</a>
+</li>
+      <li><a href="m_parameters.html#m_parameters_docs.initial_tidal_dissipation">initial_tidal_dissipation (in module m_parameters_docs)</a>
 </li>
       <li><a href="m_parameters.html#m_parameters_docs.initial_topography">initial_topography (in module m_parameters_docs)</a>
 </li>
-      <li><a href="m_boundary_conditions.html#m_boundary_conditions.Point_Fixed_Pressure.inside">inside() (m_boundary_conditions.Point_Fixed_Pressure method)</a>
+      <li><a href="plot_MilleFEuiIle.html#plot_MilleFEuiIle.initialize">initialize() (in module plot_MilleFEuiIle)</a>
 </li>
-      <li><a href="m_parameters.html#m_parameters_docs.int_friction_angle2">int_friction_angle2 (in module m_parameters_docs)</a>
+      <li><a href="m_boundary_conditions.html#m_boundary_conditions.Point_Fixed_Pressure.inside">inside() (m_boundary_conditions.Point_Fixed_Pressure method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="m_parameters.html#m_parameters_docs.int_friction_angle">int_friction_angle (in module m_parameters_docs)</a>
+</li>
       <li><a href="m_parameters.html#m_parameters_docs.integration_method">integration_method (in module m_parameters_docs)</a>
 </li>
       <li><a href="m_parameters.html#m_parameters_docs.interface">interface() (in module m_parameters_docs)</a>
@@ -403,6 +450,8 @@
       <li><a href="m_tracers.html#m_tracers.Tracers.introduce_tracers">introduce_tracers() (m_tracers.Tracers method)</a>
 </li>
       <li><a href="m_tracers.html#m_tracers.Tracers.introduce_tracers_unstructured">introduce_tracers_unstructured() (m_tracers.Tracers method)</a>
+</li>
+      <li><a href="m_tracers.html#m_tracers.Tracers.introduce_tracked_tracers">introduce_tracked_tracers() (m_tracers.Tracers method)</a>
 </li>
   </ul></td>
   </tr>
@@ -422,15 +471,19 @@
   <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
       <li><a href="m_parameters.html#m_parameters_docs.length">length (in module m_parameters_docs)</a>
 </li>
-      <li><a href="m_filenames.html#m_filenames.SaveFiles.Load_HDF5">Load_HDF5() (m_filenames.SaveFiles method)</a>
+      <li><a href="plot_MilleFEuiIle.html#plot_MilleFEuiIle.load">load() (in module plot_MilleFEuiIle)</a>
 </li>
-      <li><a href="m_mesh.html#m_mesh.MeshModule.Load_Mesh">Load_Mesh() (m_mesh.MeshModule method)</a>
+      <li><a href="plot_MilleFEuiIle.html#plot_MilleFEuiIle.load_comp_tracers">load_comp_tracers() (in module plot_MilleFEuiIle)</a>
+</li>
+      <li><a href="m_filenames.html#m_filenames.SaveFiles.load_HDF5">load_HDF5() (m_filenames.SaveFiles method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
-      <li><a href="m_tracers.html#m_tracers.Tracers.load_tracers">load_tracers() (m_tracers.Tracers method)</a>
+      <li><a href="plot_MilleFEuiIle.html#plot_MilleFEuiIle.load_melt_tracers">load_melt_tracers() (in module plot_MilleFEuiIle)</a>
 </li>
-      <li><a href="m_parameters.html#m_parameters_docs.loading_mesh">loading_mesh (in module m_parameters_docs)</a>
+      <li><a href="m_mesh.html#m_mesh.MeshModule.load_mesh">load_mesh() (m_mesh.MeshModule method)</a>
+</li>
+      <li><a href="m_tracers.html#m_tracers.Tracers.load_tracers">load_tracers() (m_tracers.Tracers method)</a>
 </li>
       <li><a href="m_parameters.html#m_parameters_docs.Lt">Lt (in module m_parameters_docs)</a>
 </li>
@@ -566,15 +619,17 @@
 </li>
       <li><a href="m_rheology.html#m_rheology.max_function">max_function() (in module m_rheology)</a>
 </li>
+      <li><a href="m_parameters.html#m_parameters_docs.maximum_time_step">maximum_time_step (in module m_parameters_docs)</a>
+</li>
       <li><a href="m_postproc.html#m_postproc.melt_height">melt_height() (in module m_postproc)</a>
 </li>
       <li><a href="m_interpolation.html#m_interpolation.melt_interpolation">melt_interpolation() (in module m_interpolation)</a>
 </li>
       <li><a href="m_melting.html#m_melting.Melting">Melting (class in m_melting)</a>
 </li>
-      <li><a href="m_parameters.html#m_parameters_docs.mesh_displacement_laplace">mesh_displacement_laplace (in module m_parameters_docs)</a>
+      <li><a href="plot_MilleFEuiIle.html#plot_MilleFEuiIle.mesh2triang">mesh2triang() (in module plot_MilleFEuiIle)</a>
 </li>
-      <li><a href="m_parameters.html#m_parameters_docs.mesh_name">mesh_name (in module m_parameters_docs)</a>
+      <li><a href="m_parameters.html#m_parameters_docs.mesh_displacement_laplace">mesh_displacement_laplace (in module m_parameters_docs)</a>
 </li>
       <li><a href="m_mesh.html#m_mesh.MeshModule">MeshModule (class in m_mesh)</a>
 </li>
@@ -616,6 +671,10 @@
 </li>
         <li><a href="main.html#module-main">main</a>
 </li>
+        <li><a href="plot_demo.html#module-plot_demo">plot_demo</a>
+</li>
+        <li><a href="plot_MilleFEuiIle.html#module-plot_MilleFEuiIle">plot_MilleFEuiIle</a>
+</li>
       </ul></li>
       <li><a href="m_parameters.html#m_parameters_docs.monitor_cache">monitor_cache (in module m_parameters_docs)</a>
 </li>
@@ -629,7 +688,11 @@
   <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
       <li><a href="m_parameters.html#m_parameters_docs.name">name (in module m_parameters_docs)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="plot_demo.html#plot_demo.name">(in module plot_demo)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
       <li><a href="m_parameters.html#m_parameters_docs.nonlinear_heat_equation">nonlinear_heat_equation (in module m_parameters_docs)</a>
@@ -660,14 +723,14 @@
 </li>
       <li><a href="m_parameters.html#m_parameters_docs.Paraview_Output_Ini">Paraview_Output_Ini (in module m_parameters_docs)</a>
 </li>
+      <li><a href="m_parameters.html#m_parameters_docs.periodic_BCs">periodic_BCs (in module m_parameters_docs)</a>
+</li>
       <li><a href="m_parameters.html#m_parameters_docs.perturb_ampl">perturb_ampl (in module m_parameters_docs)</a>
 </li>
       <li><a href="m_parameters.html#m_parameters_docs.perturb_freq">perturb_freq (in module m_parameters_docs)</a>
 </li>
       <li><a href="m_parameters.html#m_parameters_docs.phase_transition">phase_transition (in module m_parameters_docs)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
       <li><a href="m_parameters.html#m_parameters_docs.Picard_iter_error">Picard_iter_error (in module m_parameters_docs)</a>
 </li>
       <li><a href="m_parameters.html#m_parameters_docs.Picard_iter_max">Picard_iter_max (in module m_parameters_docs)</a>
@@ -675,6 +738,42 @@
       <li><a href="m_rheology.html#m_rheology.plastic_strain_integration">plastic_strain_integration() (in module m_rheology)</a>
 </li>
       <li><a href="m_parameters.html#m_parameters_docs.plasticity">plasticity (in module m_parameters_docs)</a>
+</li>
+      <li><a href="plot_demo.html#plot_demo.plot_axes">plot_axes (in module plot_demo)</a>
+</li>
+      <li><a href="plot_demo.html#plot_demo.plot_comp_tracers">plot_comp_tracers (in module plot_demo)</a>
+</li>
+      <li>
+    plot_demo
+
+      <ul style="list-style-type:none">
+        <li><a href="plot_demo.html#module-plot_demo">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="plot_demo.html#plot_demo.plot_HDF5_data">plot_HDF5_data (in module plot_demo)</a>
+</li>
+      <li><a href="plot_demo.html#plot_demo.plot_melt_tracers">plot_melt_tracers (in module plot_demo)</a>
+</li>
+      <li>
+    plot_MilleFEuiIle
+
+      <ul style="list-style-type:none">
+        <li><a href="plot_MilleFEuiIle.html#module-plot_MilleFEuiIle">module</a>
+</li>
+      </ul></li>
+      <li><a href="plot_MilleFEuiIle.html#plot_MilleFEuiIle.plot_scalar">plot_scalar() (in module plot_MilleFEuiIle)</a>
+</li>
+      <li><a href="plot_demo.html#plot_demo.plot_scalebar">plot_scalebar (in module plot_demo)</a>
+</li>
+      <li><a href="plot_demo.html#plot_demo.plot_streamlines">plot_streamlines (in module plot_demo)</a>
+</li>
+      <li><a href="plot_MilleFEuiIle.html#plot_MilleFEuiIle.plot_time">plot_time() (in module plot_MilleFEuiIle)</a>
+</li>
+      <li><a href="plot_demo.html#plot_demo.plot_trajectories">plot_trajectories (in module plot_demo)</a>
+</li>
+      <li><a href="plot_MilleFEuiIle.html#plot_MilleFEuiIle.plot_trajectory">plot_trajectory() (in module plot_MilleFEuiIle)</a>
 </li>
       <li><a href="m_boundary_conditions.html#m_boundary_conditions.Point_Fixed_Pressure">Point_Fixed_Pressure (class in m_boundary_conditions)</a>
 </li>
@@ -710,10 +809,10 @@
 </li>
       <li><a href="m_parameters.html#m_parameters_docs.restart_time">restart_time (in module m_parameters_docs)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
       <li><a href="m_material_properties.html#m_material_properties.rho">rho() (in module m_material_properties)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
       <li><a href="m_material_properties.html#m_material_properties.rho_ice_water">rho_ice_water() (in module m_material_properties)</a>
 </li>
       <li><a href="m_parameters.html#m_parameters_docs.rho_l">rho_l (in module m_parameters_docs)</a>
@@ -727,7 +826,11 @@
       <li><a href="m_equations.html#m_equations.Equations.rotate_and_interpolate_stress">rotate_and_interpolate_stress() (m_equations.Equations method)</a>
 </li>
       <li><a href="main.html#main.run_code">run_code() (in module main)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="plot_demo.html#plot_demo.run_code">(in module plot_demo)</a>
 </li>
+      </ul></li>
   </ul></td>
   </tr>
       </table>
@@ -735,30 +838,44 @@
   <h2 id="S">S</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
-      <li><a href="m_filenames.html#m_filenames.SaveFiles.Save_HDF5">Save_HDF5() (m_filenames.SaveFiles method)</a>
+      <li><a href="m_filenames.html#m_filenames.SaveFiles.save_HDF5">save_HDF5() (m_filenames.SaveFiles method)</a>
 </li>
       <li><a href="m_tracers.html#m_tracers.Tracers.save_header_tracer">save_header_tracer() (m_tracers.Tracers method)</a>
 </li>
       <li><a href="m_tracers.html#m_tracers.Tracers.save_indiv_tracer">save_indiv_tracer() (m_tracers.Tracers method)</a>
 </li>
-      <li><a href="m_filenames.html#m_filenames.SaveFiles.Save_Mesh">Save_Mesh() (m_filenames.SaveFiles method)</a>
+      <li><a href="m_filenames.html#m_filenames.SaveFiles.save_mesh_HDF5">save_mesh_HDF5() (m_filenames.SaveFiles method)</a>
 </li>
-      <li><a href="m_filenames.html#m_filenames.SaveFiles.save_mesh">save_mesh() (m_filenames.SaveFiles method)</a>
+      <li><a href="m_filenames.html#m_filenames.SaveFiles.save_mesh_XDMF">save_mesh_XDMF() (m_filenames.SaveFiles method)</a>
 </li>
-      <li><a href="m_filenames.html#m_filenames.SaveFiles.Save_Paraview">Save_Paraview() (m_filenames.SaveFiles method)</a>
+      <li><a href="m_filenames.html#m_filenames.SaveFiles.save_paraview">save_paraview() (m_filenames.SaveFiles method)</a>
 </li>
-      <li><a href="m_filenames.html#m_filenames.SaveFiles.Save_Paraview_Ini">Save_Paraview_Ini() (m_filenames.SaveFiles method)</a>
+      <li><a href="m_filenames.html#m_filenames.SaveFiles.save_paraview_ini">save_paraview_ini() (m_filenames.SaveFiles method)</a>
+</li>
+      <li><a href="m_mesh.html#m_mesh.save_topography">save_topography() (in module m_mesh)</a>
+</li>
+      <li><a href="m_parameters.html#m_parameters_docs.save_tracer_trajectory">save_tracer_trajectory (in module m_parameters_docs)</a>
 </li>
       <li><a href="m_tracers.html#m_tracers.Tracers.save_tracers">save_tracers() (m_tracers.Tracers method)</a>
+</li>
+      <li><a href="m_tracers.html#m_tracers.Tracers.save_trajectory">save_trajectory() (m_tracers.Tracers method)</a>
 </li>
       <li><a href="m_filenames.html#m_filenames.SaveFiles">SaveFiles (class in m_filenames)</a>
 </li>
       <li><a href="m_interpolation.html#m_interpolation.scalar_interpolation">scalar_interpolation() (in module m_interpolation)</a>
 </li>
-      <li><a href="m_rheology.html#m_rheology.sigma_yield">sigma_yield() (in module m_rheology)</a>
+      <li><a href="plot_MilleFEuiIle.html#plot_MilleFEuiIle.scalebar">scalebar() (in module plot_MilleFEuiIle)</a>
+</li>
+      <li><a href="m_parameters.html#m_parameters_docs.scaled_time_step">scaled_time_step (in module m_parameters_docs)</a>
+</li>
+      <li><a href="plot_demo.html#plot_demo.show_time">show_time (in module plot_demo)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="m_rheology.html#m_rheology.sigma_yield">sigma_yield() (in module m_rheology)</a>
+</li>
+      <li><a href="plot_demo.html#plot_demo.skip_plotting">skip_plotting (in module plot_demo)</a>
+</li>
       <li><a href="m_parameters.html#m_parameters_docs.solve_energy_problem">solve_energy_problem (in module m_parameters_docs)</a>
 </li>
       <li><a href="m_equations.html#m_equations.Equations.solve_heat_equation">solve_heat_equation() (m_equations.Equations method)</a>
@@ -771,11 +888,17 @@
 </li>
       <li><a href="m_parameters.html#m_parameters_docs.stat_output">stat_output (in module m_parameters_docs)</a>
 </li>
+      <li><a href="m_parameters.html#m_parameters_docs.stokes_elements">stokes_elements (in module m_parameters_docs)</a>
+</li>
       <li><a href="m_parameters.html#m_parameters_docs.stokes_null">stokes_null (in module m_parameters_docs)</a>
 </li>
       <li><a href="m_rheology.html#m_rheology.strain_rate_II">strain_rate_II() (in module m_rheology)</a>
 </li>
+      <li><a href="m_rheology.html#m_rheology.strain_rate_II_fast">strain_rate_II_fast() (in module m_rheology)</a>
+</li>
       <li><a href="m_interpolation.html#m_interpolation.stress_interpolation">stress_interpolation() (in module m_interpolation)</a>
+</li>
+      <li><a href="m_parameters.html#m_parameters_docs.stress_iter_error">stress_iter_error (in module m_parameters_docs)</a>
 </li>
       <li><a href="m_interpolation.html#m_interpolation.stress_reduction">stress_reduction() (in module m_interpolation)</a>
 </li>
@@ -791,6 +914,10 @@
   <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
       <li><a href="m_parameters.html#m_parameters_docs.T_melt">T_melt (in module m_parameters_docs)</a>
+</li>
+      <li><a href="plot_demo.html#plot_demo.tail">tail (in module plot_demo)</a>
+</li>
+      <li><a href="plot_demo.html#plot_demo.tail_length">tail_length (in module plot_demo)</a>
 </li>
       <li><a href="m_rheology.html#m_rheology.tensor_2nd_invariant">tensor_2nd_invariant() (in module m_rheology)</a>
 </li>
@@ -808,11 +935,13 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="m_parameters.html#m_parameters_docs.time_step_scaling">time_step_scaling (in module m_parameters_docs)</a>
+</li>
       <li><a href="m_parameters.html#m_parameters_docs.time_step_strategy">time_step_strategy (in module m_parameters_docs)</a>
 </li>
-      <li><a href="m_parameters.html#m_parameters_docs.time_units">time_units (in module m_parameters_docs)</a>
-</li>
       <li><a href="m_parameters.html#m_parameters_docs.time_units_string">time_units_string (in module m_parameters_docs)</a>
+</li>
+      <li><a href="m_parameters.html#m_parameters_docs.topo_diff">topo_diff (in module m_parameters_docs)</a>
 </li>
       <li><a href="m_interpolation.html#m_interpolation.tracer_count_interpolation">tracer_count_interpolation() (in module m_interpolation)</a>
 
@@ -826,6 +955,8 @@
 </li>
       <li><a href="m_parameters.html#m_parameters_docs.Tracers_Output">Tracers_Output (in module m_parameters_docs)</a>
 </li>
+      <li><a href="m_parameters.html#m_parameters_docs.tracers_per_cell">tracers_per_cell (in module m_parameters_docs)</a>
+</li>
       <li><a href="m_parameters.html#m_parameters_docs.triangle_types">triangle_types (in module m_parameters_docs)</a>
 </li>
   </ul></td>
@@ -835,10 +966,12 @@
   <h2 id="U">U</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
-      <li><a href="m_equations.html#m_equations.Equations.update_stress">update_stress() (m_equations.Equations method)</a>
+      <li><a href="main.html#main.update_functions_for_output">update_functions_for_output() (in module main)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="m_equations.html#m_equations.Equations.update_stress">update_stress() (m_equations.Equations method)</a>
+</li>
       <li><a href="m_equations.html#m_equations.Equations.update_viscosity">update_viscosity() (m_equations.Equations method)</a>
 </li>
   </ul></td>
@@ -856,6 +989,10 @@
   
   <h2 id="W">W</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="m_parameters.html#m_parameters_docs.weight_tracers_by_ratio">weight_tracers_by_ratio (in module m_parameters_docs)</a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
       <li><a href="m_filenames.html#m_filenames.SaveFiles.write_statistic">write_statistic() (m_filenames.SaveFiles method)</a>
 </li>
@@ -893,6 +1030,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
       <li><a href="m_parameters.html#m_parameters_docs.z_div">z_div (in module m_parameters_docs)</a>
+</li>
+      <li><a href="m_rheology.html#m_rheology.z_fast">z_fast() (in module m_rheology)</a>
 </li>
   </ul></td>
   </tr>

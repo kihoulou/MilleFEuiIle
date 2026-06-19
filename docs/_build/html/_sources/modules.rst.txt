@@ -1,5 +1,5 @@
-**MilleFEuille modules**
-================================
+**Computational modules**
+=======================================
 
 .. toctree::
    :caption: Modules
@@ -21,4 +21,4 @@
    m_rheology
    m_timestep
    m_tracers
-   main
+   main   

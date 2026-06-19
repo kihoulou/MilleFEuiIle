@@ -1,4 +1,4 @@
-from m_parameters_docs import *
+from m_parameters import *
 from m_constants import *
 
 HEADER = '\033[95m'
@@ -19,13 +19,29 @@ def check_input_parameters():
     exit_code = False
     count = 0
 
-    input_par = [1.0, hr, day, yr, kyr, Myr]
-    if (time_units not in input_par):
+    if ("mechanisms" in Paraview_Output and (viscosity_type == "temp-dep" or viscosity_type == "constant")):
+        exit_code = True
+        if (rank == 0):
+            count += 1
+            print("'Mechanisms' only defined for stress-dependent rheology.")
+            print(" ")
+
+    if (len(save_tracer_trajectory) > 0):
+        for i in range(len(save_tracer_trajectory)):
+            if (isinstance(save_tracer_trajectory[i][2], str) == False):
+                exit_code = True
+                if (rank == 0):
+                    count += 1
+                    print("'save_tracer_trajectory' at index ", i ,"requires a string ID.")
+                    print(" ")
+
+    input_par = ["-", "s", "hr", "day", "yr", "kyr", "Myr", "Gyr"]
+    if (time_units_string not in input_par):
         exit_code = True
         if(rank == 0):
             count += 1
             print("Invalid scale_time parameter.")
-            print("Possible inputs: 1.0, hr, day, yr, kyr, Myr")
+            print("Possible inputs: '-', 's', 'hr', 'day', 'yr', 'kyr', 'Myr', 'Gyr'")
             print(" ")
 
     if ((reload == True) and reload_name == name):
@@ -35,7 +51,7 @@ def check_input_parameters():
             print(f"{FAIL}Reloading file = new file.{ENDC}" + " Cannot overwrite data the code is reading from.")
             print(" ")
     
-    input_par = ["step", "time", "initial_condition"]
+    input_par = ["step", "time", "time_and_step," "initial_condition"]
     if (termination_condition[0] not in input_par):
         exit_code = True
         if(rank == 0):
@@ -53,7 +69,7 @@ def check_input_parameters():
             print("Possible inputs:", input_par)
             print(" ")
 
-    if (loading_mesh == False):
+    if (reload == False):
         if (len(refinement)==0 or len(refinement)%4==0):
             pass
         else:
@@ -220,6 +236,11 @@ def check_input_parameters():
         if (rank == 0):
             print("Adding 'melt_fraction' into Paraview_Output list.")
 
+    if (plasticity == True and "pressure" not in Paraview_Output):
+        Paraview_Output.append("pressure")
+        if (rank == 0):
+            print("Adding 'pressure' into Paraview_Output list.")
+
     # ---- Tracers ---
     # --- The headers need to be embedded so that they can be recognized when reloading ---
     # --- Loop over the ones that are in Tracers_Output --- 
@@ -239,23 +260,14 @@ def check_input_parameters():
         if (arg == "original_y"):
             Tracers_header.append("y_orig (m)")
 
-        if (arg == "composition_0"):
-            Tracers_header.append("comp_0 (-)")
-        
-        if (arg == "composition_1"):
-            Tracers_header.append("comp_1 (-)")
-
-        if (arg == "composition_2"):
-            Tracers_header.append("comp_1 (-)")
-
         if (arg == "melt_fraction"):
             Tracers_header.append("xm (-)")
 
         if (arg == "origin"):
-            Tracers_header.append("origin\t")
+            Tracers_header.append("origin")
 
         if (arg == "ID"):
-            Tracers_header.append("ID\t")
+            Tracers_header.append("ID")
 
     # --- Now add the mandatory ones, if not there already ---
     if (internal_melting == True and "melt_fraction" not in Tracers_Output):
@@ -272,7 +284,7 @@ def check_input_parameters():
 
     if (plasticity == True):
         Tracers_Output.append("origin")
-        Tracers_header.append("origin\t")
+        Tracers_header.append("origin")
         if (rank == 0):
             print("Adding 'origin' into Tracers_Output list.")
 
@@ -284,10 +296,11 @@ def check_input_parameters():
 
     if (elasticity == True and "dev_stress_xz" not in Tracers_Output):
         Tracers_Output.append("dev_stress_xz")
-        Tracers_header.append("s_xx (Pa)")
+        Tracers_header.append("s_xz (Pa)")
         if (rank == 0):
             print("Adding 'dev_stress_xz' into Tracers_Output list.")
 
+    # --- This one has to be the last because it can produce multiple columns ---
     if (len(materials) > 0 and "composition" not in Tracers_Output):
         Tracers_Output.append("composition")
         Tracers_header.append("composition")

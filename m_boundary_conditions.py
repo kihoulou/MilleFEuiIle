@@ -1,5 +1,5 @@
 from dolfin import *
-from m_parameters_docs import *
+from m_parameters import *
 from m_constants import *
 
 comm = MPI.comm_world
