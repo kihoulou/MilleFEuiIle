@@ -1,4 +1,4 @@
-[![Docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://kihoulou.github.io/MilleFEuiIle/index.html)
+[![Docs](https://img.shields.io/badge/docs-Homepage-green.svg)](https://kihoulou.github.io/MilleFEuiIle/index.html)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18641506.svg)](https://doi.org/10.5281/zenodo.18641506)
 
 # MilleFEuiIle
@@ -17,5 +17,4 @@ ice shells of icy bodies. Combining finite element method and Lagrangian markers
 The code is provided with several demos and a thorough user guide, see [MilleFEuiIle documentation](https://kihoulou.github.io/MilleFEuiIle/).
 
 [Martin Kihoulou](https://geo.mff.cuni.cz/~kihoulou/)
-
 martin.kihoulou@matfyz.cuni.cz 
