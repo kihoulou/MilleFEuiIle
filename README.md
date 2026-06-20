@@ -4,8 +4,8 @@
 # MilleFEuiIle
 ## Multi-InstrumentaL **Lagrangian**-Eulerian FEniCS-Using Ice-Ih Layer Explorer
              
-<!-- <img width="201" height="201" align="right" alt="mf_logo" src="https://github.com/user-attachments/assets/c1a674f0-a049-4dff-993f-528affcfb960" /> -->
-[![](/docs/_images/mf_logo_white.png)]
+<img width="201" height="201" align="right" alt="mf_logo_white" src="https://github.com/user-attachments/assets/f3ce204f-97e7-4f99-89d9-ed3d7d61d402" />
+
 MilleFEuiIle [mil·fœj] is a computational code built upon the open-source finite-element python library FEniCS, developed to solve thermo-mechanical evolution of
 ice shells of icy bodies. Combining finite element method and Lagrangian markers, MilleFEuiIle can be used to address a variety of problems, such as
 
