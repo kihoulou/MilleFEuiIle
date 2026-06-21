@@ -54,6 +54,9 @@ run_MilleFEuiIle() {
 }
 
 run_MilleFEuiIle_loop() {
+
+    local par=$(($1))
+    
     main_file2="main_MF_"$name"_par"$par".py"
     param_file2="m_parameters_"$name".py"
 

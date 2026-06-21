@@ -126,112 +126,112 @@ class SaveFiles:
 
         # --- Initialize Paraview files for initial condition and fill dictionaries ---
         # --- Initialize Paraview files and fill dictionaries ---
-        for i in range(len(Paraview_Output_Ini)):
-            self.Paraview_Dict_Ini[Paraview_Output_Ini[i]] = XDMFFile(comm,"data_" + self.name + "/paraview/initial_condition/" + Paraview_Output_Ini[i] + ".xdmf")
-            self.Paraview_Dict_Ini[Paraview_Output_Ini[i]].parameters["flush_output"] = True
-            self.Paraview_Dict_Ini[Paraview_Output_Ini[i]].parameters["rewrite_function_mesh"] = True
+        for i in range(len(paraview_output_ini)):
+            self.Paraview_Dict_Ini[paraview_output_ini[i]] = XDMFFile(comm,"data_" + self.name + "/paraview/initial_condition/" + paraview_output_ini[i] + ".xdmf")
+            self.Paraview_Dict_Ini[paraview_output_ini[i]].parameters["flush_output"] = True
+            self.Paraview_Dict_Ini[paraview_output_ini[i]].parameters["rewrite_function_mesh"] = True
 
-            self.assign_dictionaries(Paraview_Output_Ini, self.Function_Dict, i)
+            self.assign_dictionaries(paraview_output_ini, self.Function_Dict, i)
 
         # --- Initialize Paraview files and fill dictionaries ---
-        for i in range(len(Paraview_Output)):
-            self.Paraview_Dict[Paraview_Output[i]] = XDMFFile(comm,"data_" + self.name + "/paraview/" + Paraview_Output[i] + ".xdmf")
-            self.Paraview_Dict[Paraview_Output[i]].parameters["flush_output"] = True
-            self.Paraview_Dict[Paraview_Output[i]].parameters["rewrite_function_mesh"] = True
+        for i in range(len(paraview_output)):
+            self.Paraview_Dict[paraview_output[i]] = XDMFFile(comm,"data_" + self.name + "/paraview/" + paraview_output[i] + ".xdmf")
+            self.Paraview_Dict[paraview_output[i]].parameters["flush_output"] = True
+            self.Paraview_Dict[paraview_output[i]].parameters["rewrite_function_mesh"] = True
 
-            self.assign_dictionaries(Paraview_Output, self.Function_Dict, i)
+            self.assign_dictionaries(paraview_output, self.Function_Dict, i)
 
             
-    def assign_dictionaries(self, Paraview_Output, Function_Dict, i):
-        if (Paraview_Output[i] == "temperature"):
-            Function_Dict[Paraview_Output[i]] = self.Temp
+    def assign_dictionaries(self, paraview_output, Function_Dict, i):
+        if (paraview_output[i] == "temperature"):
+            Function_Dict[paraview_output[i]] = self.Temp
         
-        if (Paraview_Output[i] == "velocity"):
-            Function_Dict[Paraview_Output[i]] = self.v_k
+        if (paraview_output[i] == "velocity"):
+            Function_Dict[paraview_output[i]] = self.v_k
 
-        if (Paraview_Output[i] == "pressure"):
-            Function_Dict[Paraview_Output[i]] = self.p_k
+        if (paraview_output[i] == "pressure"):
+            Function_Dict[paraview_output[i]] = self.p_k
 
-        if (Paraview_Output[i] == "strain_rate_inv"):
-            Function_Dict[Paraview_Output[i]] = self.strain_rate_inv
+        if (paraview_output[i] == "strain_rate_inv"):
+            Function_Dict[paraview_output[i]] = self.strain_rate_inv
 
-        if (Paraview_Output[i] == "composition_0"):
-            Function_Dict[Paraview_Output[i]] = self.comp_0
+        if (paraview_output[i] == "composition_0"):
+            Function_Dict[paraview_output[i]] = self.comp_0
 
-        if (Paraview_Output[i] == "composition_1"):
-            Function_Dict[Paraview_Output[i]] = self.comp_1
+        if (paraview_output[i] == "composition_1"):
+            Function_Dict[paraview_output[i]] = self.comp_1
 
-        if (Paraview_Output[i] == "composition_2"):
-            Function_Dict[Paraview_Output[i]] = self.comp_2
+        if (paraview_output[i] == "composition_2"):
+            Function_Dict[paraview_output[i]] = self.comp_2
 
-        if (Paraview_Output[i] == "tracers"):
-            Function_Dict[Paraview_Output[i]] = self.number_of_tracers
+        if (paraview_output[i] == "tracers"):
+            Function_Dict[paraview_output[i]] = self.number_of_tracers
 
-        if (Paraview_Output[i] == "ranks"):
-            Function_Dict[Paraview_Output[i]] = self.mesh_ranks
+        if (paraview_output[i] == "ranks"):
+            Function_Dict[paraview_output[i]] = self.mesh_ranks
 
-        if (Paraview_Output[i] == "viscosity"):
-            Function_Dict[Paraview_Output[i]] = self.visc
+        if (paraview_output[i] == "viscosity"):
+            Function_Dict[paraview_output[i]] = self.visc
         
-        if (Paraview_Output[i] == "tidal_heating"):
-            Function_Dict[Paraview_Output[i]] = self.heating
+        if (paraview_output[i] == "tidal_heating"):
+            Function_Dict[paraview_output[i]] = self.heating
         
-        if (Paraview_Output[i] == "melt_fraction"):
-            Function_Dict[Paraview_Output[i]] = self.xm
+        if (paraview_output[i] == "melt_fraction"):
+            Function_Dict[paraview_output[i]] = self.xm
 
-        if (Paraview_Output[i] == "mesh_displacement"):
-            Function_Dict[Paraview_Output[i]] = self.u_mesh
+        if (paraview_output[i] == "mesh_displacement"):
+            Function_Dict[paraview_output[i]] = self.u_mesh
 
-        if (Paraview_Output[i] == "mesh_velocity"):
-            Function_Dict[Paraview_Output[i]] = self.v_mesh
+        if (paraview_output[i] == "mesh_velocity"):
+            Function_Dict[paraview_output[i]] = self.v_mesh
 
-        if (Paraview_Output[i] == "topography_bottom"):
-            Function_Dict[Paraview_Output[i]] = self.h_bot
+        if (paraview_output[i] == "topography_bottom"):
+            Function_Dict[paraview_output[i]] = self.h_bot
 
-        if (Paraview_Output[i] == "topography_top"):
-            Function_Dict[Paraview_Output[i]] = self.h_top
+        if (paraview_output[i] == "topography_top"):
+            Function_Dict[paraview_output[i]] = self.h_top
         
-        if (Paraview_Output[i] == "normal_bottom"):
-            Function_Dict[Paraview_Output[i]] = self.n_bot
+        if (paraview_output[i] == "normal_bottom"):
+            Function_Dict[paraview_output[i]] = self.n_bot
         
-        if (Paraview_Output[i] == "iteration_error"):
-            Function_Dict[Paraview_Output[i]] = self.iteration_error
+        if (paraview_output[i] == "iteration_error"):
+            Function_Dict[paraview_output[i]] = self.iteration_error
 
-        if (Paraview_Output[i] == "plastic_strain"):
-            Function_Dict[Paraview_Output[i]] = self.plastic_strain
+        if (paraview_output[i] == "plastic_strain"):
+            Function_Dict[paraview_output[i]] = self.plastic_strain
 
-        if (Paraview_Output[i] == "yield_stress"):
-            Function_Dict[Paraview_Output[i]] = self.yield_stress
+        if (paraview_output[i] == "yield_stress"):
+            Function_Dict[paraview_output[i]] = self.yield_stress
 
-        if (Paraview_Output[i] == "stress_dev_inv"):
-            Function_Dict[Paraview_Output[i]] = self.stress_dev_inv
+        if (paraview_output[i] == "stress_dev_inv"):
+            Function_Dict[paraview_output[i]] = self.stress_dev_inv
         
-        if (Paraview_Output[i] == "stress_dev_inv_k"):
-            Function_Dict[Paraview_Output[i]] = self.stress_dev_inv_k
+        if (paraview_output[i] == "stress_dev_inv_k"):
+            Function_Dict[paraview_output[i]] = self.stress_dev_inv_k
 
-        if (Paraview_Output[i] == "yield_function"):
-            Function_Dict[Paraview_Output[i]] = self.yield_function
+        if (paraview_output[i] == "yield_function"):
+            Function_Dict[paraview_output[i]] = self.yield_function
 
-        if (Paraview_Output[i] == "eta_v"):
-            Function_Dict[Paraview_Output[i]] = self.eta_v
+        if (paraview_output[i] == "eta_v"):
+            Function_Dict[paraview_output[i]] = self.eta_v
 
-        if (Paraview_Output[i] == "density"):
-            Function_Dict[Paraview_Output[i]] = self.density
+        if (paraview_output[i] == "density"):
+            Function_Dict[paraview_output[i]] = self.density
 
-        if (Paraview_Output[i] == "z_function"):
-            Function_Dict[Paraview_Output[i]] = self.z_function
+        if (paraview_output[i] == "z_function"):
+            Function_Dict[paraview_output[i]] = self.z_function
 
-        if (Paraview_Output[i] == "shear_modulus"):
-            Function_Dict[Paraview_Output[i]] = self.shear_modulus
+        if (paraview_output[i] == "shear_modulus"):
+            Function_Dict[paraview_output[i]] = self.shear_modulus
 
-        if (Paraview_Output[i] == "cohesion"):
-            Function_Dict[Paraview_Output[i]] = self.cohesion
+        if (paraview_output[i] == "cohesion"):
+            Function_Dict[paraview_output[i]] = self.cohesion
 
-        if (Paraview_Output[i] == "mechanisms"):
-            Function_Dict[Paraview_Output[i]] = self.mechanisms
+        if (paraview_output[i] == "mechanisms"):
+            Function_Dict[paraview_output[i]] = self.mechanisms
 
-        if (Paraview_Output[i] == "diff_coef"):
-            Function_Dict[Paraview_Output[i]] = self.diff_coef
+        if (paraview_output[i] == "diff_coef"):
+            Function_Dict[paraview_output[i]] = self.diff_coef
     
 
     def write_statistic(self, t, step, stat_output, time_units, **kwargs):
@@ -279,18 +279,18 @@ class SaveFiles:
         file.close()
         
     def save_paraview(self, t, time_units):
-        for i in range(len(Paraview_Output)):
-            self.Function_Dict[Paraview_Output[i]].rename(Paraview_Output[i], "")
-            self.Paraview_Dict[Paraview_Output[i]].write(self.Function_Dict[Paraview_Output[i]], float(t)/time_units)
+        for i in range(len(paraview_output)):
+            self.Function_Dict[paraview_output[i]].rename(paraview_output[i], "")
+            self.Paraview_Dict[paraview_output[i]].write(self.Function_Dict[paraview_output[i]], float(t)/time_units)
 
     def save_paraview_ini(self):
-        for i in range(len(Paraview_Output_Ini)):
-            self.Function_Dict[Paraview_Output_Ini[i]].rename(Paraview_Output_Ini[i], "")
-            self.Paraview_Dict_Ini[Paraview_Output_Ini[i]].write(self.Function_Dict[Paraview_Output_Ini[i]])
+        for i in range(len(paraview_output_ini)):
+            self.Function_Dict[paraview_output_ini[i]].rename(paraview_output_ini[i], "")
+            self.Paraview_Dict_Ini[paraview_output_ini[i]].write(self.Function_Dict[paraview_output_ini[i]])
 
     def save_HDF5(self, step_output, step, dt, t, time_units):
-        for i in range(len(Paraview_Output)):
-            self.data_file['data'].write(self.Function_Dict[Paraview_Output[i]], "/" + Paraview_Output[i], step) 
+        for i in range(len(paraview_output)):
+            self.data_file['data'].write(self.Function_Dict[paraview_output[i]], "/" + paraview_output[i], step) 
         
         self.data_file['data'].flush()
 

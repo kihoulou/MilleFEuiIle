@@ -15,7 +15,7 @@ skip_plotting = False
 
 plot_streamlines = False
 
-plot_comp_tracers = [[2, "orange", 0.25]] #[1, "lightskyblue", 0.25], 
+plot_comp_tracers = [[2, "orange", 0.25], [1, "lightskyblue", 0.25]] #[1, "lightskyblue", 0.25], 
 
 plot_melt_tracers = False
 

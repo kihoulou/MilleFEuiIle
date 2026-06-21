@@ -60,15 +60,15 @@ output_frequency = ["time", 100*kyr] # e.g. ["steps", 10] or ["time", 100*kyr]
 # origin            = 0 if the tracer is original, 1 if added later
 # id                = unique ID of the tracer
 
-Tracers_Output = []
+tracers_output = []
 
 # --- Headers for the columns in the text file for tracers ---
-Tracers_header = [] # KEEP EMPTY, will be filled automatically
+tracers_header = [] # KEEP EMPTY, will be filled automatically
 
 # --- What functions to write into Paraview and HDF5 file ---
-Paraview_Output = ["temperature", "velocity", "viscosity", "composition_1"]
+paraview_output = ["temperature", "velocity", "viscosity", "composition_1"]
 
-Paraview_Output_Ini = ["temperature", "composition_1"]
+paraview_output_ini = ["temperature", "composition_1"]
 
 # --- What values to print in a text file every time step? Must be one of the following (order does not matter):
 # nusselt 	= Nusselt number

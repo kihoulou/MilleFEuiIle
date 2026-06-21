@@ -15,14 +15,6 @@ def mesh2triang(mesh):
     return tri.Triangulation(xy[:, 0], xy[:, 1], mesh.cells())
 
 def initialize(name, i):
-    """
-    :var: Initializes dolfin function spaces.
-
-    :vartype: string
-
-    :meta hide-value:
-    """
-
     mesh = Mesh()
 
     mesh_file = HDF5File(comm, "data_" + name + "/HDF5/meshes/mesh_" + str(i) +".h5", "r")
@@ -53,7 +45,6 @@ def load(name, i, *args):
     return l
 
 def plot_scalar(ax, fig, function, mesh, labels, x_range, z_range, font_size, type, plot_HDF5_data):
-    
     # Axes range
     ax.set_ylim(z_range[0],z_range[1])
     ax.set_xlim(x_range[0],x_range[1])
@@ -288,12 +279,12 @@ def load_comp_tracers(ax, name, i, data):
         ax.scatter(xx[j], yy[j],  c =  data[j][1], marker=".", s = 0.1, alpha=data[j][2]) 
 
 def load_melt_tracers(ax, name, labels, fig, font_size, i):
-    m_label, m_label_text, m_label_val = labels[3][0], labels[3][1], labels[3][2]
-
     print("Plotting melt tracers...")
     xx = []
     yy = []
     mm = []
+
+    m_label, m_label_text, m_label_val = labels[3][0], labels[3][1], labels[3][2]
 
     infile = open("data_"+name+"/tracers/step_"+str(i)+".dat", "r") 
     lines = infile.readlines() 

@@ -90,7 +90,7 @@ class Tracers:
 
         file.write((2*"%s\t")%("x_pos (m)", "y_pos (m)"))   
 
-        for arg in Tracers_header:
+        for arg in tracers_header:
             file.write(("%s\t")%(arg))
         file.write("\n")
 
@@ -98,7 +98,7 @@ class Tracers:
 
         file.write((2*"%.7E\t")%(self.tracers[j][0], self.tracers[j][1]))   
 
-        for arg in Tracers_Output:
+        for arg in tracers_output:
             for key in kwargs:
                 if (arg == key):
                     if (arg == "composition"):

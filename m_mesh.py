@@ -217,7 +217,7 @@ def detect_oscillations(mesh, bound_mesh, diff_coef, x_div_top):
     ranks = numpy.array(ranks)                                                            
     diff_coef.vector().set_local(ranks)
 
-def save_topography(bound_mesh, name, step):
+def save_topography(bound_mesh, name, q_ice, q_water, step):
     if (BC_Stokes_problem[0][0] == "free_surface"):
         
         topography_top = []
@@ -256,15 +256,24 @@ def save_topography(bound_mesh, name, step):
     if (BC_Stokes_problem[1][0] == "free_surface"):
         # --- Bottom topography ---
         topography_bot = []
+        topography_bot_header = ["#x (m)\t\t", "y (m)\t\t"]
         for vertex in vertices(bound_mesh):
             if (vertex.point()[1] < height*0.25):
-                topography_bot.append([vertex.point()[0], vertex.point()[1]])
+                x_pos =vertex.point()[0] 
+                y_pos = vertex.point()[1]
+                topography_bot.append([x_pos, y_pos])
+
+                # --- Uncomment for the heat flux along the bottom bounrady ---
+                # q_ice_vertex = q_ice(Point(x_pos, y_pos))[1]
+                # q_water_vertex = q_water(Point(x_pos, y_pos))[1]
+                # topography_bot[-1].append([q_ice_vertex, q_water_vertex])
+                # topography_bot_header.append(["q_i (W/m2)\t", "q_w (W/m2)"])
 
         all_topography_bot = []
         gather_topography = comm.allgather(topography_bot)
         for k in range(0,size):
             for j in range (0,len(gather_topography[k])):
-                all_topography_bot.append([gather_topography[k][j][0], gather_topography[k][j][1]])
+                all_topography_bot.append([gather_topography[k][j][0], gather_topography[k][j][1], gather_topography[k][j][2]])
 
         minimum_left = height
         minimum_right = height
@@ -278,11 +287,33 @@ def save_topography(bound_mesh, name, step):
         all_topography_bot.sort(key = lambda x: x[0])
         if (rank == 0):
             file = open("data_" + name + "/topography/step_" + str(step - 1) + "_bot.dat","w")
+            file.write(((len(topography_bot_header[2]) + 2)*"%s\t" + "\n")%(topography_bot_header[0],
+                                                                       topography_bot_header[1],
+                                                                       *topography_bot_header[2]))
 
-            file.write((2*"%.7E\t" + "\n")%(0.0, minimum_left))
+            # --- Left bottom point ----
+            for j in range (len(all_topography_bot) - 1, -1, -1):  
+                if (all_topography_bot[j][0] == 0 and all_topography_bot[j][1] == minimum_left):
+                    write_topography_file(file, all_topography_bot, j)
+                    break
+
+            # --- Intermediate bottom points ---
             for j in range (0, len(all_topography_bot)):    
                 if (0 < all_topography_bot[j][0] < length):
-                    file.write((2*"%.7E\t" + "\n")%(all_topography_bot[j][0], all_topography_bot[j][1]))
-            file.write((2*"%.7E\t" + "\n")%(length, minimum_right))
-
+                    write_topography_file(file, all_topography_bot, j)
+            
+            # --- Right bottom point ---
+            for j in range (0, len(all_topography_bot)):  
+                if (all_topography_bot[j][0] == length and all_topography_bot[j][1] == minimum_right):
+                    write_topography_file(file, all_topography_bot, j)
+                    break
+            
             file.close()
+
+def write_topography_file(file, all_topography_bot, j):
+    if (len(all_topography_bot[j][2]) == 0):
+        file.write((2*"%.7E\t" + "\n")%(all_topography_bot[j][0], all_topography_bot[j][1]))
+    else:
+        file.write(((len(all_topography_bot[j][2]) + 2)*"%.7E\t" + "\n")%(all_topography_bot[j][0],
+                                                                          all_topography_bot[j][1],
+                                                                          *all_topography_bot[j][2]))

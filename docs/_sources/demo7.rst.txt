@@ -69,10 +69,10 @@ Tracers will be used for partial melt, we need to save them in order to visualiz
     save_tracers = True
 
     # --- What properties to save? Must be one of the following (order does not matter):
-    Tracers_Output = ["melt_fraction"]
+    tracers_output = ["melt_fraction"]
 
     # --- Headers for the columns in the text file for tracers
-    Tracers_header = ["Melt fraction (-)"]
+    tracers_header = ["Melt fraction (-)"]
 
 To visualize the results in Paraview, we will save temperature, melt fraction, and viscosity.
 For initial condition, we will save only temperature.
@@ -81,9 +81,9 @@ For initial condition, we will save only temperature.
     :emphasize-lines: 2, 4
 
     # --- What functions to write into Paraview and HDF5 file ---
-    Paraview_Output = ["temperature", "melt_fraction", "viscosity"]
+    paraview_output = ["temperature", "melt_fraction", "viscosity"]
 
-    Paraview_Output_Ini = ["temperature"]
+    paraview_output_ini = ["temperature"]
 
 To the statistics text file, time (in the units specified above, i.e., Myr)
 and the duration of the time step will be saved. We also choose corresponding headers.

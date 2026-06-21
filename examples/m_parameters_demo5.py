@@ -59,15 +59,15 @@ output_frequency = ["time", 25*kyr] # e.g. ["steps", 10] or ["time", 100*kyr]
 # melt_fraction     = amount of partial melt on the tracer
 # origin            = 0 if the tracer is original, 1 if added later
 # id                = unique ID of the tracer
-Tracers_Output = []
+tracers_output = []
 
 # --- Headers for the columns in the text file for tracers ---
-Tracers_header = [] # KEEP EMPTY, will be filled automatically
+tracers_header = [] # KEEP EMPTY, will be filled automatically
 
 # --- What functions to write into Paraview and HDF5 file ---
-Paraview_Output = ["temperature", "velocity", "viscosity", "melt_fraction", "tidal_heating"]
+paraview_output = ["temperature", "velocity", "viscosity", "melt_fraction", "tidal_heating"]
 
-Paraview_Output_Ini = ["temperature"]
+paraview_output_ini = ["temperature"]
 
 # --- What values to print in a text file every time step? Must be one of the following (order does not matter):
 # nusselt 	= Nusselt number

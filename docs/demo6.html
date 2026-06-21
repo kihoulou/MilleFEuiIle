@@ -191,20 +191,20 @@ an output will be made every 10 kyr (<code class="docutils literal notranslate">
 </span></code></pre></div>
 </div>
 <p>The simulation requires tracers because of elasticity, plasticity, and tracking of passive compositional fields.
-The <code class="docutils literal notranslate"><span class="pre">Tracers_Output</span></code> and <code class="docutils literal notranslate"><span class="pre">Tracers_header</span></code> will remain empty, but they will be filled automatically.</p>
+The <code class="docutils literal notranslate"><span class="pre">tracers_output</span></code> and <code class="docutils literal notranslate"><span class="pre">tracers_header</span></code> will remain empty, but they will be filled automatically.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- What properties to save? Must be one of the following (order does not matter):</span>
-</span><span id="line-2"><mark><span class="n">Tracers_Output</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># KEEP EMPTY, will be filled automatically</span>
+</span><span id="line-2"><mark><span class="n">tracers_output</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># KEEP EMPTY, will be filled automatically</span>
 </mark></span><span id="line-3">
 </span><span id="line-4"><span class="c1"># --- Headers for the columns in the text file for tracers</span>
-</span><span id="line-5"><mark><span class="n">Tracers_header</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># KEEP EMPTY, will be filled automatically</span>
+</span><span id="line-5"><mark><span class="n">tracers_header</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># KEEP EMPTY, will be filled automatically</span>
 </mark></span></code></pre></div>
 </div>
 <p>To visualize the results in Paraview, we will save temperature, velocity, and viscosity and other useful functions.
 For initial condition, we will save only temperature.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- What functions to write into Paraview and HDF5 file ---</span>
-</span><span id="line-2"><mark><span class="n">Paraview_Output</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"temperature"</span><span class="p">,</span> <span class="s2">"velocity"</span><span class="p">,</span> <span class="s2">"viscosity"</span><span class="p">,</span> <span class="s2">"plastic_strain"</span><span class="p">,</span> <span class="s2">"composition_1"</span><span class="p">,</span> <span class="s2">"composition_2"</span><span class="p">,</span> <span class="s2">"density"</span><span class="p">]</span>
+</span><span id="line-2"><mark><span class="n">paraview_output</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"temperature"</span><span class="p">,</span> <span class="s2">"velocity"</span><span class="p">,</span> <span class="s2">"viscosity"</span><span class="p">,</span> <span class="s2">"plastic_strain"</span><span class="p">,</span> <span class="s2">"composition_1"</span><span class="p">,</span> <span class="s2">"composition_2"</span><span class="p">,</span> <span class="s2">"density"</span><span class="p">]</span>
 </mark></span><span id="line-3">
-</span><span id="line-4"><mark><span class="n">Paraview_Output_Ini</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"temperature"</span><span class="p">]</span>
+</span><span id="line-4"><mark><span class="n">paraview_output_ini</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"temperature"</span><span class="p">]</span>
 </mark></span></code></pre></div>
 </div>
 <p>To the statistics text file, the heat flux through the top boundary,

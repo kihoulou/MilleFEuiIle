@@ -335,7 +335,7 @@ def run_code():
         step_output, output_now = Output_Timing(step, step_output, t, time_output)
         if (output_now == True):
 
-            save_topography(MeshClass.bound_mesh, name, step_output)
+            save_topography(MeshClass.bound_mesh, name, EqClass.q_ice, EqClass.q_water, step_output)
             if (use_tracers == True):
                 # TracersClass.tracer_count_interpolation()
                 TracersClass.save_tracers(step_output, EqClass.p_k, EqClass.Temp)
@@ -372,34 +372,34 @@ def run_code():
 
 def update_functions_for_output(EqClass, ElemClass):
      # --- Postprocessing of functions ---
-    if ("density" in Paraview_Output):
+    if ("density" in paraview_output):
         EqClass.density.assign(project(rho(EqClass.Temp, EqClass.composition, EqClass.xm), ElemClass.sDG0))
 
-    if ("cohesion" in Paraview_Output):
+    if ("cohesion" in paraview_output):
         EqClass.cohesion.assign(project(cohesion(EqClass.plastic_strain), ElemClass.sDG0))
 
-    if ("mechanisms" in Paraview_Output):
+    if ("mechanisms" in paraview_output):
         ElemClass.mechanisms.assign(project(get_mechanisms(EqClass.Temp, EqClass.v_k, EqClass.stress_dev_inv), ElemClass.sDG0))
 
-    if ("tidal_heating" in Paraview_Output):
+    if ("tidal_heating" in paraview_output):
         ElemClass.heating.assign(project(tidal_heating(EqClass.p_k, EqClass.Temp, EqClass.v_k,\
                                 EqClass.stress_dev_inv, EqClass.xm, EqClass.composition, EqClass.plastic_strain,\
                                 EqClass.step, EqClass.Picard_iter, EqClass.stress_dev_inv_k, EqClass.dt, EqClass.sr_min), ElemClass.sDG0))
 
-    if ("melting_rate" in Paraview_Output):
+    if ("melting_rate" in paraview_output):
         EqClass.melting_rate.assign(project(rho_m*(EqClass.xm - EqClass.xm_k)/EqClass.dt*rho_s/rho_m, ElemClass.sDG0))
 
-    if ("stress_dev_inv" in Paraview_Output):
+    if ("stress_dev_inv" in paraview_output):
         # --- Calculate here only if elasticity and plasticity are off 
         #     otherwise it is already computed in m_equations.py ---
         if (plasticity == False and elasticity == False):
             EqClass.stress_dev_inv.assign(project(2*EqClass.visc*strain_rate_II(EqClass.v_k), ElemClass.sDG0))
     
-    if ("strain_rate_inv" in Paraview_Output):
+    if ("strain_rate_inv" in paraview_output):
         if (plasticity == False and elasticity == False):
             EqClass.strain_rate_inv.assign(project(strain_rate_II(EqClass.v_k), EqClass.sDG0))
 
-    if ("viscosity" in Paraview_Output):
+    if ("viscosity" in paraview_output):
         if (plasticity == False and elasticity == False):
             EqClass.visc.assign(project(eta_ductile(EqClass.Temp, EqClass.v_k, None, EqClass.xm, EqClass.composition, EqClass.step, EqClass.Picard_iter, "mesh"), EqClass.sDG0))
         else:

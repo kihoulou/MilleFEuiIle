@@ -53,9 +53,11 @@ When running the code, the following tree is created:
     ├── /img
     ├── /paraview        
     │   ├── /initial_condition
-    │   ├── *.h5, *.xdmf
+    │   └── *.h5, *.xdmf
     ├── /source_code
-    ├── /tracers
+    ├── /topography
+    ├── /tracers         
+    │   └── /trajectories (if applicable)
     ├── empty_cells.dat (if applicable)
     ├── picard_iter.dat (if applicable)
     └── statistics.dat
@@ -66,8 +68,8 @@ Below, the data in individual directories are described.
 /HDF5
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-* The directory ``meshes`` contains files named ``mesh_*.h5``, which is an HDF5 file containing the mesh for each time output. These files can be used for plotting through *matplotlib* and cannot be opened in Paraview.
-* The file ``data.h5`` contains functions defined in ``Paraview_Output`` parameter, but always at least those that are needed for restarting the computation. Data from this file are used for plotting and reloading the simulation.
+* The directory ``/meshes`` contains files named ``mesh_*.h5``, which is an HDF5 file containing the mesh for each time output. These files can be used for plotting through *matplotlib* and cannot be opened in Paraview.
+* The file ``data.h5`` contains functions defined in ``paraview_output`` parameter, but always at least those that are needed for restarting the computation. Data from this file are used for plotting and reloading the simulation.
 * The file ``data_timestamp.dat`` contains information about the steps when the data were written (time, simulation step, position in HDF5 file)
 * Files starting ``subdomains*`` contain Paraview-readable format of the subdomains, which enables to check whether the boundaries were defined and recognized correctly.
 * Files ``mesh.h5`` and ``mesh.xdmf`` contain mesh in Paraview-readable format.
@@ -87,8 +89,8 @@ When running the plotting scripts provided with the tutorials, images are placed
 /paraview
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-* Contains pairs of ``*.xdmf`` and ``*.h5`` for each of the physical quantities specified in ``Paraview_Output`` (again at least those that are needed for restarting the computation).
-* The directory  ``initial_condition`` contains quantities that were used as an initial condition and specified in ``Paraview_Output_Ini``
+* Contains pairs of ``*.xdmf`` and ``*.h5`` for each of the physical quantities specified in ``paraview_output`` (again at least those that are needed for restarting the computation).
+* The directory  ``/initial_condition`` contains quantities that were used as an initial condition and specified in ``paraview_output_ini``
 
 |
 
@@ -98,10 +100,16 @@ When running the plotting scripts provided with the tutorials, images are placed
 
 Contains all parts of the source code needed for reproduction of the results.
 
+^^^^^^^^^^^^^^^^^^^^^^^
+/topography
+^^^^^^^^^^^^^^^^^^^^^^^
 
+Contains files the x- and y- positions of the nodes of the bottom and top boundaries. 
 
 ^^^^^^^^^^^^^^^^^^^^^^^
 /tracers
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 Contains files with all tracers' coordinates and carried properties. 
+
+* The directory  ``trajectorues`` contains position of tracers specified in ``save_tracer_trajectory`` in every time step of the simulation.

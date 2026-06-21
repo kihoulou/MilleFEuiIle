@@ -74,16 +74,16 @@ an output will be made every 10 kyr (``output_frequency``).
     output_frequency = ["time", 10*kyr]
 
 The simulation requires tracers because of elasticity, plasticity, and tracking of passive compositional fields. 
-The ``Tracers_Output`` and ``Tracers_header`` will remain empty, but they will be filled automatically.
+The ``tracers_output`` and ``tracers_header`` will remain empty, but they will be filled automatically.
 
 .. code-block:: python
     :emphasize-lines: 2, 5
 
     # --- What properties to save? Must be one of the following (order does not matter):
-    Tracers_Output = [] # KEEP EMPTY, will be filled automatically
+    tracers_output = [] # KEEP EMPTY, will be filled automatically
 
     # --- Headers for the columns in the text file for tracers
-    Tracers_header = [] # KEEP EMPTY, will be filled automatically
+    tracers_header = [] # KEEP EMPTY, will be filled automatically
 
 To visualize the results in Paraview, we will save temperature, velocity, and viscosity and other useful functions.
 For initial condition, we will save only temperature.
@@ -92,9 +92,9 @@ For initial condition, we will save only temperature.
     :emphasize-lines: 2, 4
 
     # --- What functions to write into Paraview and HDF5 file ---
-    Paraview_Output = ["temperature", "velocity", "viscosity", "plastic_strain", "composition_1", "composition_2", "density"]
+    paraview_output = ["temperature", "velocity", "viscosity", "plastic_strain", "composition_1", "composition_2", "density"]
 
-    Paraview_Output_Ini = ["temperature"]
+    paraview_output_ini = ["temperature"]
 
 To the statistics text file, the heat flux through the top boundary,
 time (in the units specified above, i.e., Myr)

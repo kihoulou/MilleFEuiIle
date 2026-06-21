@@ -183,18 +183,18 @@ the results will be overwritten each time</p>
 </span><span id="line-2"><mark><span class="n">save_tracers</span> <span class="o">=</span> <span class="kc">True</span>
 </mark></span><span id="line-3">
 </span><span id="line-4"><span class="c1"># --- What properties to save? Must be one of the following (order does not matter):</span>
-</span><span id="line-5"><mark><span class="n">Tracers_Output</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"melt_fraction"</span><span class="p">]</span>
+</span><span id="line-5"><mark><span class="n">tracers_output</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"melt_fraction"</span><span class="p">]</span>
 </mark></span><span id="line-6">
 </span><span id="line-7"><span class="c1"># --- Headers for the columns in the text file for tracers</span>
-</span><span id="line-8"><mark><span class="n">Tracers_header</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Melt fraction (-)"</span><span class="p">]</span>
+</span><span id="line-8"><mark><span class="n">tracers_header</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Melt fraction (-)"</span><span class="p">]</span>
 </mark></span></code></pre></div>
 </div>
 <p>To visualize the results in Paraview, we will save temperature, melt fraction, and viscosity.
 For initial condition, we will save only temperature.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- What functions to write into Paraview and HDF5 file ---</span>
-</span><span id="line-2"><mark><span class="n">Paraview_Output</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"temperature"</span><span class="p">,</span> <span class="s2">"melt_fraction"</span><span class="p">,</span> <span class="s2">"viscosity"</span><span class="p">]</span>
+</span><span id="line-2"><mark><span class="n">paraview_output</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"temperature"</span><span class="p">,</span> <span class="s2">"melt_fraction"</span><span class="p">,</span> <span class="s2">"viscosity"</span><span class="p">]</span>
 </mark></span><span id="line-3">
-</span><span id="line-4"><mark><span class="n">Paraview_Output_Ini</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"temperature"</span><span class="p">]</span>
+</span><span id="line-4"><mark><span class="n">paraview_output_ini</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"temperature"</span><span class="p">]</span>
 </mark></span></code></pre></div>
 </div>
 <p>To the statistics text file, time (in the units specified above, i.e., Myr)

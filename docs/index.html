@@ -144,7 +144,7 @@ evolution of ice shells of icy bodies. Combining finite element method and Lagra
 <section id="support">
 <h1>Support<a class="headerlink" href="#support" title="Link to this heading"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h1>
 <p>Information on the methodology and the benchmarks performed can be found in Chapter 4 of my <a class="reference external" href="https://geo.mff.cuni.cz/theses/2025-Kihoulou-PhD.pdf">dissertation thesis.</a></p>
-<p>This page was last updated on Jun 11, 2026 and is still under development. With any questions, issues or ideas, please contact
+<p>This page was last updated on Jun 21, 2026 and is still under development. With any questions, issues or ideas, please contact
 me at <a class="reference external" href="mailto:martin.kihoulou%40mff.cuni.cz">martin<span>.</span>kihoulou<span>@</span>mff<span>.</span>cuni<span>.</span>cz</a>.</p>
 <div class="line-block">
 <div class="line"><br/></div>
@@ -180,6 +180,7 @@ me at <a class="reference external" href="mailto:martin.kihoulou%40mff.cuni.cz">
 <li class="toctree-l3"><a class="reference internal" href="filetree.html#anim-and-img">/anim and /img</a></li>
 <li class="toctree-l3"><a class="reference internal" href="filetree.html#id1">/paraview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="filetree.html#source-code">/source_code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="filetree.html#topography">/topography</a></li>
 <li class="toctree-l3"><a class="reference internal" href="filetree.html#tracers">/tracers</a></li>
 </ul>
 </li>
@@ -290,6 +291,7 @@ me at <a class="reference external" href="mailto:martin.kihoulou%40mff.cuni.cz">
 <li class="toctree-l3"><a class="reference internal" href="m_mesh.html#m_mesh.count_nodes"><code class="docutils literal notranslate"><span class="pre">count_nodes()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="m_mesh.html#m_mesh.detect_oscillations"><code class="docutils literal notranslate"><span class="pre">detect_oscillations()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="m_mesh.html#m_mesh.save_topography"><code class="docutils literal notranslate"><span class="pre">save_topography()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_mesh.html#m_mesh.write_topography_file"><code class="docutils literal notranslate"><span class="pre">write_topography_file()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="m_parameters.html">m_parameters.py</a><ul>
@@ -299,13 +301,10 @@ me at <a class="reference external" href="mailto:martin.kihoulou%40mff.cuni.cz">
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.G_ice"><code class="docutils literal notranslate"><span class="pre">G_ice</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.H_max"><code class="docutils literal notranslate"><span class="pre">H_max</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.Lt"><code class="docutils literal notranslate"><span class="pre">Lt</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.Paraview_Output"><code class="docutils literal notranslate"><span class="pre">Paraview_Output</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.Paraview_Output_Ini"><code class="docutils literal notranslate"><span class="pre">Paraview_Output_Ini</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.Picard_iter_error"><code class="docutils literal notranslate"><span class="pre">Picard_iter_error</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.Picard_iter_max"><code class="docutils literal notranslate"><span class="pre">Picard_iter_max</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.Q_activ"><code class="docutils literal notranslate"><span class="pre">Q_activ</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.T_melt"><code class="docutils literal notranslate"><span class="pre">T_melt</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.Tracers_Output"><code class="docutils literal notranslate"><span class="pre">Tracers_Output</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.adaptive_smoothing"><code class="docutils literal notranslate"><span class="pre">adaptive_smoothing</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.albedo"><code class="docutils literal notranslate"><span class="pre">albedo</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.cfl"><code class="docutils literal notranslate"><span class="pre">cfl</span></code></a></li>
@@ -351,6 +350,8 @@ me at <a class="reference external" href="mailto:martin.kihoulou%40mff.cuni.cz">
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.name"><code class="docutils literal notranslate"><span class="pre">name</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.nonlinear_heat_equation"><code class="docutils literal notranslate"><span class="pre">nonlinear_heat_equation</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.output_frequency"><code class="docutils literal notranslate"><span class="pre">output_frequency</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.paraview_output"><code class="docutils literal notranslate"><span class="pre">paraview_output</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.paraview_output_ini"><code class="docutils literal notranslate"><span class="pre">paraview_output_ini</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.periodic_BCs"><code class="docutils literal notranslate"><span class="pre">periodic_BCs</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.perturb_ampl"><code class="docutils literal notranslate"><span class="pre">perturb_ampl</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.perturb_freq"><code class="docutils literal notranslate"><span class="pre">perturb_freq</span></code></a></li>
@@ -379,6 +380,7 @@ me at <a class="reference external" href="mailto:martin.kihoulou%40mff.cuni.cz">
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.time_step_strategy"><code class="docutils literal notranslate"><span class="pre">time_step_strategy</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.time_units_string"><code class="docutils literal notranslate"><span class="pre">time_units_string</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.topo_diff"><code class="docutils literal notranslate"><span class="pre">topo_diff</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.tracers_output"><code class="docutils literal notranslate"><span class="pre">tracers_output</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.tracers_per_cell"><code class="docutils literal notranslate"><span class="pre">tracers_per_cell</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.triangle_types"><code class="docutils literal notranslate"><span class="pre">triangle_types</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="m_parameters.html#m_parameters_docs.viscosity_type"><code class="docutils literal notranslate"><span class="pre">viscosity_type</span></code></a></li>

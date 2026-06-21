@@ -19,7 +19,7 @@ def check_input_parameters():
     exit_code = False
     count = 0
 
-    if ("mechanisms" in Paraview_Output and (viscosity_type == "temp-dep" or viscosity_type == "constant")):
+    if ("mechanisms" in paraview_output and (viscosity_type == "temp-dep" or viscosity_type == "constant")):
         exit_code = True
         if (rank == 0):
             count += 1
@@ -216,96 +216,96 @@ def check_input_parameters():
     
     # --- Ensuring that the parameters needed for restarting are always written ---
     # ---- Field functions ---
-    if (solve_energy_problem == True and "temperature" not in Paraview_Output):
-        Paraview_Output.append("temperature")
+    if (solve_energy_problem == True and "temperature" not in paraview_output):
+        paraview_output.append("temperature")
         if (rank == 0):
-            print("Adding 'temperature' into Paraview_Output list.")
+            print("Adding 'temperature' into paraview_output list.")
 
-    if (BC_Stokes_problem[0][0] == "free_surface" and "topography_top" not in Paraview_Output):
-        Paraview_Output.append("topography_top")
+    if (BC_Stokes_problem[0][0] == "free_surface" and "topography_top" not in paraview_output):
+        paraview_output.append("topography_top")
         if (rank == 0):
-            print("Adding 'topography_top' into Paraview_Output list.")
+            print("Adding 'topography_top' into paraview_output list.")
 
-    if (BC_Stokes_problem[1][0] == "free_surface" and "topography_bottom" not in Paraview_Output):
-        Paraview_Output.append("topography_bottom")
+    if (BC_Stokes_problem[1][0] == "free_surface" and "topography_bottom" not in paraview_output):
+        paraview_output.append("topography_bottom")
         if (rank == 0):
-            print("Adding 'topography_bottom' into Paraview_Output list.")
+            print("Adding 'topography_bottom' into paraview_output list.")
 
-    if (internal_melting == True and "melt_fraction" not in Paraview_Output):
-        Paraview_Output.append("melt_fraction")
+    if (internal_melting == True and "melt_fraction" not in paraview_output):
+        paraview_output.append("melt_fraction")
         if (rank == 0):
-            print("Adding 'melt_fraction' into Paraview_Output list.")
+            print("Adding 'melt_fraction' into paraview_output list.")
 
-    if (plasticity == True and "pressure" not in Paraview_Output):
-        Paraview_Output.append("pressure")
+    if (plasticity == True and "pressure" not in paraview_output):
+        paraview_output.append("pressure")
         if (rank == 0):
-            print("Adding 'pressure' into Paraview_Output list.")
+            print("Adding 'pressure' into paraview_output list.")
 
     # ---- Tracers ---
     # --- The headers need to be embedded so that they can be recognized when reloading ---
-    # --- Loop over the ones that are in Tracers_Output --- 
-    for arg in Tracers_Output:
+    # --- Loop over the ones that are in tracers_output --- 
+    for arg in tracers_output:
         if (arg == "rank"):
-            Tracers_header.append("rank")
+            tracers_header.append("rank")
 
         if (arg == "dev_stress_xx"):
-            Tracers_header.append("s_xx (Pa)")
+            tracers_header.append("s_xx (Pa)")
         
         if (arg == "dev_stress_xz"):
-            Tracers_header.append("s_xz (Pa)")
+            tracers_header.append("s_xz (Pa)")
 
         if (arg == "plastic_strain"):
-            Tracers_header.append("eps_p (-)")
+            tracers_header.append("eps_p (-)")
 
         if (arg == "original_y"):
-            Tracers_header.append("y_orig (m)")
+            tracers_header.append("y_orig (m)")
 
         if (arg == "melt_fraction"):
-            Tracers_header.append("xm (-)")
+            tracers_header.append("xm (-)")
 
         if (arg == "origin"):
-            Tracers_header.append("origin")
+            tracers_header.append("origin")
 
         if (arg == "ID"):
-            Tracers_header.append("ID")
+            tracers_header.append("ID")
 
     # --- Now add the mandatory ones, if not there already ---
-    if (internal_melting == True and "melt_fraction" not in Tracers_Output):
-        Tracers_Output.append("melt_fraction")
-        Tracers_header.append("xm (-)")
+    if (internal_melting == True and "melt_fraction" not in tracers_output):
+        tracers_output.append("melt_fraction")
+        tracers_header.append("xm (-)")
         if (rank == 0):
-            print("Adding 'melt_fraction' into Tracers_Output list.")
+            print("Adding 'melt_fraction' into tracers_output list.")
 
-    if (plasticity == True and "plastic_strain" not in Tracers_Output):
-        Tracers_Output.append("plastic_strain")
-        Tracers_header.append("eps_p (-)")
+    if (plasticity == True and "plastic_strain" not in tracers_output):
+        tracers_output.append("plastic_strain")
+        tracers_header.append("eps_p (-)")
         if (rank == 0):
-            print("Adding 'plastic_strain' into Tracers_Output list.")
+            print("Adding 'plastic_strain' into tracers_output list.")
 
     if (plasticity == True):
-        Tracers_Output.append("origin")
-        Tracers_header.append("origin")
+        tracers_output.append("origin")
+        tracers_header.append("origin")
         if (rank == 0):
-            print("Adding 'origin' into Tracers_Output list.")
+            print("Adding 'origin' into tracers_output list.")
 
-    if (elasticity == True and "dev_stress_xx" not in Tracers_Output):
-        Tracers_Output.append("dev_stress_xx")
-        Tracers_header.append("s_xx (Pa)")
+    if (elasticity == True and "dev_stress_xx" not in tracers_output):
+        tracers_output.append("dev_stress_xx")
+        tracers_header.append("s_xx (Pa)")
         if (rank == 0):
-            print("Adding 'dev_stress_xx' into Tracers_Output list.")
+            print("Adding 'dev_stress_xx' into tracers_output list.")
 
-    if (elasticity == True and "dev_stress_xz" not in Tracers_Output):
-        Tracers_Output.append("dev_stress_xz")
-        Tracers_header.append("s_xz (Pa)")
+    if (elasticity == True and "dev_stress_xz" not in tracers_output):
+        tracers_output.append("dev_stress_xz")
+        tracers_header.append("s_xz (Pa)")
         if (rank == 0):
-            print("Adding 'dev_stress_xz' into Tracers_Output list.")
+            print("Adding 'dev_stress_xz' into tracers_output list.")
 
     # --- This one has to be the last because it can produce multiple columns ---
-    if (len(materials) > 0 and "composition" not in Tracers_Output):
-        Tracers_Output.append("composition")
-        Tracers_header.append("composition")
+    if (len(materials) > 0 and "composition" not in tracers_output):
+        tracers_output.append("composition")
+        tracers_header.append("composition")
         if (rank == 0):
-            print("Adding 'composition' into Tracers_Output list.")
+            print("Adding 'composition' into tracers_output list.")
 
     if (exit_code == True):
         if (rank == 0):
