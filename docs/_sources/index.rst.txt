@@ -26,38 +26,35 @@ evolution of ice shells of icy bodies. Combining finite element method and Lagra
 * tectonic deformation with visco-elasto-plastic rheology
 * melt generation and transport inside the ice shell (using Rayleigh-Taylor approximation)
 
-|
-
 Support
---------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Information on the methodology and the benchmarks performed can be found in Chapter 4 of my `dissertation thesis. <https://geo.mff.cuni.cz/theses/2025-Kihoulou-PhD.pdf>`_
 
 This page was last updated on |today| and is still under development. With any questions, issues or ideas, please contact 
 me at `martin.kihoulou@mff.cuni.cz <mailto:martin.kihoulou@mff.cuni.cz>`_\ .
 
-|
 
 Citation
--------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-For the **latest released version of the code**:
+* Kihoulou, M. (2026). MilleFEuiIle (*Multi-InstrumentaL Lagrangian-Eulerian FEniCS-Using Ice-I Layer Explorer*) (1.0.1). Zenodo. `https://doi.org/10.5281/zenodo.18641506 <https://doi.org/10.5281/zenodo.18641506>`_ 
 
-* Kihoulou, M. (2026). MilleFEuiIle (*Multi-InstrumentaL Lagrangian-Eulerian FEniCS-Using Ice-I Layer Explorer*) (1.0.0). Zenodo. `https://doi.org/10.5281/zenodo.18641506 <https://doi.org/10.5281/zenodo.18641506>`_ 
 
-For thermal convection, free surface, **phase boundary evolution**:
+MilleFEuiIle in publications
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. * Lebec, L., Kihoulou, M., Čadek, O.,  Tobie, G. and Choblet, G. (2026). Cracking Europa: Formation of the dilational bands and material distribution on the surface. Submitted to *J. Geophys. Res. Planets*
+
+* Aygün, B., Kihoulou, M. and Čadek, O. (2026). Titan's heat budget indicates a rapidly emerging subsurface ocean. Submitted to *Geophys. Res. Lett.*, `https://doi.org/10.22541/essoar.177307884.44798188/v1 <https://doi.org/10.22541/essoar.177307884.44798188/v1>`_  **(PREPRINT)**
+
+* Kihoulou, M., Choblet, G., Tobie, G., Kalousová, K. and Čadek, O. (2025). Subduction-like process in Europa’s ice shell triggered by enhanced eccentricity periods. *Science Advances* **11**, eadq8719, `https://www.science.org/doi/10.1126/sciadv.adq8719 <https://www.science.org/doi/10.1126/sciadv.adq8719>`_
 
 * Kihoulou, M., Čadek, O., Kvorka, J., Kalousová, K., Choblet, G. and Tobie, G. (2023). Topographic response to ocean heat flux anomaly on the icy moons of Jupiter and Saturn. *Icarus* **391**, 115337, `https://doi.org/10.1016/j.icarus.2022.115337 <https://doi.org/10.1016/j.icarus.2022.115337>`_
  
 
-For thermal convection, free surface, **tectonic deformation**:
-
-* Kihoulou, M., Choblet, G., Tobie, G., Kalousová, K. and Čadek, O. (2025). Subduction-like process in Europa’s ice shell triggered by enhanced eccentricity periods. *Science Advances* **11**, eadq8719, `https://www.science.org/doi/10.1126/sciadv.adq8719 <https://www.science.org/doi/10.1126/sciadv.adq8719>`_
-
-|
-
 Explore
---------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. toctree::
    :maxdepth: 3
    :includehidden:

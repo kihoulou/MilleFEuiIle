@@ -5,13 +5,13 @@ This module contains the most important computation parameters. It is divided in
 
 **Running parameters**
 
-1. Output files settings
-2. Reloading options
-3. Termination criteria
+1. Run settings
+2. Time settings
 
-**Geometry and material composition**
+**Geometry and material composition, output**
 
-4. Mesh geometry
+3. Mesh settings
+4. Output files settings
 5. Material composition
 
 **Physics**

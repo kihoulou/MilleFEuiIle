@@ -150,6 +150,14 @@ the modified <a class="reference download internal" download="" href="_downloads
 the <a class="reference download internal" download="" href="_downloads/6bf8ea5e5d0ded8c824cfbe424595cb2/m_parameters_demo4.py"><code class="xref download docutils literal notranslate"><span class="pre">parameter</span> <span class="pre">file</span></code></a>,
 and the <a class="reference download internal" download="" href="_downloads/f6f4419f91ba51e10711f38c4be4473f/plot_demo4.py"><code class="xref download docutils literal notranslate"><span class="pre">matplotlib</span> <span class="pre">script</span></code></a>.
 Detailed explanation is given below.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>In this simulation, modification of the <code class="docutils literal notranslate"><span class="pre">m_material_properties.py</span></code> is needed.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Copy the bash script, parameter file, and plotting script from <code class="docutils literal notranslate"><span class="pre">/demos/demo4/</span></code> into the main directory.</p>
+</div>
 </section>
 <section id="material-properties-file-modification">
 <h2>Material properties file modification<a class="headerlink" href="#material-properties-file-modification" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#material-properties-file-modification'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
@@ -160,13 +168,20 @@ Detailed explanation is given below.</p>
 </span><span id="line-2">        <span class="c1"># .</span>
 </span><span id="line-3">        <span class="c1"># .</span>
 </span><span id="line-4">        <span class="c1"># .</span>
-</span><span id="line-5"><mark>        <span class="k">return</span> <span class="p">((</span><span class="mf">1.0</span><span class="o">-</span><span class="n">xm</span><span class="p">)</span><span class="o">*</span><span class="n">rho_s</span><span class="o">*</span><span class="n">mm</span><span class="o">/</span><span class="n">VV</span> <span class="o">+</span> <span class="n">xm</span><span class="o">*</span><span class="n">rho_m</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">composition</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.004</span><span class="o">*</span><span class="n">composition</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</span><span id="line-5">
+</span><span id="line-6">        <span class="c1"># --- Demo 4 ---</span>
+</span><span id="line-7"><mark>        <span class="k">return</span> <span class="p">((</span><span class="mf">1.0</span><span class="o">-</span><span class="n">xm</span><span class="p">)</span><span class="o">*</span><span class="n">rho_s</span><span class="o">*</span><span class="n">mm</span><span class="o">/</span><span class="n">VV</span> <span class="o">+</span> <span class="n">xm</span><span class="o">*</span><span class="n">rho_m</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">composition</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.004</span><span class="o">*</span><span class="n">composition</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 </mark></span></code></pre></div>
 </div>
 </section>
 <section id="parameter-file-modification">
 <h2>Parameter file modification<a class="headerlink" href="#parameter-file-modification" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#parameter-file-modification'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
-<p>In the parameter file, we modify the <code class="docutils literal notranslate"><span class="pre">interface()</span></code> function as a gaussian peak
+<p>First, we redefine the directory name:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Name of the directory with results ---</span>
+</span><span id="line-2"><mark><span class="n">name</span> <span class="o">=</span> <span class="s2">"demo4_convection_comp"</span>
+</mark></span></code></pre></div>
+</div>
+<p>Then, we modify the <code class="docutils literal notranslate"><span class="pre">interface()</span></code> function as a gaussian peak
 in the middle of the ice shell to represent the dyke. Afterwards, in the first position of <code class="docutils literal notranslate"><span class="pre">materials</span></code>,
 we enter the whole domain (the ice), and in the second position the dyke material defined
 as the material below the interface.</p>

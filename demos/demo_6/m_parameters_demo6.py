@@ -1,26 +1,32 @@
+# --- Python modules ---
 from dolfin import *
-from m_constants import *
+from pathlib import Path
 import numpy as np
+import shutil
 import sys
+import os
+
+# --- MilleFEuiIle modules ---
+from m_constants import *
 
 comm = MPI.comm_world
 rank = MPI.rank(comm)
 size = MPI.size(comm)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#------------------------- 1/ OUTPUT FILES SETTINGS -------------------
-#----------------------------------------------------------------------
+#:::::::::::::::::::: 1/ RUN SETTINGS :::::::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # --- Name of the directory with results ---
-name = "demo_compression"
+name = "demo6_extension"
 
 # Protection from overwriting the directory above
 protect_directory = False
 
-# --- Name of the directory from which the data will be reloaded ---
-reload_name 		= ""
-
 # --- Whether or not to load HDF5 data from reload_name/HDF5/data.h5 --- 
 reload 		= False
+
+# --- Name of the directory from which the data will be reloaded ---
+reload_name 		= ""
 
 # ---  Time stamp of the HDF5 file which will be loaded ---
 reload_step			= 10
@@ -29,23 +35,56 @@ reload_step			= 10
 restart_time 	= False
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#-------------------------  TIME SETTINGS -------------------
-#----------------------------------------------------------------------
+#::::::::::::::::::::::::::::: 2/ TIME SETTINGS :::::::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # --- In what units the time will be? ---
 # 1.0 - seconds or nondimensional, or yr, kyr or Myr
 # --- String representation of time_units ---
 time_units_string = "Myr"
 
-# --- Criterion for ending the simulation, e.g., ["time", 1*Myr], ["step", 1000] or ["initial_condition", *]---
+# --- Criterion for ending the simulation, e.g., ["time", 1*Myr], ["step", 1000], ["time_and_step", 100*kyr, 1000] or ["initial_condition", *]---
 termination_condition = ["time", 2*Myr]
 
 # --- Output method for Paraview, HDF5 and  tracers ---
 output_frequency = ["time", 10*kyr] # e.g. ["steps", 10] or ["time", 100*kyr]
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#------------------------- FILE SETTINGS -------------------
-#----------------------------------------------------------------------
+#::::::::::::::::::::::::::::: 3/ MESH SETTINGS :::::::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# --- Mesh height ---
+height = 25e3 # m
+
+# --- Mesh length ---
+length = 50e3 # m
+
+# --- Whether to read an external mesh ---
+loading_mesh = False
+
+# --- Mesh to be loaded ---
+mesh_name 	= ""
+
+# --- Basic mesh resolution if not loading mesh ---
+z_div = 50
+
+# --- Number of nodes in horizontal direction ---
+x_div = int(z_div*(length/height)) # (keeps aspect ratio 1)
+
+# --- Method of dividing basic squares into mesh triangle elements. ---
+triangle_types = "crossed" # crossed, left, right, left/right, right/left
+
+# --- Rectangular mesh refinement ---
+# --- From x_left to x_right and y_bottom to y_top
+# e.g. refinement = [x_left, x_right, y_bottom, y_top] ---
+
+# --- Repeat within the [...] for multiple levels of refinement,
+# leave empty for no refinement ---
+refinement = [] #[0, length, height/2.0, height]
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#::::::::::::::::::::: 4/ OUTPUT FILES SETTINGS :::::::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # --- What properties to save? Must be one of the following (order does not matter):
 # rank              = to which process the tracer belongs
@@ -64,8 +103,11 @@ tracers_output = []
 # --- Headers for the columns in the text file for tracers ---
 tracers_header = [] # KEEP EMPTY, will be filled automatically
 
+# --- Specify tracers whose trajectory will be recorded ---
+save_tracer_trajectory = []
+
 # --- What functions to write into Paraview and HDF5 file ---
-paraview_output = ["temperature", "velocity", "viscosity", "plastic_strain", "composition_1", "composition_2", "density", "diff_coef"]
+paraview_output = ["temperature", "velocity", "viscosity", "plastic_strain", "composition_1", "composition_2", "density"]
 
 paraview_output_ini = ["temperature"]
 
@@ -77,53 +119,17 @@ paraview_output_ini = ["temperature"]
 # q_bot 	= Heat flux over the bottom boundary
 # time		= Duration of the simulation (hours)
 # timestep	= Duration of the time step (seconds)
-stat_output = ["q_top", "time", "timestep"]
+stat_output = ["time", "timestep"]
 
 # --- Headers for the columns in the text file
 # --- Up to the user (order corredponding to "stat_output").
-stat_header = ["q_top (W/m2)", "Time (h)", "dt (s)"]
+stat_header = ["Time (h)", "dt (s)"]
 
 monitor_cache = False
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#------------------------ 3/ MESH SETTINGS ----------------------------
-#----------------------------------------------------------------------
-
-# --- Mesh height ---
-height = 10e3 # m
-
-# --- Mesh length ---
-length = 100e3 # m
-
-save_tracer_trajectory = []
-
-
-# --- Whether to read an external mesh ---
-loading_mesh = False
-
-# --- Mesh to be loaded ---
-mesh_name 	= ""
-
-# --- Basic mesh resolution if not loading mesh ---
-z_div = 20
-
-# --- Number of nodes in horizontal direction ---
-x_div = int(z_div*(length/height)) # (keeps aspect ratio 1)
-
-# --- Method of dividing basic squares into mesh triangle elements. ---
-triangle_types = "crossed" # crossed, left, right, left/right, right/left
-
-# --- Rectangular mesh refinement ---
-# --- From x_left to x_right and y_bottom to y_top
-# e.g. refinement = [x_left, x_right, y_bottom, y_top] ---
-
-# --- Repeat within the [...] for multiple levels of refinement,
-# leave empty for no refinement ---
-refinement = [] #[0, length, height/2.0, height]
-
+#:::::::::::::::::::: 5/ MATERIAL COMPOSITION SETTINGS ::::::::::::::::
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#------------------------- 4/ MATERIAL COMPOSITION -------------------
-#----------------------------------------------------------------------
 
 # --- Simple material assignment using "interface", "circle" or "rectangle" geometries ---
 # --- The n-th material overrides the (n-1)th.
@@ -150,13 +156,13 @@ empty_cells_region = [] #  So far rectangle implemented
 
 initial_topography = False
 
-h_top_ini = Expression("0.0*sin(120*pi*x[0]/l)", l = length, pi = np.pi, degree = 1)
+h_top_ini = Expression("0.0", l = length, pi = np.pi, degree = 1)
 
-h_bot_ini = Expression("8.5e3*(tanh((x[0]-l/4)/3000) - tanh((x[0] - 3*l/4)/3000))/2.0", l = length, degree = 1)
+h_bot_ini = Expression("0.0", l = length, degree = 1)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#------------ 4/ STOKES PROBLEM SETTINGS -------------------
-#----------------------------------------------------------------------
+#::::::::::::::::::::::: 6/ STOKES PROBLEM SETTINGS :::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 stokes_elements = "Mini"
 
 time_step_position = "stokes"# (right after Stokes problem) or "end" (at the end of the time loop)
@@ -175,13 +181,9 @@ error_type          = "integrated" # "maximum or integrated"
 
 # Boundary conditions for velocity (free_slip, no_slip, free surface, velocity, velocity_x, velocity_y)
 BC_Stokes_problem = [["free_surface"],                # top boundary       (1)
-                    ["free_surface"],    # bottom boundary    (2)
-                    ["velocity_x", +10e3/Myr],       # left boundary      (3)
-                    ["velocity_x", -10e3/Myr]]       # right boundary     (4)
-# BC_Stokes_problem = [["free_surface"],                # top boundary       (1)
-#                      ["free_surface"],    # bottom boundary    (2)
-#                      ["velocity_x", -10e3/Myr],       # left boundary      (3)
-#                      ["velocity_x", +10e3/Myr]]       # right boundary     (4)
+                    ["velocity", 0.0, 10e3/Myr],    # bottom boundary    (2)
+                    ["velocity_x", -10e3/Myr],       # left boundary      (3)
+                    ["velocity_x", 10e3/Myr]]       # right boundary     (4)
 
 
 mesh_displacement_laplace = "full"  #"full" or "z_only"
@@ -196,7 +198,7 @@ tracers_per_cell = 20
 weight_tracers_by_ratio = False
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#:::::::::::::::::::: HEAT TRANSFER SETTINGS ::::::::::::::::::::::::::
+#:::::::::::::::::::: 7/ HEAT TRANSFER SETTINGS :::::::::::::::::::::::
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # --- Solve heat transfer? ---
@@ -249,7 +251,7 @@ init_cond_profile = True
 cos_perturbation = True
 
 # --- Thermal perturbation amplitude ---
-perturb_ampl 	= 5 # K
+perturb_ampl 	= 1 # K
 # --Number of half-cosine waves in lateral direction ---
 perturb_freq 	= 1 
 
@@ -269,8 +271,8 @@ scaled_time_step = False
 dt_max = 0.1*Myr
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#---------------------------- 6/ RHEOLOGY -----------------------------
-#::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+#:::::::::::::::::::::::::: 8/ RHEOLOGY SETTINGS ::::::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # === PHYSICAL PARAMETERS ===
 # --- Density of the domain solid ---
@@ -282,7 +284,6 @@ rho_l 	= 1000.0 # kg/m3
 # --- Density of the melt produced by the solid ---
 rho_m 	= rho_l # kg/m3
 
-alpha_exp = 1.6e-4	# K^-1
 
 # === PHYSICAL INGREDIENTS ===
 # --- Gravity acceleration ---
@@ -305,7 +306,7 @@ DAL_factor = 0.0 # W/m3
 Lt 			= 334.0e3 # J/kg
 
 # --- Adaptive topography diffusion and topography diffusion factor ---
-adaptive_smoothing = True
+adaptive_smoothing = False
 topo_diff = 1e-8
 
 # --- Rheological parameters ---
@@ -336,7 +337,6 @@ stress_iter_error = 1e-4
 # --- Plasticity ---
 # --- Angle of internal friction in degrees ---
 int_friction_angle = 16.0
-int_friction_angle2 = 0.0
 
 # --- Cohesion of an undamaged material (Pa) ---
 cohesion_strong = 1e6
@@ -357,3 +357,23 @@ healing = False
 
 # --- Characteristic time scale for the microscopic healing processes ---
 healing_timescale = 100*kyr
+
+if __name__ == "__main__":
+   # --- Copy the original parameter file ---
+   Path("data_" + name + "/source_code").mkdir(parents = True, exist_ok = True)
+   shutil.copy(os.path.basename(__file__), "data_" + name + "/source_code/" + os.path.basename(__file__)) 
+
+   # --- Distinguish the bash script name from loop parameters ---
+   i = 1
+   while True:
+      bash_script= sys.argv[i]
+      if (isinstance(bash_script, str)):
+         if (".sh" in bash_script):
+            break
+         else:
+            i += 1
+      else:
+         i += 1
+
+   # --- Copy the original bash script ---
+   os.system("cp " + bash_script + " data_" + name + "/source_code")

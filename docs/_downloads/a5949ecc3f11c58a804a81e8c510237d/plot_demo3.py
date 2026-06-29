@@ -1,17 +1,21 @@
+# --- Python modules ---
 from dolfin import *
 import matplotlib.pyplot as plt
-
-import numpy as np
 import subprocess
+import numpy as np
+import sys
+
+# --- MilleFEuiIle modules ---
 from plot_MilleFEuiIle import *
 
 comm = MPI.comm_world
 rank = MPI.rank(comm)
-size= MPI.size(comm)
-
-name = "demo_convection_phase1e15"
+size = MPI.size(comm)
+name = "demo3_convection_phase1e15"
 
 skip_plotting = False
+
+plot_HDF5_data = True
 
 plot_streamlines = True
 
@@ -19,13 +23,22 @@ plot_tracers = False
 
 plot_melt_tracers = False
 
+plot_comp_tracers = []
+
+plot_trajectories = []
+tail = "comet"
+tail_length = 500 # steps
+
 show_time = True
 
 plot_scalebar = False
 
 plot_axes = True
 
-i_start = 0 
+try:
+    i_start = int(sys.argv[1])
+except:
+    i_start = 0
 
 if (skip_plotting == False):
     font_size = 14
@@ -115,7 +128,7 @@ if (skip_plotting == False):
                             )
 
             if (plot_scalebar == True):
-                scalebar(ax, 50e3, 0, font_size)
+                scalebar(ax, 50e3, 10e3, font_size)
 
             if (plot_axes == False):
                 ax.axis('off')
@@ -123,14 +136,20 @@ if (skip_plotting == False):
             if (show_time == True):
                 ax.text(0, 1.1*z_label_val[-1], r"$t$ = "+str("{:.1f}".format(ii[2]))+" Myr", fontsize=font_size)
 
+             # --- Plot tracer trajectories ---
+            if (len(plot_trajectories) > 0):
+                for j in range(0, len(plot_trajectories)):
+                    plot_trajectory(ax, name, plot_trajectories[j], sim_step, tail, tail_length)
+
             # --- Plot temperature field ---
             print("\nPlotting snapshot", hdf5_step, "/", int(steps[len(steps) - 1][0]))
-            plot_scalar(ax, fig, Temp, mesh, labels, x_range, z_range, font_size, "smooth")
+            plot_scalar(ax, fig, Temp, mesh, labels, x_range, z_range, font_size, "smooth", plot_HDF5_data)
 
-            # --- Plot tracers ---
+            # --- Plot composition tracers ---
             if (plot_tracers == True):
                 load_comp_tracers(ax, name, sim_step)
 
+            # --- Plot melt tracers ---
             if (plot_melt_tracers == True):
                 load_melt_tracers(ax, name, labels, fig, font_size, sim_step)
 

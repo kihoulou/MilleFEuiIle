@@ -140,7 +140,7 @@
 <figure class="align-default" id="id1">
 <img alt="_images/demo5.gif" src="_images/demo5.gif"/>
 <figcaption>
-<p><span class="caption-text">Tidally heated thermal convection in an ice shell inspired by the setup of <a class="reference external" href="https://doi.org/10.1029/2003JE002099">Tobie et al. (2025)</a> .</span><a class="headerlink" href="#id1" title="Link to this image"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></p>
+<p><span class="caption-text">Tidally heated thermal convection in an ice shell inspired by the setup of <a class="reference external" href="https://doi.org/10.1029/2003JE002099">Tobie et al. (2003)</a> .</span><a class="headerlink" href="#id1" title="Link to this image"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></p>
 </figcaption>
 </figure>
 <section id="download">
@@ -148,25 +148,59 @@
 <p>Here you can download the <a class="reference download internal" download="" href="_downloads/e2fbae9dc58569eec6f03d238bfde68f/run_MilleFEuiIle_demo5.sh"><code class="xref download docutils literal notranslate"><span class="pre">bash</span> <span class="pre">script</span></code></a>the <a class="reference download internal" download="" href="_downloads/2af5da1a47d6ae8c7d2043d4d9adee49/m_parameters_demo5.py"><code class="xref download docutils literal notranslate"><span class="pre">parameter</span> <span class="pre">file</span></code></a>,
 and the <a class="reference download internal" download="" href="_downloads/ac8cd0a323b5656aad5aa15392b0e318/plot_demo5.py"><code class="xref download docutils literal notranslate"><span class="pre">matplotlib</span> <span class="pre">script</span></code></a>.
 Detailed explanation is given below.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>In this simulation, modification of the <code class="docutils literal notranslate"><span class="pre">m_material_properties.py</span></code> and <code class="docutils literal notranslate"><span class="pre">m_rheology.py</span></code> is needed.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Copy the bash script, parameter file, and plotting script from <code class="docutils literal notranslate"><span class="pre">/demos/demo5/</span></code> into the main directory.</p>
+</div>
 </section>
-<section id="parameter-file-line-by-line">
-<h2>Parameter file line by line<a class="headerlink" href="#parameter-file-line-by-line" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#parameter-file-line-by-line'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
-<p>The parameter file contains all parameters that can be set. Not all of them
-are needed for every setting, therefore here only the active ones are highlighted.</p>
-<section id="output-files-settings">
-<h3>Output files settings<a class="headerlink" href="#output-files-settings" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#output-files-settings'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
-<p>We start with the directory name</p>
+<section id="rheology-file-modification">
+<h2>Rheology file modification<a class="headerlink" href="#rheology-file-modification" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#rheology-file-modification'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
+<p>Here we adopt the viscosity for the mixture of ice and melt from Tobie et al. (2003):</p>
+<div class="math notranslate nohighlight">
+\[\eta(T) = \eta_0\left(-\frac{14}{170}(T - T_{\rm bot})\right)\cdot\exp(-45\chi)\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="k">if</span> <span class="p">(</span><span class="n">viscosity_type</span> <span class="o">==</span> <span class="s2">"temp-dep"</span><span class="p">):</span>
+</span><span id="line-2">    <span class="c1"># eta_v = 1.0/(1.0/(eta_0*exp(Q_activ/R_gas*(1.0/Temp - 1.0/T_ref))) + 1.0/eta_max)*exp(-45.0*xm)</span>
+</span><span id="line-3">
+</span><span id="line-4">    <span class="c1"># --- Demo 5 ---</span>
+</span><span id="line-5"><mark>    <span class="n">T_bot</span> <span class="o">=</span> <span class="n">BC_heat_transfer</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+</mark></span><span id="line-6"><mark>    <span class="n">eta_v</span> <span class="o">=</span> <span class="n">eta_0</span><span class="o">*</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">14.0</span><span class="o">*</span><span class="p">(</span><span class="n">Temp</span> <span class="o">-</span> <span class="n">T_bot</span><span class="p">)</span><span class="o">/</span><span class="mf">170.0</span><span class="p">)</span><span class="o">*</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">45.0</span><span class="o">*</span><span class="n">xm</span><span class="p">)</span>
+</mark></span></code></pre></div>
+</div>
+</section>
+<section id="material-properties-file-modification">
+<h2>Material properties file modification<a class="headerlink" href="#material-properties-file-modification" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#material-properties-file-modification'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
+<p>Here we adopt constant thermal properties from Tobie et al. (2003):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="k">def</span><span class="w"> </span><span class="nf">k</span><span class="p">(</span><span class="n">Temp</span><span class="p">,</span> <span class="n">composition</span><span class="p">):</span>
+</span><span id="line-2">    <span class="c1"># k_H2O = 612.0/Temp</span>
+</span><span id="line-3">
+</span><span id="line-4">    <span class="c1"># --- Demo 5 ---</span>
+</span><span id="line-5"><mark>    <span class="n">k_H2O</span> <span class="o">=</span> <span class="mf">2.3</span>
+</mark></span><span id="line-6">
+</span><span id="line-7">    <span class="k">return</span> <span class="n">k_H2O</span>
+</span><span id="line-8">
+</span><span id="line-9"><span class="k">def</span><span class="w"> </span><span class="nf">cp</span><span class="p">(</span><span class="n">Temp</span><span class="p">,</span> <span class="n">composition</span><span class="p">):</span>
+</span><span id="line-10">    <span class="c1"># cp_H2O = 185.0 + 7.037*Temp</span>
+</span><span id="line-11">
+</span><span id="line-12">    <span class="c1"># --- Demo 5 ---</span>
+</span><span id="line-13"><mark>    <span class="n">cp_H2O</span> <span class="o">=</span> <span class="mi">2100</span>
+</mark></span><span id="line-14">
+</span><span id="line-15">    <span class="k">return</span> <span class="n">cp_H2O</span>
+</span></code></pre></div>
+</div>
+</section>
+<section id="parameter-file-modification">
+<h2>Parameter file modification<a class="headerlink" href="#parameter-file-modification" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#parameter-file-modification'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
+<p>We start with changing the directory name</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Name of the directory with results ---</span>
-</span><span id="line-2"><mark><span class="n">name</span> <span class="o">=</span> <span class="s2">"convection_melting"</span>
+</span><span id="line-2"><mark><span class="n">name</span> <span class="o">=</span> <span class="s2">"demo5_convection_melting"</span>
 </mark></span></code></pre></div>
 </div>
-<p>The directory protection will be turned off, meaning that when lauched repeatedly,
-the results will be overwritten each time</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># Protection from overwriting the directory above</span>
-</span><span id="line-2"><mark><span class="n">protect_directory</span> <span class="o">=</span> <span class="kc">False</span>
-</mark></span></code></pre></div>
-</div>
-<p>We choose the time units millions of years and output every 25 kyr.</p>
+<p>As the melt generation and collapse will be rather quick, we make the output more frequent.
+We choose the time units millions of years and output every 25 kyr.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- In what units the time will be? ---</span>
 </span><span id="line-2"><span class="c1"># 1.0 - seconds or nondimensional, or yr, kyr or Myr</span>
 </span><span id="line-3"><mark><span class="n">time_units</span> <span class="o">=</span> <span class="n">Myr</span>
@@ -178,95 +212,6 @@ the results will be overwritten each time</p>
 </span><span id="line-9"><mark><span class="n">output_frequency</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"time"</span><span class="p">,</span> <span class="mi">25</span><span class="o">*</span><span class="n">kyr</span><span class="p">]</span>
 </mark></span></code></pre></div>
 </div>
-<p>Tracers will be used for partial melt, we need to save them in order to visualize them later.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Save tracers into files? ---</span>
-</span><span id="line-2"><mark><span class="n">save_tracers</span> <span class="o">=</span> <span class="kc">True</span>
-</mark></span><span id="line-3">
-</span><span id="line-4"><span class="c1"># --- What properties to save? Must be one of the following (order does not matter):</span>
-</span><span id="line-5"><mark><span class="n">tracers_output</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"melt_fraction"</span><span class="p">]</span>
-</mark></span><span id="line-6">
-</span><span id="line-7"><span class="c1"># --- Headers for the columns in the text file for tracers</span>
-</span><span id="line-8"><mark><span class="n">tracers_header</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Melt fraction (-)"</span><span class="p">]</span>
-</mark></span></code></pre></div>
-</div>
-<p>To visualize the results in Paraview, we will save temperature, melt fraction, and viscosity.
-For initial condition, we will save only temperature.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- What functions to write into Paraview and HDF5 file ---</span>
-</span><span id="line-2"><mark><span class="n">paraview_output</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"temperature"</span><span class="p">,</span> <span class="s2">"melt_fraction"</span><span class="p">,</span> <span class="s2">"viscosity"</span><span class="p">]</span>
-</mark></span><span id="line-3">
-</span><span id="line-4"><mark><span class="n">paraview_output_ini</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"temperature"</span><span class="p">]</span>
-</mark></span></code></pre></div>
-</div>
-<p>To the statistics text file, time (in the units specified above, i.e., Myr)
-and the duration of the time step will be saved. We also choose corresponding headers.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- What values to print in a text file every time step? ---</span>
-</span><span id="line-2"><mark><span class="n">stat_output</span> <span class="o">=</span> <span class="p">[</span> <span class="s2">"time"</span><span class="p">,</span> <span class="s2">"timestep"</span><span class="p">]</span>
-</mark></span><span id="line-3">
-</span><span id="line-4"><span class="c1"># --- Headers for the columns in the text file</span>
-</span><span id="line-5"><mark><span class="n">stat_header</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Time (h)"</span><span class="p">,</span> <span class="s2">"dt (s)"</span><span class="p">]</span>
-</mark></span></code></pre></div>
-</div>
-<div class="line-block">
-<div class="line"><br/></div>
-</div>
-</section>
-<section id="reloading-options">
-<h3>Reloading options<a class="headerlink" href="#reloading-options" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#reloading-options'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
-<p>As we define our initial condition and not reload, the following options need to be set.
-The number at <code class="docutils literal notranslate"><span class="pre">reload_HDF5_step</span></code> and <code class="docutils literal notranslate"><span class="pre">reload_tracers_step</span></code> does not matter, but needs
-to be defined.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Name of the directory from which the data will be reloaded ---</span>
-</span><span id="line-2"><mark><span class="n">reload_name</span>                 <span class="o">=</span> <span class="s2">""</span>
-</mark></span><span id="line-3">
-</span><span id="line-4"><span class="c1"># --- Whether or not to load HDF5 data from data_reload_name/HDF5/data.h5 ---</span>
-</span><span id="line-5"><mark><span class="n">reload_HDF5</span>                 <span class="o">=</span> <span class="kc">False</span>
-</mark></span><span id="line-6">
-</span><span id="line-7"><span class="c1"># ---  Time stamp of the HDF5 file which will be loaded ---</span>
-</span><span id="line-8"><mark><span class="n">reload_HDF5_step</span>                    <span class="o">=</span> <span class="mi">0</span>
-</mark></span><span id="line-9">
-</span><span id="line-10"><span class="c1"># --- What functions to read from HDF5 file when reloading ---</span>
-</span><span id="line-11"><mark><span class="n">reload_HDF5_functions</span> <span class="o">=</span> <span class="p">[]</span>
-</mark></span><span id="line-12">
-</span><span id="line-13"><mark><span class="n">reload_tracers</span>      <span class="o">=</span> <span class="kc">False</span>
-</mark></span><span id="line-14">
-</span><span id="line-15"><mark><span class="n">reload_tracers_step</span>         <span class="o">=</span> <span class="mi">0</span> <span class="c1"># Second column in data_timestamp.dat</span>
-</mark></span><span id="line-16">
-</span><span id="line-17"><span class="c1"># --- Whether to reset time when reloading ---</span>
-</span><span id="line-18"><mark><span class="n">restart_time</span>        <span class="o">=</span> <span class="kc">False</span>
-</mark></span></code></pre></div>
-</div>
-<div class="line-block">
-<div class="line"><br/></div>
-</div>
-</section>
-<section id="simulation-duration">
-<h3>Simulation duration<a class="headerlink" href="#simulation-duration" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#simulation-duration'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
-<p>The simulation will be stopped at 20 Myr.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Criterion for ending the simulation, e.g. ["time", 1*Myr] or ["step", 1000] ---</span>
-</span><span id="line-2"><mark><span class="n">termination_condition</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"time"</span><span class="p">,</span> <span class="mi">20</span><span class="o">*</span><span class="n">Myr</span><span class="p">]</span>
-</mark></span></code></pre></div>
-</div>
-<div class="line-block">
-<div class="line"><br/></div>
-</div>
-</section>
-<section id="tracers-options">
-<h3>Tracers options<a class="headerlink" href="#tracers-options" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#tracers-options'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
-<p>Although tracers will be used, the options below are not relevant, because melt is the only mechanism using them, therefore the tracers will be added on the go.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">sm_thickness</span> <span class="o">=</span> <span class="mf">500.0</span>        <span class="c1"># m</span>
-</span><span id="line-2"><span class="n">om_thickness</span> <span class="o">=</span> <span class="mf">500.0</span>        <span class="c1"># m</span>
-</span><span id="line-3">
-</span><span id="line-4"><span class="n">integration_method</span> <span class="o">=</span> <span class="s2">"RK4"</span> <span class="c1"># Euler, RK2, RK4</span>
-</span><span id="line-5">
-</span><span id="line-6"><span class="n">tracers_per_cell</span> <span class="o">=</span> <span class="mi">20</span>
-</span><span id="line-7">
-</span><span id="line-8"><span class="n">weight_tracers_by_ratio</span> <span class="o">=</span> <span class="kc">False</span>
-</span></code></pre></div>
-</div>
-<div class="line-block">
-<div class="line"><br/></div>
-</div>
-</section>
 <section id="mesh-geometry">
 <h3>Mesh geometry<a class="headerlink" href="#mesh-geometry" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#mesh-geometry'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
 <p>The computational domain will be 20 km thick and 40 km long. The mesh will be created
@@ -285,101 +230,74 @@ the longest side of 1 km.</p>
 </span><span id="line-11"><mark><span class="n">mesh_name</span>   <span class="o">=</span> <span class="s2">""</span>
 </mark></span><span id="line-12">
 </span><span id="line-13"><span class="c1"># --- Basic mesh resolution if not loading mesh ---</span>
-</span><span id="line-14"><mark><span class="n">z_div</span> <span class="o">=</span> <span class="mi">40</span>
-</mark></span><span id="line-15">
-</span><span id="line-16"><span class="c1"># --- Number of nodes in horizontal direction ---</span>
-</span><span id="line-17"><mark><span class="n">x_div</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">z_div</span><span class="o">*</span><span class="p">(</span><span class="n">length</span><span class="o">/</span><span class="n">height</span><span class="p">))</span> <span class="c1"># (keeps aspect ratio 1)</span>
-</mark></span><span id="line-18">
-</span><span id="line-19"><span class="c1"># --- Method of dividing basic squares into mesh triangle elements. ---</span>
-</span><span id="line-20"><mark><span class="n">triangle_types</span> <span class="o">=</span> <span class="s2">"crossed"</span> <span class="c1"># crossed, left, right, left/right, right/left</span>
-</mark></span><span id="line-21">
-</span><span id="line-22"><span class="c1"># --- Rectangular mesh refinement ---</span>
-</span><span id="line-23"><mark><span class="n">refinement</span> <span class="o">=</span> <span class="p">[]</span>
-</mark></span></code></pre></div>
-</div>
-<div class="line-block">
-<div class="line"><br/></div>
-</div>
-</section>
-<section id="material-composition">
-<h3>Material composition<a class="headerlink" href="#material-composition" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#material-composition'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
-<p>The ice will consist of pure ice, therefore the list <code class="docutils literal notranslate"><span class="pre">materials</span></code> will remain empty.
-Other options can be left as they are.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><mark><span class="n">materials</span> <span class="o">=</span> <span class="p">[]</span>
-</mark></span><span id="line-2">
-</span><span id="line-3"><span class="n">empty_cells_allowed</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span id="line-4">
-</span><span id="line-5"><span class="n">empty_cells_composition</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span id="line-6">
-</span><span id="line-7"><span class="n">empty_cells_region</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="line-14"><mark><span class="n">z_div</span> <span class="o">=</span> <span class="mi">50</span>
+</mark></span><span id="line-15"><span class="c1"># --- Number of nodes in horizontal direction ---</span>
+</span><span id="line-16"><span class="n">x_div</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">z_div</span><span class="o">*</span><span class="p">(</span><span class="n">length</span><span class="o">/</span><span class="n">height</span><span class="p">))</span> <span class="c1"># (keeps aspect ratio 1)</span>
+</span><span id="line-17"><mark>
+</mark></span><span id="line-18"><span class="c1"># --- Method of dividing basic squares into mesh triangle elements. ---</span>
+</span><span id="line-19"><span class="n">triangle_types</span> <span class="o">=</span> <span class="s2">"crossed"</span> <span class="c1"># crossed, left, right, left/right, right/left</span>
+</span><span id="line-20"><mark>
+</mark></span><span id="line-21"><span class="c1"># --- Rectangular mesh refinement ---</span>
+</span><span id="line-22"><span class="n">refinement</span> <span class="o">=</span> <span class="p">[]</span>
 </span></code></pre></div>
 </div>
 <div class="line-block">
 <div class="line"><br/></div>
 </div>
-</section>
-<section id="rheology">
-<h3>Rheology<a class="headerlink" href="#rheology" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#rheology'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
-<p>We will modify the formula for temperature-dependent viscosity, therefore we will specify the viscosity type here.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><mark><span class="n">viscosity_type</span> <span class="o">==</span> <span class="s2">"temp-dep"</span>
+<p>Tracers will be used for partial melt, we will save them in order to visualize them later.
+However, both <code class="docutils literal notranslate"><span class="pre">tracers_output</span></code> and <code class="docutils literal notranslate"><span class="pre">tracers_header</span></code> can remain empty, as <code class="docutils literal notranslate"><span class="pre">m_check.py</span></code> fills
+them automatically.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- What properties to save? Must be one of the following (order does not matter):</span>
+</span><span id="line-2"><mark><span class="n">tracers_output</span> <span class="o">=</span> <span class="p">[]</span>
+</mark></span><span id="line-3">
+</span><span id="line-4"><span class="c1"># --- Headers for the columns in the text file for tracers</span>
+</span><span id="line-5"><mark><span class="n">tracers_header</span> <span class="o">=</span> <span class="p">[]</span>
+</mark></span></code></pre></div>
+</div>
+<p>To visualize the results in Paraview, we will save temperature, melt fraction, and viscosity.
+For initial condition, we will save only temperature.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- What functions to write into Paraview and HDF5 file ---</span>
+</span><span id="line-2"><mark><span class="n">paraview_output</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"temperature"</span><span class="p">,</span> <span class="s2">"melt_fraction"</span><span class="p">,</span> <span class="s2">"viscosity"</span><span class="p">]</span>
+</mark></span><span id="line-3">
+</span><span id="line-4"><mark><span class="n">paraview_output_ini</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"temperature"</span><span class="p">]</span>
 </mark></span></code></pre></div>
 </div>
 <div class="line-block">
 <div class="line"><br/></div>
 </div>
 </section>
-</section>
-<section id="rheology-file-modification">
-<h2>Rheology file modification<a class="headerlink" href="#rheology-file-modification" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#rheology-file-modification'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
-<p>Here we adopt the viscosity for the mixture of ice and melt from Tobie et al. (2003):</p>
-<div class="math notranslate nohighlight">
-\[\eta(T) = \eta_0\left(-\frac{14}{170}(T - T_{\rm bot})\right)\cdot\exp(-45\chi)\]</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="k">if</span> <span class="p">(</span><span class="n">viscosity_type</span> <span class="o">==</span> <span class="s2">"temp-dep"</span><span class="p">):</span>
-</span><span id="line-2">    <span class="n">T_bot</span> <span class="o">=</span> <span class="n">BC_heat_transfer</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
-</span><span id="line-3"><mark>    <span class="n">eta_v</span> <span class="o">=</span> <span class="n">eta_0</span><span class="o">*</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">14.0</span><span class="o">*</span><span class="p">(</span><span class="n">Temp</span> <span class="o">-</span> <span class="n">T_bot</span><span class="p">)</span><span class="o">/</span><span class="mf">170.0</span><span class="p">)</span><span class="o">*</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">45.0</span><span class="o">*</span><span class="n">xm</span><span class="p">)</span>
+<section id="heat-transfer-settings">
+<h3>Heat transfer settings<a class="headerlink" href="#heat-transfer-settings" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#heat-transfer-settings'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
+<p>We also increase the temperature at the bottom of the ice shell.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><mark><span class="n">BC_heat_transfer</span>   <span class="o">=</span> <span class="p">[[</span><span class="s2">"temp"</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">],</span>      <span class="c1"># top boundary    (1)</span>
+</mark></span><span id="line-2">                      <span class="p">[</span><span class="s2">"temp"</span><span class="p">,</span> <span class="mf">270.0</span><span class="p">],</span>     <span class="c1"># bottom boundary (2)</span>
+</span><span id="line-3">                      <span class="p">[</span><span class="s2">"heat_flux"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>  <span class="c1"># left boundary   (3)</span>
+</span><span id="line-4">                      <span class="p">[</span><span class="s2">"heat_flux"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]]</span>  <span class="c1"># right boundary  (4)</span>
+</span></code></pre></div>
+</div>
+<p>In order to trigger melting, we turn on the tidal heating and specify its properties</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Tidal heating ---</span>
+</span><span id="line-2"><mark><span class="n">tidal_dissipation</span>           <span class="o">=</span> <span class="kc">True</span>
+</mark></span><span id="line-3">
+</span><span id="line-4"><mark><span class="n">initial_tidal_dissipation</span>   <span class="o">=</span> <span class="kc">False</span>
+</mark></span><span id="line-5"><mark><span class="n">heating_model</span>               <span class="o">=</span> <span class="s2">"Maxwell"</span> <span class="c1"># Maxwell, Andrade or none</span>
+</mark></span><span id="line-6"><mark><span class="n">H_max</span> <span class="o">=</span> <span class="mf">4e-6</span> <span class="c1"># W m^{-3}</span>
 </mark></span></code></pre></div>
 </div>
 </section>
-<section id="material-properties-file-modification">
-<h2>Material properties file modification<a class="headerlink" href="#material-properties-file-modification" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#material-properties-file-modification'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
-<p>Here we adopt the density of the mixture of ice and melt from Tobie et al. (2003):</p>
-<div class="math notranslate nohighlight">
-\[\rho(T, \chi) = \rho_s(1 - \alpha(T - T_{ref})) + \chi\rho_s(1 - \rho_s / \rho_m)\]</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="k">def</span><span class="w"> </span><span class="nf">rho</span><span class="p">(</span><span class="n">Temp</span><span class="p">,</span> <span class="n">composition</span><span class="p">,</span> <span class="n">xm</span><span class="p">):</span>
-</span><span id="line-2">        <span class="c1"># .</span>
-</span><span id="line-3">        <span class="c1"># .</span>
-</span><span id="line-4">        <span class="c1"># .</span>
-</span><span id="line-5"><mark>        <span class="k">return</span> <span class="n">rho_s</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="mf">1.6e-4</span><span class="o">*</span><span class="p">(</span><span class="n">Temp</span><span class="o">-</span><span class="n">T_ref</span><span class="p">))</span> <span class="o">+</span> <span class="n">xm</span><span class="o">*</span><span class="n">rho_s</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="n">rho_s</span><span class="o">/</span><span class="n">rho_m</span><span class="p">)</span>
-</mark></span></code></pre></div>
-</div>
-<p>and constant thermal properties:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="k">def</span><span class="w"> </span><span class="nf">k</span><span class="p">(</span><span class="n">Temp</span><span class="p">,</span> <span class="n">composition</span><span class="p">):</span>
-</span><span id="line-2">        <span class="c1">#return 2.3 567.0/Temp</span>
-</span><span id="line-3"><mark>        <span class="k">return</span> <span class="mf">2.3</span>
-</mark></span><span id="line-4">
-</span><span id="line-5"><span class="k">def</span><span class="w"> </span><span class="nf">cp</span><span class="p">(</span><span class="n">Temp</span><span class="p">,</span> <span class="n">composition</span><span class="p">):</span>
-</span><span id="line-6">        <span class="c1">#return 185.0 + 7.037*Temp</span>
-</span><span id="line-7"><mark>        <span class="k">return</span> <span class="mf">2100.0</span>
-</mark></span></code></pre></div>
-</div>
 </section>
 </section>
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
 <li><a :data-current="activeSection === '#download'" class="reference internal" href="#download">Download</a></li>
-<li><a :data-current="activeSection === '#parameter-file-line-by-line'" class="reference internal" href="#parameter-file-line-by-line">Parameter file line by line</a><ul>
-<li><a :data-current="activeSection === '#output-files-settings'" class="reference internal" href="#output-files-settings">Output files settings</a></li>
-<li><a :data-current="activeSection === '#reloading-options'" class="reference internal" href="#reloading-options">Reloading options</a></li>
-<li><a :data-current="activeSection === '#simulation-duration'" class="reference internal" href="#simulation-duration">Simulation duration</a></li>
-<li><a :data-current="activeSection === '#tracers-options'" class="reference internal" href="#tracers-options">Tracers options</a></li>
-<li><a :data-current="activeSection === '#mesh-geometry'" class="reference internal" href="#mesh-geometry">Mesh geometry</a></li>
-<li><a :data-current="activeSection === '#material-composition'" class="reference internal" href="#material-composition">Material composition</a></li>
-<li><a :data-current="activeSection === '#rheology'" class="reference internal" href="#rheology">Rheology</a></li>
-</ul>
-</li>
 <li><a :data-current="activeSection === '#rheology-file-modification'" class="reference internal" href="#rheology-file-modification">Rheology file modification</a></li>
 <li><a :data-current="activeSection === '#material-properties-file-modification'" class="reference internal" href="#material-properties-file-modification">Material properties file modification</a></li>
+<li><a :data-current="activeSection === '#parameter-file-modification'" class="reference internal" href="#parameter-file-modification">Parameter file modification</a><ul>
+<li><a :data-current="activeSection === '#mesh-geometry'" class="reference internal" href="#mesh-geometry">Mesh geometry</a></li>
+<li><a :data-current="activeSection === '#heat-transfer-settings'" class="reference internal" href="#heat-transfer-settings">Heat transfer settings</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </aside>

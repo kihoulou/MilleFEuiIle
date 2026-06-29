@@ -149,14 +149,27 @@ scales the maximum speed at given time step.</span><a class="headerlink" href="#
 <h2>Download<a class="headerlink" href="#download" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#download'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
 <p>Here you can download the <a class="reference download internal" download="" href="_downloads/3304094043a1c32131de6ad0007476ea/run_MilleFEuiIle_demo3.sh"><code class="xref download docutils literal notranslate"><span class="pre">bash</span> <span class="pre">script</span></code></a>, the <a class="reference download internal" download="" href="_downloads/66a6504111bd7caa4738781a4f468f53/m_parameters_demo3.py"><code class="xref download docutils literal notranslate"><span class="pre">parameter</span> <span class="pre">file</span></code></a>and the <a class="reference download internal" download="" href="_downloads/a5949ecc3f11c58a804a81e8c510237d/plot_demo3.py"><code class="xref download docutils literal notranslate"><span class="pre">matplotlib</span> <span class="pre">script</span></code></a>for the heat flux evolution.
 Detailed explanation is given below.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Copy the bash script, parameter file, and plotting script from <code class="docutils literal notranslate"><span class="pre">/demos/demo3/</span></code> into the main directory.</p>
+</div>
 </section>
 <section id="parameter-file-modification">
 <h2>Parameter file modification<a class="headerlink" href="#parameter-file-modification" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#parameter-file-modification'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h2>
+<p>First, we redefine the directory name:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Name of the directory with results ---</span>
+</span><span id="line-2"><mark><span class="n">name</span> <span class="o">=</span> <span class="s2">"demo3_convection_phase1e15"</span>
+</mark></span></code></pre></div>
+</div>
+<p>Then, we make the output more frequent.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><mark><span class="n">output_frequency</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"time"</span><span class="p">,</span> <span class="mi">50</span><span class="o">*</span><span class="n">kyr</span><span class="p">]</span>
+</mark></span></code></pre></div>
+</div>
 <p>Compared to the thermal convection in the previous section, we need the bottom boundary to deform,
 therefre we prescribe the free surface boundary condition</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># Boundary conditions for velocity (free_slip, no_slip, free surface, velocity, velocity_x, velocity_y)</span>
-</span><span id="line-2"><span class="n">BC_Stokes_problem</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">"free_slip"</span><span class="p">],</span>                <span class="c1"># top boundary       (1)</span>
-</span><span id="line-3"><mark>                    <span class="p">[</span><span class="s2">"free_surface"</span><span class="p">],</span>    <span class="c1"># bottom boundary    (2)</span>
+</span><span id="line-2"><span class="n">BC_Stokes_problem</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">"free_slip"</span><span class="p">],</span>      <span class="c1"># top boundary       (1)</span>
+</span><span id="line-3"><mark>                    <span class="p">[</span><span class="s2">"pressure"</span><span class="p">],</span>        <span class="c1"># bottom boundary    (2)</span>
 </mark></span><span id="line-4">                    <span class="p">[</span><span class="s2">"free_slip"</span><span class="p">],</span>       <span class="c1"># left boundary      (3)</span>
 </span><span id="line-5">                    <span class="p">[</span><span class="s2">"free_slip"</span><span class="p">]]</span>       <span class="c1"># right boundary     (4)</span>
 </span></code></pre></div>
@@ -172,15 +185,14 @@ ocean-shell exchange.</p>
 </span><span id="line-5"><mark><span class="n">DAL_factor</span>  <span class="o">=</span> <span class="mf">1e-2</span> <span class="c1"># W/m3</span>
 </mark></span></code></pre></div>
 </div>
-<p>Finally, instead of temperature-dependent viscosity we prescribe the temperature- and stress-dependent rheology
-following Goldsby and Kohlstedt (2001). We choose grain size 1 mm.</p>
+<p>Finally, we prescribe the temperature-dependent viscosity one order of magnitude hugher than in the first example</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- VISCOSITY ---</span>
-</span><span id="line-2"><mark><span class="n">viscosity_type</span> <span class="o">=</span> <span class="s2">"GK_2001"</span>
+</span><span id="line-2"><mark><span class="n">viscosity_type</span> <span class="o">=</span> <span class="s2">"temp-dep"</span>
 </mark></span><span id="line-3"><span class="o">.</span>
 </span><span id="line-4"><span class="o">.</span>
 </span><span id="line-5"><span class="o">.</span>
-</span><span id="line-6"><span class="c1"># --- Grain size ---</span>
-</span><span id="line-7"><mark><span class="n">d_grain</span> <span class="o">=</span> <span class="mf">1.0e-3</span>
+</span><span id="line-6"><span class="c1"># --- Parameters for constant / temperature-dependent viscosity ---</span>
+</span><span id="line-7"><mark><span class="n">eta_0</span> <span class="o">=</span> <span class="mf">1e15</span>
 </mark></span></code></pre></div>
 </div>
 </section>

@@ -147,11 +147,15 @@
 <p>Here you can download the <a class="reference download internal" download="" href="_downloads/8fd594c7dcce4ba61a02ba629a3b7488/run_MilleFEuiIle_demo6.sh"><code class="xref download docutils literal notranslate"><span class="pre">bash</span> <span class="pre">script</span></code></a>the <a class="reference download internal" download="" href="_downloads/91fb228d1fa49f1aaeccf689c5a589f6/m_parameters_demo6.py"><code class="xref download docutils literal notranslate"><span class="pre">parameter</span> <span class="pre">file</span></code></a>,
 and the <a class="reference download internal" download="" href="_downloads/f8b17dc35f99fbfcb3516138410d6682/plot_demo6.py"><code class="xref download docutils literal notranslate"><span class="pre">matplotlib</span> <span class="pre">script</span></code></a>.
 Detailed explanation is given below.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Copy the bash script, parameter file, and plotting script from <code class="docutils literal notranslate"><span class="pre">/demos/demo6/</span></code> into the main directory.</p>
+</div>
 <section id="files-settings">
 <h3>Files settings<a class="headerlink" href="#files-settings" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#files-settings'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></h3>
 <p>We start with the directory name</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- Name of the directory with results ---</span>
-</span><span id="line-2"><mark><span class="n">name</span> <span class="o">=</span> <span class="s2">"demo_extension"</span>
+</span><span id="line-2"><mark><span class="n">name</span> <span class="o">=</span> <span class="s2">"demo6_extension"</span>
 </mark></span></code></pre></div>
 </div>
 <p>The directory protection will be turned off, meaning that when lauched repeatedly,
@@ -183,7 +187,7 @@ an output will be made every 10 kyr (<code class="docutils literal notranslate">
 </span><span id="line-3"><span class="c1"># --- String representation of time_units ---</span>
 </span><span id="line-4"><mark><span class="n">time_units_string</span> <span class="o">=</span> <span class="s2">"Myr"</span>
 </mark></span><span id="line-5">
-</span><span id="line-6"><span class="c1"># --- Criterion for ending the simulation, e.g., ["time", 1*Myr], ["step", 1000] or ["initial_condition", *]---</span>
+</span><span id="line-6"><span class="c1"># --- Criterion for ending the simulation, e.g., ["time", 1*Myr], ["step", 1000], ["time_and_step", 100*kyr, 1000] or ["initial_condition", *]---</span>
 </span><span id="line-7"><span class="n">termination_condition</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"time"</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">Myr</span><span class="p">]</span>
 </span><span id="line-8">
 </span><span id="line-9"><span class="c1"># --- Output method for Paraview, HDF5 and tracers ---</span>
@@ -211,10 +215,10 @@ For initial condition, we will save only temperature.</p>
 time (in the units specified above, i.e., Myr)
 and the duration of the time step will be saved. We also choose corresponding headers.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># --- What values to print in a text file every time step? ---</span>
-</span><span id="line-2"><mark><span class="n">stat_output</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"q_top"</span><span class="p">,</span> <span class="s2">"time"</span><span class="p">,</span> <span class="s2">"timestep"</span><span class="p">]</span>
+</span><span id="line-2"><mark><span class="n">stat_output</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"time"</span><span class="p">,</span> <span class="s2">"timestep"</span><span class="p">]</span>
 </mark></span><span id="line-3">
 </span><span id="line-4"><span class="c1"># --- Headers for the columns in the text file</span>
-</span><span id="line-5"><mark><span class="n">stat_header</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"q_top (W/m2)"</span><span class="p">,</span> <span class="s2">"Time (h)"</span><span class="p">,</span> <span class="s2">"dt (s)"</span><span class="p">]</span>
+</span><span id="line-5"><mark><span class="n">stat_header</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Time (h)"</span><span class="p">,</span> <span class="s2">"dt (s)"</span><span class="p">]</span>
 </mark></span></code></pre></div>
 </div>
 <div class="line-block">
@@ -420,9 +424,7 @@ in <code class="docutils literal notranslate"><span class="pre">m_material_prope
 </mark></span><span id="line-9">
 </span><span id="line-10"><span class="c1"># --- Density of the melt produced by the solid ---</span>
 </span><span id="line-11"><mark><span class="n">rho_m</span>       <span class="o">=</span> <span class="n">rho_l</span> <span class="c1"># kg/m3</span>
-</mark></span><span id="line-12">
-</span><span id="line-13"><span class="n">alpha_exp</span> <span class="o">=</span> <span class="mf">1.6e-4</span>  <span class="c1"># K^-1</span>
-</span></code></pre></div>
+</mark></span></code></pre></div>
 </div>
 <div class="line-block">
 <div class="line"><br/></div>

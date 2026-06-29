@@ -1,15 +1,16 @@
+# --- Python modules ---
 from dolfin import *
-from m_parameters import *
 import time
 import random
 
+# --- MilleFEuiIle modules ---
+from m_parameters import *
 
 comm = MPI.comm_world
 rank = MPI.rank(comm)
 size = MPI.size(comm)
 
 class Tracers:
-
     def __init__(self, MeshClass, ElemClass, FilesClass, use_tracers):        
         self.mesh = MeshClass.mesh
         self.moving_mesh = MeshClass.moving_mesh

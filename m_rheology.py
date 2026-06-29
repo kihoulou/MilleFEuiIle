@@ -1,6 +1,9 @@
+# --- Python modules ---
 from dolfin import *
-import numpy
 from scipy import special
+import numpy
+
+# --- MilleFEuiIle modules ---
 from m_parameters import *
 
 def tidal_heating(p_k, Temp, v_k, stress_dev_inv, xm, composition, plastic_strain,
@@ -272,6 +275,7 @@ def eta_ductile(Temp, v, stress, xm, composition, step, Picard_iter, eval_type):
     if (viscosity_type == "temp-dep"):
         eta_v = 1.0/(1.0/(eta_0*exp(Q_activ/R_gas*(1.0/Temp - 1.0/T_ref))) + 1.0/eta_max)*exp(-45.0*xm)
 
+        # --- Demo 5 ---
         # T_bot = BC_heat_transfer[1][1]
         # eta_v = eta_0*exp(-14.0*(Temp - T_bot)/170.0)*exp(-45.0*xm)
 

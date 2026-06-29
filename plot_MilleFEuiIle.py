@@ -195,20 +195,20 @@ def compute_streamlines(ax, v, points, vel_max, fig, font_size, i):
     cbar.set_ticks(ticks=[0,  0.5*vel_max,  1*vel_max], labels=['0', "", "max"], fontsize = font_size)
     cbar.set_label("Velocity magnitude", fontsize = font_size) 
 
-def scalebar(axis, length, y_coord, fs):
-    right_off = 2e3
-    sbar_length = 25e3
-    xx = [length - sbar_length - right_off, length - right_off]
+def scalebar(axis, length, sbar_length, corner_offset, fs):
+
+    # Scale bar extent
+    xx = [length - sbar_length - corner_offset, length - corner_offset]
     
     # Scale bar
-    sbar = mpatches.Rectangle((xx[0], y_coord + sbar_length/2*0.8), sbar_length, sbar_length/15.0, facecolor='black', zorder = 11)
+    sbar = mpatches.Rectangle((xx[0], corner_offset + sbar_length/2*0.8), sbar_length, sbar_length/15.0, facecolor='black', zorder = 11)
 
     # Surrounding rectangle
-    rect = mpatches.Rectangle((xx[0]*0.99, y_coord*0.99), sbar_length*1.2, sbar_length/2*1.1, facecolor='white', zorder = 10)
+    rect = mpatches.Rectangle((xx[0]*0.99, corner_offset), sbar_length + xx[0]*0.02, sbar_length/2*1.1, facecolor='white', zorder = 10)
 
     axis.add_patch(sbar)
     axis.add_patch(rect)
-    axis.text((xx[0] + xx[1])/2.0, y_coord + 2e3, "25 km", fontsize=fs, zorder = 11, horizontalalignment='center')
+    axis.text((xx[0] + xx[1])/2.0, corner_offset +  sbar_length/6, str(int(sbar_length/1e3)) + " km", fontsize=fs, zorder = 11, horizontalalignment='center')
 
 def plot_trajectory(ax, name, ID, sim_step, tail, tail_length):
     infile = open("data_" + name + "/tracers/trajectories/tracer_" + str(ID[0]) + ".dat", "r") 
@@ -258,7 +258,7 @@ def load_comp_tracers(ax, name, i, data):
         xx.append([])
         yy.append([])
 
-    infile = open("data_" + name + "/tracers/step_" + str(i + 1) + ".dat", "r") 
+    infile = open("data_" + name + "/tracers/step_" + str(i) + ".dat", "r") 
     lines = infile.readlines() 
 
     header = True
@@ -323,21 +323,25 @@ def extract_cell_data(mesh, function, index):
 def plot_time(ax, directories, column, labelname, colors, styles):
     for j in range(len(directories)):
 
-        infile = open(directories[j], "r") 
-        lines = infile.readlines() 
+        try:
+            infile = open(directories[j], "r") 
+            lines = infile.readlines() 
 
-        time = []
-        data_y = []
+            time = []
+            data_y = []
 
-        header = True
-        for line in lines:
-            sline = line.split("\t\t")
+            header = True
+            for line in lines:
+                sline = line.split("\t\t")
 
-            if (header == True):
-                header = False
-                continue
-            else:
-                time.append(float(sline[0]))
-                data_y.append(float(sline[column])*1e3)
-                
-        ax.plot(time, data_y, c = colors[j], lw = 2, linestyle = styles[j], label = labelname[j])
+                if (header == True):
+                    header = False
+                    continue
+                else:
+                    time.append(float(sline[0]))
+                    data_y.append(float(sline[column])*1e3)
+                    
+            ax.plot(time, data_y, c = colors[j], lw = 2, linestyle = styles[j], label = labelname[j])
+
+        except:
+            print("Directory " + directories[j] + " not found.")

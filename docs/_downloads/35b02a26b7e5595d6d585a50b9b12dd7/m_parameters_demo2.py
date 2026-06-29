@@ -1,17 +1,23 @@
+# --- Python modules ---
 from dolfin import *
-from m_constants import *
+from pathlib import Path
 import numpy as np
+import shutil
 import sys
+import os
+
+# --- MilleFEuiIle modules ---
+from m_constants import *
 
 comm = MPI.comm_world
 rank = MPI.rank(comm)
 size = MPI.size(comm)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#------------------------- 1/ OUTPUT FILES SETTINGS -------------------
-#----------------------------------------------------------------------
+#:::::::::::::::::::: 1/ RUN SETTINGS :::::::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # --- Name of the directory with results ---
-name = "demo_convection_1e" + str(int(sys.argv[1])) + "Pas"
+name = "demo2_convection_1e" + str(int(sys.argv[1])) + "Pas"
 """
 :var: Name of the directory with the results. The directory with the results will be named ``data_name``.
 
@@ -75,8 +81,8 @@ Whether to reset time when ``reloading_HDF5 = True``.
 """
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#-------------------------  TIME SETTINGS -------------------
-#----------------------------------------------------------------------
+#::::::::::::::::::::::::::::: 2/ TIME SETTINGS :::::::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # --- In what units the time will be? ---
 # 1.0 - seconds or nondimensional, or yr, kyr or Myr
@@ -90,7 +96,7 @@ time_units_string = "Myr"
 :meta hide-value:
 """
 
-# --- Criterion for ending the simulation, e.g., ["time", 1*Myr], ["step", 1000] or ["initial_condition", *]---
+# --- Criterion for ending the simulation, e.g., ["time", 1*Myr], ["step", 1000], ["time_and_step", 100*kyr, 1000] or ["initial_condition", *]---
 termination_condition = ["time", 10*Myr]
 """ Time or step criterion for ending the simulation naturally.
 
@@ -124,8 +130,114 @@ output_frequency = ["time", 100*kyr] # e.g. ["steps", 10] or ["time", 100*kyr]
 """
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#------------------------- FILE SETTINGS -------------------
-#----------------------------------------------------------------------
+#::::::::::::::::::::::::::::: 3/ MESH SETTINGS :::::::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# --- Mesh height ---
+height = 100e3 # m
+""" Height of the rectangular mesh.
+
+:vartype: float
+
+:meta hide-value:
+"""
+
+# --- Mesh length ---
+length = 200e3 # m
+""" Length of the rectangular mesh.
+
+:vartype: float
+
+:meta hide-value:
+"""
+
+# --- Whether to read an external mesh ---
+loading_mesh = False
+""" Whether to read an external mesh.
+
+:var: 
+   * **True** reads a mesh from file ``mesh_name``.
+   * **False** creates a new mesh based on ``x_div``, ``z_div`` and ``triangle_types`` 
+
+:vartype: boolean
+
+:meta hide-value:
+"""
+
+# --- Mesh to be loaded ---
+mesh_name 	= ""
+""" Mesh to be loaded.
+
+:var: path to a mesh in **xml** format, e.g. ``mesh_25x100km.xml``
+
+:vartype: string
+
+:meta hide-value:
+"""
+
+# --- Basic mesh resolution if not loading mesh ---
+z_div = 20
+""" Number of nodes in vertical direction.
+
+:vartype: integer
+
+:meta hide-value:
+"""
+
+# --- Number of nodes in horizontal direction ---
+x_div = int(z_div*(length/height)) # (keeps aspect ratio 1)
+""" Number of nodes in horizontal direction.
+
+:var: default ``int(z_div*(length/height))`` which keeps acpect ratio of the elements equal to 1
+
+:vartype: integer
+
+:meta hide-value:
+"""
+
+# --- Method of dividing basic squares into mesh triangle elements. ---
+triangle_types = "crossed" # crossed, left, right, left/right, right/left
+"""
+Method of dividing basic squares into mesh triangle elements. 
+
+:var: ``"crossed"``, ``"left"``, ``"right"``, ``"right/left"`` or ``"left/right"``
+:vartype: string
+
+:meta hide-value:
+"""
+
+# --- Rectangular mesh refinement ---
+# --- From x_left to x_right and y_bottom to y_top
+# e.g. refinement = [x_left, x_right, y_bottom, y_top] ---
+
+# --- Repeat within the [...] for multiple levels of refinement,
+# leave empty for no refinement ---
+refinement = [0, length, 0, height/2]
+""" 
+:var: Minimum and maximum *x*- and *y*-coordinates of a rectangle area of the mesh to be refined, see :func:`m_mesh.MeshModule.refine_mesh`\ .
+
+:vartype: list of 4x *n* floats, where *n* is the number of refined areas
+
+.. hint:: 
+   In order to refine the upper half of the mesh: ::
+
+      refinement = [0.0, length, height/2.0, height]
+   
+   By repeating the sequence, the areas of refinement can be superposed. For example ::
+
+      refinement = [0.0, length, 0, height/2.0, 0.0, length, 0, height/4.0]
+
+   gives first-level refinement in the bottom half domain and second-level one in the bottom quarter of the domain.
+
+.. warning:: For tectonic simulations, the top boundary nodes need to be **equidistant** because of 
+   detecting and smoothing node oscillations, see :func:`m_mesh.detect_oscillations`\ .
+
+:meta hide-value:
+"""
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#::::::::::::::::::::: 4/ OUTPUT FILES SETTINGS :::::::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # --- What properties to save? Must be one of the following (order does not matter):
 # rank              = to which process the tracer belongs
@@ -167,6 +279,9 @@ List of strings indicating which properties carried by the tracers will be saved
 
 # --- Headers for the columns in the text file for tracers ---
 tracers_header = [] # KEEP EMPTY, will be filled automatically
+
+# --- Specify tracers whose trajectory will be recorded ---
+save_tracer_trajectory = []
 
 # --- What functions to write into Paraview and HDF5 file ---
 paraview_output = ["temperature", "velocity", "viscosity"]
@@ -279,114 +394,8 @@ monitor_cache = False
 """
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#------------------------ 3/ MESH SETTINGS ----------------------------
-#----------------------------------------------------------------------
-
-# --- Mesh height ---
-height = 100e3 # m
-""" Height of the rectangular mesh.
-
-:vartype: float
-
-:meta hide-value:
-"""
-
-# --- Mesh length ---
-length = 200e3 # m
-""" Length of the rectangular mesh.
-
-:vartype: float
-
-:meta hide-value:
-"""
-
-# --- Whether to read an external mesh ---
-loading_mesh = False
-""" Whether to read an external mesh.
-
-:var: 
-   * **True** reads a mesh from file ``mesh_name``.
-   * **False** creates a new mesh based on ``x_div``, ``z_div`` and ``triangle_types`` 
-
-:vartype: boolean
-
-:meta hide-value:
-"""
-
-# --- Mesh to be loaded ---
-mesh_name 	= ""
-""" Mesh to be loaded.
-
-:var: path to a mesh in **xml** format, e.g. ``mesh_25x100km.xml``
-
-:vartype: string
-
-:meta hide-value:
-"""
-
-# --- Basic mesh resolution if not loading mesh ---
-z_div = 20
-""" Number of nodes in vertical direction.
-
-:vartype: integer
-
-:meta hide-value:
-"""
-
-# --- Number of nodes in horizontal direction ---
-x_div = int(z_div*(length/height)) # (keeps aspect ratio 1)
-""" Number of nodes in horizontal direction.
-
-:var: default ``int(z_div*(length/height))`` which keeps acpect ratio of the elements equal to 1
-
-:vartype: integer
-
-:meta hide-value:
-"""
-
-# --- Method of dividing basic squares into mesh triangle elements. ---
-triangle_types = "crossed" # crossed, left, right, left/right, right/left
-"""
-Method of dividing basic squares into mesh triangle elements. 
-
-:var: ``"crossed"``, ``"left"``, ``"right"``, ``"right/left"`` or ``"left/right"``
-:vartype: string
-
-:meta hide-value:
-"""
-
-# --- Rectangular mesh refinement ---
-# --- From x_left to x_right and y_bottom to y_top
-# e.g. refinement = [x_left, x_right, y_bottom, y_top] ---
-
-# --- Repeat within the [...] for multiple levels of refinement,
-# leave empty for no refinement ---
-refinement = [0, length, 0, height/2]
-""" 
-:var: Minimum and maximum *x*- and *y*-coordinates of a rectangle area of the mesh to be refined, see :func:`m_mesh.MeshModule.refine_mesh`\ .
-
-:vartype: list of 4x *n* floats, where *n* is the number of refined areas
-
-.. hint:: 
-   In order to refine the upper half of the mesh: ::
-
-      refinement = [0.0, length, height/2.0, height]
-   
-   By repeating the sequence, the areas of refinement can be superposed. For example ::
-
-      refinement = [0.0, length, 0, height/2.0, 0.0, length, 0, height/4.0]
-
-   gives first-level refinement in the bottom half domain and second-level one in the bottom quarter of the domain.
-
-.. warning:: For tectonic simulations, the top boundary nodes need to be **equidistant** because of 
-   detecting and smoothing node oscillations, see :func:`m_mesh.detect_oscillations`\ .
-
-:meta hide-value:
-"""
-
+#:::::::::::::::::::: 5/ MATERIAL COMPOSITION SETTINGS ::::::::::::::::
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#------------------------- 4/ MATERIAL COMPOSITION -------------------
-#----------------------------------------------------------------------
 
 # --- Simple material assignment using "interface", "circle" or "rectangle" geometries ---
 # --- The n-th material overrides the (n-1)th.
@@ -469,7 +478,7 @@ initial_topography = False
 :meta hide-value:
 """
 
-h_top_ini = Expression("0.0*sin(120*pi*x[0]/l)", l = length, pi = np.pi, degree = 1)
+h_top_ini = Expression("0.0", l = length, pi = np.pi, degree = 1)
 """
 :var: Expression defining initial top topography. Will be take into account only if ``initial_topography = True``. 
 
@@ -478,7 +487,7 @@ h_top_ini = Expression("0.0*sin(120*pi*x[0]/l)", l = length, pi = np.pi, degree 
 :meta hide-value:
 """
 
-h_bot_ini = Expression("8.5e3*(tanh((x[0]-l/4)/3000) - tanh((x[0] - 3*l/4)/3000))/2.0", l = length, degree = 1)
+h_bot_ini = Expression("0.0", l = length, degree = 1)
 """
 :var: Expression defining initial bottom topography. Will be take into account only if ``initial_topography = True``. 
 
@@ -488,8 +497,8 @@ h_bot_ini = Expression("8.5e3*(tanh((x[0]-l/4)/3000) - tanh((x[0] - 3*l/4)/3000)
 """
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#------------ 4/ STOKES PROBLEM SETTINGS -------------------
-#----------------------------------------------------------------------
+#::::::::::::::::::::::: 6/ STOKES PROBLEM SETTINGS :::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 stokes_elements = "Mini"
 
 time_step_position = "stokes"# (right after Stokes problem) or "end" (at the end of the time loop)
@@ -639,7 +648,7 @@ tracers_per_cell = 10
 weight_tracers_by_ratio = False
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#:::::::::::::::::::: HEAT TRANSFER SETTINGS ::::::::::::::::::::::::::
+#:::::::::::::::::::: 7/ HEAT TRANSFER SETTINGS :::::::::::::::::::::::
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # --- Solve heat transfer? ---
@@ -823,8 +832,8 @@ scaled_time_step = False
 dt_max = 0.1*Myr
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#---------------------------- 6/ RHEOLOGY -----------------------------
-#::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+#:::::::::::::::::::::::::: 8/ RHEOLOGY SETTINGS ::::::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # === PHYSICAL PARAMETERS ===
 # --- Density of the domain solid ---
@@ -857,7 +866,6 @@ rho_m 	= rho_l # kg/m3
 :meta hide-value:
 """
 
-alpha_exp = 1.6e-4	# K^-1
 
 # === PHYSICAL INGREDIENTS ===
 # --- Gravity acceleration ---
@@ -1089,3 +1097,23 @@ healing_timescale = 100*kyr
 
 :meta hide-value:
 """
+
+if __name__ == "__main__":
+   # --- Copy the original parameter file ---
+   Path("data_" + name + "/source_code").mkdir(parents = True, exist_ok = True)
+   shutil.copy(os.path.basename(__file__), "data_" + name + "/source_code/" + os.path.basename(__file__)) 
+
+   # --- Distinguish the bash script name from loop parameters ---
+   i = 1
+   while True:
+      bash_script= sys.argv[i]
+      if (isinstance(bash_script, str)):
+         if (".sh" in bash_script):
+            break
+         else:
+            i += 1
+      else:
+         i += 1
+
+   # --- Copy the original bash script ---
+   os.system("cp " + bash_script + " data_" + name + "/source_code")

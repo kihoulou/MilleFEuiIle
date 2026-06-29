@@ -1,24 +1,16 @@
+# --- Python modules ---
 from dolfin import *
-from m_parameters import *
-from m_constants import *
-from m_postproc import *
 from pathlib import Path
 import os 
 
+# --- MilleFEuiIle modules ---
+from m_parameters import *
+from m_constants import *
+from m_postproc import *
+
 class SaveFiles:
     def __init__(self, MeshClass, ElemClass, use_tracers):
-
         self.name = name
-        if (Path("data_" + name).is_dir() == True):
-            if (protect_directory == False):
-                    if (rank == 0):
-                        os.system("rm -r data_" + name + "/*")
-            else:
-                self.name += "_new"
-                if (rank == 0):
-                    print("\nWarning:\nName collision detected. New directory name is", str("data_" + self.name), ".\n")
-
-        MPI.barrier(comm)
         directories = ["HDF5",
                        "anim",
                        "img",
@@ -26,8 +18,24 @@ class SaveFiles:
                        "tracers",
                        "tracers/trajectories",
                        "paraview",
-                       "paraview/initial_condition",
-                       "source_code"]
+                       "paraview/initial_condition"]
+        # /source_code created already in m_parameters.py
+
+        if (Path("data_" + name).is_dir() == True):
+            if (protect_directory == False):
+                    if (rank == 0):
+                        for dir in directories:
+                            if (Path("data_" + name + "/" + dir).is_dir() == True):
+                                os.system("rm -r data_" + name + "/" + dir)
+                            else:
+                                pass
+                        
+            else:
+                self.name += "_new"
+                if (rank == 0):
+                    print("\nWarning:\nName collision detected. New directory name is", str("data_" + self.name), ".\n")
+
+        MPI.barrier(comm)
         
         for dir in directories:
             Path("data_" + self.name + "/" + dir).mkdir(parents = True, exist_ok = True)
@@ -35,7 +43,6 @@ class SaveFiles:
         # --- Save the source code ---
         if (rank == 0):
             os.system("cp  main.py data_" + name + "/source_code")
-            os.system("cp  run_MilleFEuiIle.sh data_" + name + "/source_code")
 
             files = ["boundary_conditions",
                      "check",
@@ -48,11 +55,12 @@ class SaveFiles:
                      "material_properties",
                      "melting",
                      "mesh",
-                     "parameters",
                      "postproc",
                      "rheology",
                      "timestep",
                      "tracers"]
+            
+            # m_parameters.py copied already in m_parameters.py
             
             for f in files:
                 os.system("cp  m_" + f + ".py data_" + name + "/source_code")
@@ -104,7 +112,7 @@ class SaveFiles:
         if (time_units_string == "-"):
             file.write((2*"%s")%("Time (-)\t\t", "Step\t"))
         else:
-            file.write((2*"%s")%("Time (" + time_units_string + ")\t\t", "Step\t"))
+            file.write((2*"%s")%("Time (" + time_units_string + ")\t\t", "Step\t\t"))
 
         for arg in stat_header:
             file.write(("%s\t\t")%(arg))
@@ -121,7 +129,7 @@ class SaveFiles:
         self.data_file['data'] = HDF5File(comm, "data_" + self.name + "/HDF5/data.h5", "w")
 
         stat_hdf5 = open("data_" + self.name + "/HDF5/data_timestamp.dat", 'w')
-        stat_hdf5.write((4*"%s\t"+"\n")%("# HDF5 step", "Step\t", "Time step ("+time_units_string+")\t", "Time ("+time_units_string+")"))    
+        stat_hdf5.write((4*"%s\t"+"\n")%("# HDF5 step", "Step\t", "Time step (" + time_units_string + ")\t", "Time (" + time_units_string + ")"))    
         stat_hdf5.close()
 
         # --- Initialize Paraview files for initial condition and fill dictionaries ---
@@ -141,7 +149,6 @@ class SaveFiles:
 
             self.assign_dictionaries(paraview_output, self.Function_Dict, i)
 
-            
     def assign_dictionaries(self, paraview_output, Function_Dict, i):
         if (paraview_output[i] == "temperature"):
             Function_Dict[paraview_output[i]] = self.Temp
@@ -301,7 +308,6 @@ class SaveFiles:
 
         # --- Always save the mesh as well - used for reloading ---
         self.save_mesh_HDF5(step_output)
-
 
     def load_HDF5(self, t, dt, time_units, name, *args):
 

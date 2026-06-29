@@ -1,4 +1,7 @@
+# --- Python modules ---
 from dolfin import *
+
+# --- MilleFEuiIle modules ---
 from m_parameters import *
 
 class Elements:

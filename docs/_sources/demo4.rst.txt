@@ -17,6 +17,10 @@ the :download:`parameter file <code/demo4/m_parameters_demo4.py>`\,
 and the :download:`matplotlib script <code/demo4/plot_demo4.py>`\.
 Detailed explanation is given below.
 
+.. attention:: In this simulation, modification of the ``m_material_properties.py`` is needed.
+
+.. note:: Copy the bash script, parameter file, and plotting script from ``/demos/demo4/`` into the main directory.
+
 -----------------------------------------------
 Material properties file modification
 -----------------------------------------------
@@ -28,19 +32,29 @@ We add the dependence of ice density on the composition, enhancing the density w
     \rho(T, C) = \rho_i(T)\cdot (C_{\rm ice} + 1.004\cdot C_{\rm salt})
 
 .. code-block:: python
-    :emphasize-lines: 5
+    :emphasize-lines: 7
 
     def rho(Temp, composition, xm):
             # .
             # .
             # .
+
+            # --- Demo 4 ---
             return ((1.0-xm)*rho_s*mm/VV + xm*rho_m)*(composition[0] + 1.004*composition[1])
 
 -----------------------------------------------
 Parameter file modification
 -----------------------------------------------
 
-In the parameter file, we modify the ``interface()`` function as a gaussian peak 
+First, we redefine the directory name:
+
+.. code-block:: python
+    :emphasize-lines: 2
+
+    # --- Name of the directory with results ---
+    name = "demo4_convection_comp"
+
+Then, we modify the ``interface()`` function as a gaussian peak 
 in the middle of the ice shell to represent the dyke. Afterwards, in the first position of ``materials``,
 we enter the whole domain (the ice), and in the second position the dyke material defined 
 as the material below the interface.

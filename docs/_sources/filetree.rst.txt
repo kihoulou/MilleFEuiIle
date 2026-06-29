@@ -23,15 +23,43 @@ In the script, define the name of the **current parameter file** (e.g., ``m_para
 the **number of cores** to be used for the computation, the way of **queueing** in case of a parametric study, 
 orthe **maximum number of cores** the script can occupy.
 
+Succesful launch in the foreground generates output on the screen. In case of running in the background, it returns something like this
+
+.. code-block:: bash
+   :emphasize-lines: 1
+
+   [1] 816928
+
+The number in brackets is the PID (process ID) of the bash script, not the python code. It can be used to stop the simulation (see below), but only until the user logs out.
 
 The script then renames the main file and the terminal output accordingly (``main_europa.py``, ``europa.out`` and ``europa_e.out``),
 and runs the simulation on **background** or **foreground**, as selected.
 
 |
 
+Stopping the simulation
+-------------------------
+
+The way of stopping the simulation may depend on the way it was launched. If a single simulation was selected  ``(loop=0)``, the bash script ends quickly and only the python code continues running. In such case, there are two options 
+
+* The proper way to stop simulation is to identify the simulation using the command ``htop`` and searching by its name.
+* Another option is to call ``pkill python``, if no other simulation can be affected.
+
+However, if the simulations were launched in a loop ``(loop=1)`` or ``(loop=2)``, the bash script needs to be terminated first.
+
+* ``kill -9 %n`` where ``n`` is the number from the brackets (see above)
+*  using ``htop`` and searching for ``run_MilleFEuiIle``
+
+Finally, the remaining python code needs to be stopped, following the same procedure as described above (``htop`` or ``pkill python``).
+
+|
+
 Visualization
 -------------------------
+
 For visualization of the mesh data, use `Paraview <https://www.paraview.org/>`_, or the example matplotlib scripts in :ref:`demos`.
+
+.. attention:: Note that even though the simulation may run in parallel, the plotting scripts need to be ran on a single core using ``python plot_demo*.py``.
 
 |
 

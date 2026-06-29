@@ -139,13 +139,13 @@
 <p>This module contains the most important computation parameters. It is divided into several categories:</p>
 <p><strong>Running parameters</strong></p>
 <ol class="arabic simple">
-<li><p>Output files settings</p></li>
-<li><p>Reloading options</p></li>
-<li><p>Termination criteria</p></li>
+<li><p>Run settings</p></li>
+<li><p>Time settings</p></li>
 </ol>
-<p><strong>Geometry and material composition</strong></p>
-<ol class="arabic simple" start="4">
-<li><p>Mesh geometry</p></li>
+<p><strong>Geometry and material composition, output</strong></p>
+<ol class="arabic simple" start="3">
+<li><p>Mesh settings</p></li>
+<li><p>Output files settings</p></li>
 <li><p>Material composition</p></li>
 </ol>
 <p><strong>Physics</strong></p>
@@ -163,7 +163,7 @@
 <ul class="simple">
 <li><dl class="simple">
 <dt>top boundary </dt><dd><ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">["free_slip/no_slip/free</span> <span class="pre">surface"]</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">["free_slip/no_slip/free_surface"]</span></code>,</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">["velocity_x/velocity_y",</span> <span class="pre">value]</span></code> for specifying one component of the velocity,</p></li>
 <li><p>or <code class="docutils literal notranslate"><span class="pre">["velocity",</span> <span class="pre">value_x,</span> <span class="pre">value_y]</span></code> for specifying both components of the velocity</p></li>
 </ul>
@@ -172,7 +172,7 @@
 </li>
 <li><dl class="simple">
 <dt>bottom boundary </dt><dd><ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">["free_slip/no_slip/free</span> <span class="pre">surface"]</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">["free_slip/no_slip/pressure"]</span></code>,</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">["velocity_x/velocity_y",</span> <span class="pre">value]</span></code> for specifying one component of the velocity,</p></li>
 <li><p>or <code class="docutils literal notranslate"><span class="pre">["velocity",</span> <span class="pre">value_x,</span> <span class="pre">value_y]</span></code> for specifying both components of the velocity</p></li>
 </ul>
@@ -286,18 +286,6 @@ the boundary condition will look as follows:</p>
 </dl>
 </dd></dl>
 <dl class="py data">
-<dt class="sig sig-object py" id="m_parameters_docs.H_max">
-<span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">H_max</span></span><a class="headerlink" href="#m_parameters_docs.H_max" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.H_max'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The peak value of the tidal heating in the function <code class="xref py py-func docutils literal notranslate"><span class="pre">m_equations.tidal_heating()</span></code>.</p>
-</dd>
-<dt class="field-even">Vartype<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py data">
 <dt class="sig sig-object py" id="m_parameters_docs.Lt">
 <span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">Lt</span></span><a class="headerlink" href="#m_parameters_docs.Lt" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.Lt'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
 <dd><dl class="field-list simple">
@@ -356,38 +344,6 @@ see <a class="reference internal" href="m_equations.html#m_equations.Equations.s
 </dd>
 <dt class="field-even">Vartype<span class="colon">:</span></dt>
 <dd class="field-even"><p>float, unit K</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="m_parameters_docs.adaptive_smoothing">
-<span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">adaptive_smoothing</span></span><a class="headerlink" href="#m_parameters_docs.adaptive_smoothing" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.adaptive_smoothing'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Whether or not use adaptive smoothing of the top topography.</p>
-</dd>
-<dt class="field-even">Vartype<span class="colon">:</span></dt>
-<dd class="field-even"><p>boolean</p>
-</dd>
-</dl>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>Adaptive smoothing is necessary for compressive tectonic simulation, as it prevents mesh distortion.
-The subroutine <a class="reference internal" href="m_mesh.html#m_mesh.detect_oscillations" title="m_mesh.detect_oscillations"><code class="xref py py-func docutils literal notranslate"><span class="pre">m_mesh.detect_oscillations()</span></code></a>scans the top boundary nodes and searches for oscillations. If the oscillations
-are detected, the area is smoothed during the next 10 time steps by a topography diffusion equation with diffusivity <code class="docutils literal notranslate"><span class="pre">topo_diff</span></code>.</p>
-</div>
-<dl class="field-list simple">
-</dl>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="m_parameters_docs.albedo">
-<span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">albedo</span></span><a class="headerlink" href="#m_parameters_docs.albedo" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.albedo'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Albedo of the surface of the body.</p>
-</dd>
-<dt class="field-even">Vartype<span class="colon">:</span></dt>
-<dd class="field-even"><p>float, unit -</p>
 </dd>
 </dl>
 </dd></dl>
@@ -456,46 +412,10 @@ are detected, the area is smoothed during the next 10 time steps by a topography
 <span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">d_grain</span></span><a class="headerlink" href="#m_parameters_docs.d_grain" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.d_grain'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Constant grain size. See <a class="reference internal" href="m_rheology.html#m_rheology.eta_ductile" title="m_rheology.eta_ductile"><code class="xref py py-func docutils literal notranslate"><span class="pre">m_rheology.eta_ductile()</span></code></a>.</p>
+<dd class="field-odd"><p>Constant grain size.  See <a class="reference internal" href="m_rheology.html#m_rheology.eta_ductile" title="m_rheology.eta_ductile"><code class="xref py py-func docutils literal notranslate"><span class="pre">m_rheology.eta_ductile()</span></code></a>.</p>
 </dd>
 <dt class="field-even">Vartype<span class="colon">:</span></dt>
 <dd class="field-even"><p>float, unit m</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="m_parameters_docs.dist_AU">
-<span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">dist_AU</span></span><a class="headerlink" href="#m_parameters_docs.dist_AU" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.dist_AU'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The moon’s distance from the Sun.</p>
-</dd>
-<dt class="field-even">Vartype<span class="colon">:</span></dt>
-<dd class="field-even"><p>float, unit (AU)</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="m_parameters_docs.dt_const">
-<span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">dt_const</span></span><a class="headerlink" href="#m_parameters_docs.dt_const" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.dt_const'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Length of the constant time step.</p>
-</dd>
-<dt class="field-even">Vartype<span class="colon">:</span></dt>
-<dd class="field-even"><p>float, unit s</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="m_parameters_docs.dt_max">
-<span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">dt_max</span></span><a class="headerlink" href="#m_parameters_docs.dt_max" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.dt_max'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Value of the maximum time step.</p>
-</dd>
-<dt class="field-even">Vartype<span class="colon">:</span></dt>
-<dd class="field-even"><p>float, unit s</p>
 </dd>
 </dl>
 </dd></dl>
@@ -508,18 +428,6 @@ are detected, the area is smoothed during the next 10 time steps by a topography
 </dd>
 <dt class="field-even">Vartype<span class="colon">:</span></dt>
 <dd class="field-even"><p>boolean</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="m_parameters_docs.emis">
-<span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">emis</span></span><a class="headerlink" href="#m_parameters_docs.emis" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.emis'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Emissivity of the surface of the body.</p>
-</dd>
-<dt class="field-even">Vartype<span class="colon">:</span></dt>
-<dd class="field-even"><p>float, unit -</p>
 </dd>
 </dl>
 </dd></dl>
@@ -650,18 +558,6 @@ For example</p>
 <span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">eta_min</span></span><a class="headerlink" href="#m_parameters_docs.eta_min" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.eta_min'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Lower cut-off value for both ductile and plastic viscosity <span class="math notranslate nohighlight">\(\eta_{p}\)</span>. See <a class="reference internal" href="m_rheology.html#m_rheology.eta_eff" title="m_rheology.eta_eff"><code class="xref py py-func docutils literal notranslate"><span class="pre">m_rheology.eta_eff()</span></code></a>.</p>
-</dd>
-<dt class="field-even">Vartype<span class="colon">:</span></dt>
-<dd class="field-even"><p>float, unit Pa s</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="m_parameters_docs.eta_min_plast">
-<span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">eta_min_plast</span></span><a class="headerlink" href="#m_parameters_docs.eta_min_plast" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.eta_min_plast'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Var<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Lower cut-off value for plastic viscosity <span class="math notranslate nohighlight">\(\eta_{p}\)</span>. See <a class="reference internal" href="m_rheology.html#m_rheology.eta_eff" title="m_rheology.eta_eff"><code class="xref py py-func docutils literal notranslate"><span class="pre">m_rheology.eta_eff()</span></code></a>.</p>
 </dd>
 <dt class="field-even">Vartype<span class="colon">:</span></dt>
@@ -732,18 +628,6 @@ See <a class="reference internal" href="m_rheology.html#m_rheology.plastic_strai
 </dl>
 </dd></dl>
 <dl class="py data">
-<dt class="sig sig-object py" id="m_parameters_docs.heating_model">
-<span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">heating_model</span></span><a class="headerlink" href="#m_parameters_docs.heating_model" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.heating_model'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Which model of tidal heating to use. See <code class="xref py py-func docutils literal notranslate"><span class="pre">m_equations.tidal_heating()</span></code>.</p>
-</dd>
-<dt class="field-even">Vartype<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">"Maxwell"</span></code> or <code class="docutils literal notranslate"><span class="pre">"Andrade"</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py data">
 <dt class="sig sig-object py" id="m_parameters_docs.height">
 <span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">height</span></span><a class="headerlink" href="#m_parameters_docs.height" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.height'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
 <dd><p>Height of the rectangular mesh.</p>
@@ -767,24 +651,6 @@ See <a class="reference internal" href="m_rheology.html#m_rheology.plastic_strai
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">False</span></code>, then a linear temperature profile between the top and bottom temperature will be prescribed.</p>
-</div>
-<dl class="field-list simple">
-</dl>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="m_parameters_docs.initial_tidal_dissipation">
-<span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">initial_tidal_dissipation</span></span><a class="headerlink" href="#m_parameters_docs.initial_tidal_dissipation" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.initial_tidal_dissipation'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Whether assume tidal dissipation already when solving for temperature initial condition.</p>
-</dd>
-<dt class="field-even">Vartype<span class="colon">:</span></dt>
-<dd class="field-even"><p>boolean</p>
-</dd>
-</dl>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>If the dissipation is too large, the initial condition might not be found.</p>
 </div>
 <dl class="field-list simple">
 </dl>
@@ -816,10 +682,10 @@ See <a class="reference internal" href="m_rheology.html#m_rheology.plastic_strai
 <dl class="py data">
 <dt class="sig sig-object py" id="m_parameters_docs.integration_method">
 <span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">integration_method</span></span><a class="headerlink" href="#m_parameters_docs.integration_method" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.integration_method'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Method for integration of the trajectories of Lagrangian tracers.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Method for integration of the trajectories of Lagrangian tracers.</p>
-<ul class="simple">
+<dd class="field-odd"><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">"RK2"</span></code> for the 2nd order Runge-Kutta scheme</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">"RK4"</span></code> for the 4nd order Runge-Kutta scheme</p></li>
 </ul>
@@ -828,31 +694,12 @@ See <a class="reference internal" href="m_rheology.html#m_rheology.plastic_strai
 <dd class="field-even"><p>string</p>
 </dd>
 </dl>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>For most of the applications, 2nd order Runge-Kutta scheme is sufficient.</p>
-</div>
-<dl class="field-list simple">
-</dl>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="m_parameters_docs.interface">
 <span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#m_parameters_docs.interface" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.interface'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A function that describes the shape of an interface.</p>
-</dd>
-</dl>
-<div class="admonition hint">
-<p class="admonition-title">Hint</p>
-<p>For example,</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="k">return</span> <span class="mf">75e3</span><span class="o">*</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mf">100e3</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="mf">1e8</span><span class="p">)</span>
-</span></code></pre></div>
-</div>
-<p>prescribes a gaussian curve.</p>
-</div>
-<dl class="field-list simple">
-</dl>
+<dd><p>A function that describes the shape of an interface.</p>
+<p>:meta hide-value:.</p>
 </dd></dl>
 <dl class="py data">
 <dt class="sig sig-object py" id="m_parameters_docs.internal_melting">
@@ -873,6 +720,22 @@ See <a class="reference internal" href="m_rheology.html#m_rheology.plastic_strai
 <dl class="field-list simple">
 <dt class="field-odd">Vartype<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters_docs.loading_mesh">
+<span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">loading_mesh</span></span><a class="headerlink" href="#m_parameters_docs.loading_mesh" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.loading_mesh'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd><p>Whether to read an external mesh.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>True</strong> reads a mesh from file <code class="docutils literal notranslate"><span class="pre">mesh_name</span></code>.</p></li>
+<li><p><strong>False</strong> creates a new mesh based on <code class="docutils literal notranslate"><span class="pre">x_div</span></code>, <code class="docutils literal notranslate"><span class="pre">z_div</span></code> and <code class="docutils literal notranslate"><span class="pre">triangle_types</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>boolean</p>
 </dd>
 </dl>
 </dd></dl>
@@ -902,21 +765,9 @@ See <a class="reference internal" href="m_rheology.html#m_rheology.plastic_strai
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>For more complicated geometries, modify <code class="docutils literal notranslate"><span class="pre">introduce_tracers(...)</span></code> function in the m_tracers.py</p>
+<p>For more complicated geometries, modify <code class="docutils literal notranslate"><span class="pre">introduce_tracers</span></code> function in the m_tracers.py</p>
 </div>
 <dl class="field-list simple">
-</dl>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="m_parameters_docs.maximum_time_step">
-<span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">maximum_time_step</span></span><a class="headerlink" href="#m_parameters_docs.maximum_time_step" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.maximum_time_step'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Whether or not to apply an upper time step limit.</p>
-</dd>
-<dt class="field-even">Vartype<span class="colon">:</span></dt>
-<dd class="field-even"><p>boolean</p>
-</dd>
 </dl>
 </dd></dl>
 <dl class="py data">
@@ -930,6 +781,19 @@ be solved to obtain mesh displacement on the mesh between the top and bottom bou
 <li><p><code class="docutils literal notranslate"><span class="pre">"full"</span></code> distributes the displacement by solving <span class="math notranslate nohighlight">\(\nabla^2 h_2 = 0\)</span>. Useful for simulation involving tectonics, mesh is more stable.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">"z_only"</span></code> distributes the displacement linearly by solving <span class="math notranslate nohighlight">\(\nabla^2_z h_2 = 0\)</span></p></li>
 </ul>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="m_parameters_docs.mesh_name">
+<span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">mesh_name</span></span><a class="headerlink" href="#m_parameters_docs.mesh_name" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.mesh_name'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
+<dd><p>Mesh to be loaded.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Var<span class="colon">:</span></dt>
+<dd class="field-odd"><p>path to a mesh in <strong>xml</strong> format, e.g. <code class="docutils literal notranslate"><span class="pre">mesh_25x100km.xml</span></code></p>
 </dd>
 <dt class="field-even">Vartype<span class="colon">:</span></dt>
 <dd class="field-even"><p>string</p>
@@ -1016,26 +880,38 @@ For example:</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cohesion</span></code></p></td>
-<td><p><span class="math notranslate nohighlight">\(C\)</span> (Pa)</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">temperature</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(T\)</span> (K)</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">composition_0</span></code></p></td>
-<td><p>1st material in <code class="docutils literal notranslate"><span class="pre">materials[]</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">velocity</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(v\)</span> (m s <span class="math notranslate nohighlight">\(^{-1}\)</span>)</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">composition_1</span></code></p></td>
-<td><p>2nd material in <code class="docutils literal notranslate"><span class="pre">materials[]</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pressure</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(p\)</span> (Pa)</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">composition_2</span></code></p></td>
-<td><p>3rd material in <code class="docutils literal notranslate"><span class="pre">materials[]</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">viscosity</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\eta\)</span> (Pa s)</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">density</span></code></p></td>
-<td><p><span class="math notranslate nohighlight">\(\rho\)</span> (kg m <span class="math notranslate nohighlight">\(^{-3}\)</span>)</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">viscosity_log</span></code></p></td>
+<td><p>log<span class="math notranslate nohighlight">\(_{10}(\eta)\)</span> (-)</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">eta_v</span></code></p></td>
 <td><p><span class="math notranslate nohighlight">\(\eta_{ductile}\)</span> (Pa s)</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">iteration_error</span></code></p></td>
-<td></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">composition_0</span></code></p></td>
+<td><p>1st material in <code class="docutils literal notranslate"><span class="pre">materials[]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">composition_1</span></code></p></td>
+<td><p>2nd material in <code class="docutils literal notranslate"><span class="pre">materials[]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">composition_2</span></code></p></td>
+<td><p>3rd material in <code class="docutils literal notranslate"><span class="pre">materials[]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tracers</span></code></p></td>
+<td><p>number of tracers in the cell</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tidal_heating</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(H_{tidal}\)</span> (W m <span class="math notranslate nohighlight">\(^{-3}\)</span>)</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">melt_fraction</span></code></p></td>
 <td><p><span class="math notranslate nohighlight">\(\chi_m\)</span> (%)</p></td>
@@ -1043,14 +919,20 @@ For example:</p>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mesh_displacement</span></code></p></td>
 <td><p><span class="math notranslate nohighlight">\(\boldsymbol{u}_{mesh}\)</span> (m)</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">plastic_strain</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">topography_bottom</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(h_{bot}\)</span> (-)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">topography_top</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(h_{top}\)</span> (-)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">iteration_error</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">plastic_strain</span></code></p></td>
 <td><p><span class="math notranslate nohighlight">\(\varepsilon_p\)</span> (-)</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pressure</span></code></p></td>
-<td><p><span class="math notranslate nohighlight">\(p\)</span> (Pa)</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">shear_modulus</span></code></p></td>
-<td><p><span class="math notranslate nohighlight">\(G\)</span> (Pa)</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">yield_stress</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\sigma_Y\)</span> (Pa)</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">stress_dev_inv</span></code></p></td>
 <td><p><span class="math notranslate nohighlight">\(\sigma_{II}\)</span> (Pa)</p></td>
@@ -1058,35 +940,20 @@ For example:</p>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">strain_rate_inv</span></code></p></td>
 <td><p><span class="math notranslate nohighlight">\(\dot{\varepsilon}_{II}\)</span> (s <span class="math notranslate nohighlight">\(^{-1}\)</span>)</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">temperature</span></code></p></td>
-<td><p><span class="math notranslate nohighlight">\(T\)</span> (K)</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tidal_heating</span></code></p></td>
-<td><p><span class="math notranslate nohighlight">\(H_{tidal}\)</span> (W m <span class="math notranslate nohighlight">\(^{-3}\)</span>)</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">topography_bottom</span></code></p></td>
-<td><p><span class="math notranslate nohighlight">\(h_{bot}\)</span> (-)</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">topography_top</span></code></p></td>
-<td><p><span class="math notranslate nohighlight">\(h_{top}\)</span> (-)</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tracers</span></code></p></td>
-<td><p>number of tracers in the cell</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">velocity</span></code></p></td>
-<td><p><span class="math notranslate nohighlight">\(v\)</span> (m s <span class="math notranslate nohighlight">\(^{-1}\)</span>)</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">viscosity</span></code></p></td>
-<td><p><span class="math notranslate nohighlight">\(\eta\)</span> (Pa s)</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">yield_function</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">yield_function</span></code></p></td>
 <td><p>1 if yielding, 0 otherwise</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">yield_stress</span></code></p></td>
-<td><p><span class="math notranslate nohighlight">\(\sigma_Y\)</span> (Pa)</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">density</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\rho\)</span> (kg m <span class="math notranslate nohighlight">\(^{-3}\)</span>)</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">z_function</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">z_function</span></code></p></td>
 <td><p><span class="math notranslate nohighlight">\(Z\)</span>, visco-elastic parameter</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">shear_modulus</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(G\)</span> (Pa)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cohesion</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(C\)</span> (Pa)</p></td>
 </tr>
 </tbody>
 </table>
@@ -1101,7 +968,35 @@ Follow the procedure for already existing functions.</p>
 <dl class="py data">
 <dt class="sig sig-object py" id="m_parameters_docs.paraview_output_ini">
 <span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">paraview_output_ini</span></span><a class="headerlink" href="#m_parameters_docs.paraview_output_ini" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.paraview_output_ini'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><p>List of strings indicating which properties will be saved at initial condition. Can be any of <code class="docutils literal notranslate"><span class="pre">paraview_output</span></code>.</p>
+<dd><p>List of strings indicating which properties will be saved at initial condition.</p>
+<p>The following are defined:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Input</p></th>
+<th class="head"><p>Note</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">temperature</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(T\)</span> (K)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">topography_top</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(h_{top}\)</span> (-)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">topography_bottom</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(h_{bot}\)</span> (-)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tracers</span></code></p></td>
+<td><p>number of tracers in the cell</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">density</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\rho\)</span> (kg m <span class="math notranslate nohighlight">\(^{-3}\)</span>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">melt_fraction</span></code></p></td>
+<td><p><span class="math notranslate nohighlight">\(\chi_m\)</span> (%)</p></td>
+</tr>
+</tbody>
+</table>
 <dl class="field-list simple">
 </dl>
 </dd></dl>
@@ -1233,7 +1128,7 @@ detecting and smoothing node oscillations, see <a class="reference internal" hre
 <span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">reload_name</span></span><a class="headerlink" href="#m_parameters_docs.reload_name" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.reload_name'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The directory from which the data will be reloaded when <code class="docutils literal notranslate"><span class="pre">reload</span> <span class="pre">=</span> <span class="pre">True</span></code>.</p>
+<dd class="field-odd"><p>The directory from which the data will be reloaded when <code class="docutils literal notranslate"><span class="pre">reloading_HDF5</span> <span class="pre">=</span> <span class="pre">True</span></code>.</p>
 </dd>
 <dt class="field-even">Vartype<span class="colon">:</span></dt>
 <dd class="field-even"><p>string</p>
@@ -1255,7 +1150,7 @@ detecting and smoothing node oscillations, see <a class="reference internal" hre
 <dl class="py data">
 <dt class="sig sig-object py" id="m_parameters_docs.restart_time">
 <span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">restart_time</span></span><a class="headerlink" href="#m_parameters_docs.restart_time" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.restart_time'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><p>Whether to reset time when <code class="docutils literal notranslate"><span class="pre">reload</span> <span class="pre">=</span> <span class="pre">True</span></code>.</p>
+<dd><p>Whether to reset time when <code class="docutils literal notranslate"><span class="pre">reloading_HDF5</span> <span class="pre">=</span> <span class="pre">True</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Var<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1301,46 +1196,6 @@ detecting and smoothing node oscillations, see <a class="reference internal" hre
 </dd>
 <dt class="field-even">Vartype<span class="colon">:</span></dt>
 <dd class="field-even"><p>float, unit kg m<span class="math notranslate nohighlight">\(^{-3}\)</span></p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="m_parameters_docs.save_tracer_trajectory">
-<span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">save_tracer_trajectory</span></span><a class="headerlink" href="#m_parameters_docs.save_tracer_trajectory" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.save_tracer_trajectory'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><p>Defines positions of tracers whose trajectory will be recorded every time step.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Vartype<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List of lists, contains tracer x and y coordinates <code class="docutils literal notranslate"><span class="pre">[[x_pos,</span> <span class="pre">y_pos,</span> <span class="pre">unique_ID],</span> <span class="pre">[...]]</span></code>.</p>
-</dd>
-</dl>
-<div class="admonition hint">
-<p class="admonition-title">Hint</p>
-<p>For example, the following list:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">save_tracer_trajectory</span> <span class="o">=</span> <span class="p">[[</span><span class="n">length</span><span class="o">/</span><span class="mf">2.0</span>  <span class="o">-</span> <span class="mi">50</span><span class="p">,</span> <span class="mf">5e3</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">],</span>
-</span><span id="line-2">                         <span class="p">[</span><span class="n">length</span><span class="o">/</span><span class="mf">2.0</span>  <span class="o">+</span> <span class="mi">50</span><span class="p">,</span> <span class="mf">10e3</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">],</span>
-</span><span id="line-3">                         <span class="p">[</span><span class="n">length</span><span class="o">/</span><span class="mf">2.0</span>  <span class="o">-</span> <span class="mi">50</span><span class="p">,</span> <span class="mf">15e3</span><span class="p">,</span> <span class="s2">"c"</span><span class="p">],</span>
-</span><span id="line-4">                         <span class="p">[</span><span class="n">length</span><span class="o">/</span><span class="mf">2.0</span>  <span class="o">+</span> <span class="mi">50</span><span class="p">,</span> <span class="mf">20e3</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">],</span>
-</span><span id="line-5">                         <span class="p">[</span><span class="n">length</span><span class="o">/</span><span class="mf">2.0</span>  <span class="o">-</span> <span class="mi">50</span><span class="p">,</span> <span class="mf">25e3</span><span class="p">,</span> <span class="s2">"e"</span><span class="p">]]</span>
-</span></code></pre></div>
-</div>
-<p>introduces five tracers with IDs “a” - “e”. The trajectories are then recorded in <code class="docutils literal notranslate"><span class="pre">data_name/tracers/trajectories/tracer_*.dat</span></code></p>
-</div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>In order to distinguish from regular tracers, a string ID is required.</p>
-</div>
-<dl class="field-list simple">
-</dl>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="m_parameters_docs.scaled_time_step">
-<span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">scaled_time_step</span></span><a class="headerlink" href="#m_parameters_docs.scaled_time_step" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.scaled_time_step'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Whether to scale the time step with the time.</p>
-</dd>
-<dt class="field-even">Vartype<span class="colon">:</span></dt>
-<dd class="field-even"><p>boolean</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1395,43 +1250,17 @@ detecting and smoothing node oscillations, see <a class="reference internal" hre
 </dl>
 </dd></dl>
 <dl class="py data">
-<dt class="sig sig-object py" id="m_parameters_docs.stokes_elements">
-<span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">stokes_elements</span></span><a class="headerlink" href="#m_parameters_docs.stokes_elements" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.stokes_elements'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><p>Determines the elements for the Stokes problem.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">"Mini"</span></code> for Mini elements or  <code class="docutils literal notranslate"><span class="pre">"TH"</span></code> for Taylor-Hood elements</p>
-</dd>
-<dt class="field-even">Vartype<span class="colon">:</span></dt>
-<dd class="field-even"><p>string</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py data">
 <dt class="sig sig-object py" id="m_parameters_docs.stokes_null">
 <span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">stokes_null</span></span><a class="headerlink" href="#m_parameters_docs.stokes_null" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.stokes_null'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><p>Method for correcting velocity field in case of free surface conditions on both top and bottom boundary.</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
+<dd class="field-odd"><p>Method for correcting velocity field in case of free surface conditions on both top and bottom boundary.</p>
+</dd>
+<dt class="field-even">Vartype<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">"boundary"</span></code> for subtracting the average <span class="math notranslate nohighlight">\(v_z\)</span>integrated along the top boundary</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">"volume"</span></code> for subtracting the average <span class="math notranslate nohighlight">\(v_z\)</span>integrated over the full domain</p></li>
 </ul>
-</dd>
-<dt class="field-even">Vartype<span class="colon">:</span></dt>
-<dd class="field-even"><p>string</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="m_parameters_docs.stress_iter_error">
-<span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">stress_iter_error</span></span><a class="headerlink" href="#m_parameters_docs.stress_iter_error" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.stress_iter_error'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The relative error of local stress iterations, see See <code class="xref py py-func docutils literal notranslate"><span class="pre">m_rheology.get_VE_stress()</span></code>.</p>
-</dd>
-<dt class="field-even">Vartype<span class="colon">:</span></dt>
-<dd class="field-even"><p>float, unit (-)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1444,7 +1273,6 @@ detecting and smoothing node oscillations, see <a class="reference internal" hre
 <dd class="field-odd"><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">["step",</span> <span class="pre">1000]</span></code> exits the time loop after the 100th step</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">["time",</span> <span class="pre">100*kyr]</span></code> exits the time loop as soon as 100 kyr is reached</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">["time_and_step",</span> <span class="pre">100*kyr,</span> <span class="pre">1000]</span></code> exits the time loop as soon as the simulation reached the 100th step OR 100 kyr have passed</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">["initial_condition",</span> <span class="pre">100*kyr]</span></code> exits the time loop after writing the initial condition</p></li>
 </ul>
 </dd>
@@ -1476,18 +1304,6 @@ detecting and smoothing node oscillations, see <a class="reference internal" hre
 </dl>
 </dd></dl>
 <dl class="py data">
-<dt class="sig sig-object py" id="m_parameters_docs.time_step_scaling">
-<span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">time_step_scaling</span></span><a class="headerlink" href="#m_parameters_docs.time_step_scaling" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.time_step_scaling'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The time step scaling factor <span class="math notranslate nohighlight">\(\alpha\)</span>. The time step is calculated as <span class="math notranslate nohighlight">\(dt = t/\alpha\)</span> if <code class="docutils literal notranslate"><span class="pre">scaled_time_step</span> <span class="pre">=</span> <span class="pre">True</span></code>.</p>
-</dd>
-<dt class="field-even">Vartype<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py data">
 <dt class="sig sig-object py" id="m_parameters_docs.time_step_strategy">
 <span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">time_step_strategy</span></span><a class="headerlink" href="#m_parameters_docs.time_step_strategy" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.time_step_strategy'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
 <dd><p>Specifies the method for computing a new time step, see <a class="reference internal" href="m_timestep.html#m_timestep.time_step" title="m_timestep.time_step"><code class="xref py py-func docutils literal notranslate"><span class="pre">m_timestep.time_step()</span></code></a>.</p>
@@ -1513,18 +1329,6 @@ detecting and smoothing node oscillations, see <a class="reference internal" hre
 </dd>
 <dt class="field-even">Vartype<span class="colon">:</span></dt>
 <dd class="field-even"><p>string, e.g.  <code class="docutils literal notranslate"><span class="pre">"-"</span></code>, <code class="docutils literal notranslate"><span class="pre">"s"</span></code>, <code class="docutils literal notranslate"><span class="pre">"yr"</span></code>, <code class="docutils literal notranslate"><span class="pre">"kyr"</span></code>, <code class="docutils literal notranslate"><span class="pre">"Myr"</span></code> or <code class="docutils literal notranslate"><span class="pre">"Gyr"</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="m_parameters_docs.topo_diff">
-<span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">topo_diff</span></span><a class="headerlink" href="#m_parameters_docs.topo_diff" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.topo_diff'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Empirical topography diffusion coefficient, works well for compression velocity of 10 km/s.</p>
-</dd>
-<dt class="field-even">Vartype<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1576,16 +1380,6 @@ detecting and smoothing node oscillations, see <a class="reference internal" hre
 </dl>
 </dd></dl>
 <dl class="py data">
-<dt class="sig sig-object py" id="m_parameters_docs.tracers_per_cell">
-<span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">tracers_per_cell</span></span><a class="headerlink" href="#m_parameters_docs.tracers_per_cell" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.tracers_per_cell'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><p>How many tracers will be placed into a cell.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Vartype<span class="colon">:</span></dt>
-<dd class="field-odd"><p>integer</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py data">
 <dt class="sig sig-object py" id="m_parameters_docs.triangle_types">
 <span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">triangle_types</span></span><a class="headerlink" href="#m_parameters_docs.triangle_types" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.triangle_types'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
 <dd><p>Method of dividing basic squares into mesh triangle elements.</p>
@@ -1614,24 +1408,6 @@ detecting and smoothing node oscillations, see <a class="reference internal" hre
 <li><p><code class="docutils literal notranslate"><span class="pre">"composition"</span></code> for composition-dependent viscosity (used for selected benchmarks)</p></li>
 </ul>
 </dd>
-</dl>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="m_parameters_docs.weight_tracers_by_ratio">
-<span class="sig-prename descclassname"><span class="pre">m_parameters_docs.</span></span><span class="sig-name descname"><span class="pre">weight_tracers_by_ratio</span></span><a class="headerlink" href="#m_parameters_docs.weight_tracers_by_ratio" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#m_parameters_docs.weight_tracers_by_ratio'"><svg height="1em" viewbox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"></path></svg></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Var<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Whether or not weight the tracer’s composition by the ratio of the material’s initial and current number of tracers.</p>
-</dd>
-<dt class="field-even">Vartype<span class="colon">:</span></dt>
-<dd class="field-even"><p>boolean</p>
-</dd>
-</dl>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>This may be useful when one of the materials has higher tracer density than the other (when it is, e.g., vigorously convecting).</p>
-</div>
-<dl class="field-list simple">
 </dl>
 </dd></dl>
 <dl class="py data">
@@ -1689,25 +1465,18 @@ detecting and smoothing node oscillations, see <a class="reference internal" hre
 <li><a :data-current="activeSection === '#m_parameters_docs.BC_heat_transfer'" class="reference internal" href="#m_parameters_docs.BC_heat_transfer"><code class="docutils literal notranslate"><span class="pre">BC_heat_transfer</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.DAL_factor'" class="reference internal" href="#m_parameters_docs.DAL_factor"><code class="docutils literal notranslate"><span class="pre">DAL_factor</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.G_ice'" class="reference internal" href="#m_parameters_docs.G_ice"><code class="docutils literal notranslate"><span class="pre">G_ice</span></code></a></li>
-<li><a :data-current="activeSection === '#m_parameters_docs.H_max'" class="reference internal" href="#m_parameters_docs.H_max"><code class="docutils literal notranslate"><span class="pre">H_max</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.Lt'" class="reference internal" href="#m_parameters_docs.Lt"><code class="docutils literal notranslate"><span class="pre">Lt</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.Picard_iter_error'" class="reference internal" href="#m_parameters_docs.Picard_iter_error"><code class="docutils literal notranslate"><span class="pre">Picard_iter_error</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.Picard_iter_max'" class="reference internal" href="#m_parameters_docs.Picard_iter_max"><code class="docutils literal notranslate"><span class="pre">Picard_iter_max</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.Q_activ'" class="reference internal" href="#m_parameters_docs.Q_activ"><code class="docutils literal notranslate"><span class="pre">Q_activ</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.T_melt'" class="reference internal" href="#m_parameters_docs.T_melt"><code class="docutils literal notranslate"><span class="pre">T_melt</span></code></a></li>
-<li><a :data-current="activeSection === '#m_parameters_docs.adaptive_smoothing'" class="reference internal" href="#m_parameters_docs.adaptive_smoothing"><code class="docutils literal notranslate"><span class="pre">adaptive_smoothing</span></code></a></li>
-<li><a :data-current="activeSection === '#m_parameters_docs.albedo'" class="reference internal" href="#m_parameters_docs.albedo"><code class="docutils literal notranslate"><span class="pre">albedo</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.cfl'" class="reference internal" href="#m_parameters_docs.cfl"><code class="docutils literal notranslate"><span class="pre">cfl</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.cohesion_strong'" class="reference internal" href="#m_parameters_docs.cohesion_strong"><code class="docutils literal notranslate"><span class="pre">cohesion_strong</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.cohesion_weak'" class="reference internal" href="#m_parameters_docs.cohesion_weak"><code class="docutils literal notranslate"><span class="pre">cohesion_weak</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.cos_perturbation'" class="reference internal" href="#m_parameters_docs.cos_perturbation"><code class="docutils literal notranslate"><span class="pre">cos_perturbation</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.dT_melt_tresh'" class="reference internal" href="#m_parameters_docs.dT_melt_tresh"><code class="docutils literal notranslate"><span class="pre">dT_melt_tresh</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.d_grain'" class="reference internal" href="#m_parameters_docs.d_grain"><code class="docutils literal notranslate"><span class="pre">d_grain</span></code></a></li>
-<li><a :data-current="activeSection === '#m_parameters_docs.dist_AU'" class="reference internal" href="#m_parameters_docs.dist_AU"><code class="docutils literal notranslate"><span class="pre">dist_AU</span></code></a></li>
-<li><a :data-current="activeSection === '#m_parameters_docs.dt_const'" class="reference internal" href="#m_parameters_docs.dt_const"><code class="docutils literal notranslate"><span class="pre">dt_const</span></code></a></li>
-<li><a :data-current="activeSection === '#m_parameters_docs.dt_max'" class="reference internal" href="#m_parameters_docs.dt_max"><code class="docutils literal notranslate"><span class="pre">dt_max</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.elasticity'" class="reference internal" href="#m_parameters_docs.elasticity"><code class="docutils literal notranslate"><span class="pre">elasticity</span></code></a></li>
-<li><a :data-current="activeSection === '#m_parameters_docs.emis'" class="reference internal" href="#m_parameters_docs.emis"><code class="docutils literal notranslate"><span class="pre">emis</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.empty_cells_allowed'" class="reference internal" href="#m_parameters_docs.empty_cells_allowed"><code class="docutils literal notranslate"><span class="pre">empty_cells_allowed</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.empty_cells_composition'" class="reference internal" href="#m_parameters_docs.empty_cells_composition"><code class="docutils literal notranslate"><span class="pre">empty_cells_composition</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.empty_cells_region'" class="reference internal" href="#m_parameters_docs.empty_cells_region"><code class="docutils literal notranslate"><span class="pre">empty_cells_region</span></code></a></li>
@@ -1717,25 +1486,23 @@ detecting and smoothing node oscillations, see <a class="reference internal" hre
 <li><a :data-current="activeSection === '#m_parameters_docs.eta_0'" class="reference internal" href="#m_parameters_docs.eta_0"><code class="docutils literal notranslate"><span class="pre">eta_0</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.eta_max'" class="reference internal" href="#m_parameters_docs.eta_max"><code class="docutils literal notranslate"><span class="pre">eta_max</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.eta_min'" class="reference internal" href="#m_parameters_docs.eta_min"><code class="docutils literal notranslate"><span class="pre">eta_min</span></code></a></li>
-<li><a :data-current="activeSection === '#m_parameters_docs.eta_min_plast'" class="reference internal" href="#m_parameters_docs.eta_min_plast"><code class="docutils literal notranslate"><span class="pre">eta_min_plast</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.g'" class="reference internal" href="#m_parameters_docs.g"><code class="docutils literal notranslate"><span class="pre">g</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.h_bot_ini'" class="reference internal" href="#m_parameters_docs.h_bot_ini"><code class="docutils literal notranslate"><span class="pre">h_bot_ini</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.h_top_ini'" class="reference internal" href="#m_parameters_docs.h_top_ini"><code class="docutils literal notranslate"><span class="pre">h_top_ini</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.healing'" class="reference internal" href="#m_parameters_docs.healing"><code class="docutils literal notranslate"><span class="pre">healing</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.healing_timescale'" class="reference internal" href="#m_parameters_docs.healing_timescale"><code class="docutils literal notranslate"><span class="pre">healing_timescale</span></code></a></li>
-<li><a :data-current="activeSection === '#m_parameters_docs.heating_model'" class="reference internal" href="#m_parameters_docs.heating_model"><code class="docutils literal notranslate"><span class="pre">heating_model</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.height'" class="reference internal" href="#m_parameters_docs.height"><code class="docutils literal notranslate"><span class="pre">height</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.init_cond_profile'" class="reference internal" href="#m_parameters_docs.init_cond_profile"><code class="docutils literal notranslate"><span class="pre">init_cond_profile</span></code></a></li>
-<li><a :data-current="activeSection === '#m_parameters_docs.initial_tidal_dissipation'" class="reference internal" href="#m_parameters_docs.initial_tidal_dissipation"><code class="docutils literal notranslate"><span class="pre">initial_tidal_dissipation</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.initial_topography'" class="reference internal" href="#m_parameters_docs.initial_topography"><code class="docutils literal notranslate"><span class="pre">initial_topography</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.int_friction_angle'" class="reference internal" href="#m_parameters_docs.int_friction_angle"><code class="docutils literal notranslate"><span class="pre">int_friction_angle</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.integration_method'" class="reference internal" href="#m_parameters_docs.integration_method"><code class="docutils literal notranslate"><span class="pre">integration_method</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.interface'" class="reference internal" href="#m_parameters_docs.interface"><code class="docutils literal notranslate"><span class="pre">interface()</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.internal_melting'" class="reference internal" href="#m_parameters_docs.internal_melting"><code class="docutils literal notranslate"><span class="pre">internal_melting</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.length'" class="reference internal" href="#m_parameters_docs.length"><code class="docutils literal notranslate"><span class="pre">length</span></code></a></li>
+<li><a :data-current="activeSection === '#m_parameters_docs.loading_mesh'" class="reference internal" href="#m_parameters_docs.loading_mesh"><code class="docutils literal notranslate"><span class="pre">loading_mesh</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.materials'" class="reference internal" href="#m_parameters_docs.materials"><code class="docutils literal notranslate"><span class="pre">materials</span></code></a></li>
-<li><a :data-current="activeSection === '#m_parameters_docs.maximum_time_step'" class="reference internal" href="#m_parameters_docs.maximum_time_step"><code class="docutils literal notranslate"><span class="pre">maximum_time_step</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.mesh_displacement_laplace'" class="reference internal" href="#m_parameters_docs.mesh_displacement_laplace"><code class="docutils literal notranslate"><span class="pre">mesh_displacement_laplace</span></code></a></li>
+<li><a :data-current="activeSection === '#m_parameters_docs.mesh_name'" class="reference internal" href="#m_parameters_docs.mesh_name"><code class="docutils literal notranslate"><span class="pre">mesh_name</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.monitor_cache'" class="reference internal" href="#m_parameters_docs.monitor_cache"><code class="docutils literal notranslate"><span class="pre">monitor_cache</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.name'" class="reference internal" href="#m_parameters_docs.name"><code class="docutils literal notranslate"><span class="pre">name</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.nonlinear_heat_equation'" class="reference internal" href="#m_parameters_docs.nonlinear_heat_equation"><code class="docutils literal notranslate"><span class="pre">nonlinear_heat_equation</span></code></a></li>
@@ -1756,25 +1523,17 @@ detecting and smoothing node oscillations, see <a class="reference internal" hre
 <li><a :data-current="activeSection === '#m_parameters_docs.rho_l'" class="reference internal" href="#m_parameters_docs.rho_l"><code class="docutils literal notranslate"><span class="pre">rho_l</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.rho_m'" class="reference internal" href="#m_parameters_docs.rho_m"><code class="docutils literal notranslate"><span class="pre">rho_m</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.rho_s'" class="reference internal" href="#m_parameters_docs.rho_s"><code class="docutils literal notranslate"><span class="pre">rho_s</span></code></a></li>
-<li><a :data-current="activeSection === '#m_parameters_docs.save_tracer_trajectory'" class="reference internal" href="#m_parameters_docs.save_tracer_trajectory"><code class="docutils literal notranslate"><span class="pre">save_tracer_trajectory</span></code></a></li>
-<li><a :data-current="activeSection === '#m_parameters_docs.scaled_time_step'" class="reference internal" href="#m_parameters_docs.scaled_time_step"><code class="docutils literal notranslate"><span class="pre">scaled_time_step</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.solve_energy_problem'" class="reference internal" href="#m_parameters_docs.solve_energy_problem"><code class="docutils literal notranslate"><span class="pre">solve_energy_problem</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.stat_output'" class="reference internal" href="#m_parameters_docs.stat_output"><code class="docutils literal notranslate"><span class="pre">stat_output</span></code></a></li>
-<li><a :data-current="activeSection === '#m_parameters_docs.stokes_elements'" class="reference internal" href="#m_parameters_docs.stokes_elements"><code class="docutils literal notranslate"><span class="pre">stokes_elements</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.stokes_null'" class="reference internal" href="#m_parameters_docs.stokes_null"><code class="docutils literal notranslate"><span class="pre">stokes_null</span></code></a></li>
-<li><a :data-current="activeSection === '#m_parameters_docs.stress_iter_error'" class="reference internal" href="#m_parameters_docs.stress_iter_error"><code class="docutils literal notranslate"><span class="pre">stress_iter_error</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.termination_condition'" class="reference internal" href="#m_parameters_docs.termination_condition"><code class="docutils literal notranslate"><span class="pre">termination_condition</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.tidal_dissipation'" class="reference internal" href="#m_parameters_docs.tidal_dissipation"><code class="docutils literal notranslate"><span class="pre">tidal_dissipation</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.time_step_position'" class="reference internal" href="#m_parameters_docs.time_step_position"><code class="docutils literal notranslate"><span class="pre">time_step_position</span></code></a></li>
-<li><a :data-current="activeSection === '#m_parameters_docs.time_step_scaling'" class="reference internal" href="#m_parameters_docs.time_step_scaling"><code class="docutils literal notranslate"><span class="pre">time_step_scaling</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.time_step_strategy'" class="reference internal" href="#m_parameters_docs.time_step_strategy"><code class="docutils literal notranslate"><span class="pre">time_step_strategy</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.time_units_string'" class="reference internal" href="#m_parameters_docs.time_units_string"><code class="docutils literal notranslate"><span class="pre">time_units_string</span></code></a></li>
-<li><a :data-current="activeSection === '#m_parameters_docs.topo_diff'" class="reference internal" href="#m_parameters_docs.topo_diff"><code class="docutils literal notranslate"><span class="pre">topo_diff</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.tracers_output'" class="reference internal" href="#m_parameters_docs.tracers_output"><code class="docutils literal notranslate"><span class="pre">tracers_output</span></code></a></li>
-<li><a :data-current="activeSection === '#m_parameters_docs.tracers_per_cell'" class="reference internal" href="#m_parameters_docs.tracers_per_cell"><code class="docutils literal notranslate"><span class="pre">tracers_per_cell</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.triangle_types'" class="reference internal" href="#m_parameters_docs.triangle_types"><code class="docutils literal notranslate"><span class="pre">triangle_types</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.viscosity_type'" class="reference internal" href="#m_parameters_docs.viscosity_type"><code class="docutils literal notranslate"><span class="pre">viscosity_type</span></code></a></li>
-<li><a :data-current="activeSection === '#m_parameters_docs.weight_tracers_by_ratio'" class="reference internal" href="#m_parameters_docs.weight_tracers_by_ratio"><code class="docutils literal notranslate"><span class="pre">weight_tracers_by_ratio</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.x_div'" class="reference internal" href="#m_parameters_docs.x_div"><code class="docutils literal notranslate"><span class="pre">x_div</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.yield_stress_max'" class="reference internal" href="#m_parameters_docs.yield_stress_max"><code class="docutils literal notranslate"><span class="pre">yield_stress_max</span></code></a></li>
 <li><a :data-current="activeSection === '#m_parameters_docs.yield_stress_min'" class="reference internal" href="#m_parameters_docs.yield_stress_min"><code class="docutils literal notranslate"><span class="pre">yield_stress_min</span></code></a></li>

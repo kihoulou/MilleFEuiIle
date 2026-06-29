@@ -1,6 +1,8 @@
+# --- Python modules ---
 from dolfin import *
 import numpy as np
 
+# --- MilleFEuiIle modules ---
 from m_constants import *
 from m_parameters import *
 from m_material_properties import *
@@ -70,7 +72,7 @@ def time_step(mesh, v, v_mesh, H_max, composition, Temp, unit_scalar, t):
             dt_list.append(dt_cond)
 
         # --- Mesh displacement time step ---
-        if (BC_Stokes_problem[0][0] == "free_surface" or BC_Stokes_problem[1][0] == "free_surface"):
+        if (BC_Stokes_problem[0][0] == "free_surface" or BC_Stokes_problem[1][0] == "pressure"):
             v_max_mesh = MPI.max(mesh.mpi_comm(), np.abs(v_mesh.vector().get_local()).max()) 
             dt_mesh = cfl*(height/1e3)/(v_max_mesh + 1e-15)
             dt_list.append(dt_mesh)

@@ -1,3 +1,4 @@
+# --- MilleFEuiIle modules ---
 from m_parameters import *
 from m_constants import *
 
@@ -89,6 +90,8 @@ def check_input_parameters():
             print("Top boundary condition for Stokes problem undefined:", BC_Stokes_problem[0][0])
             print("Possible inputs:", bc_list)
             print(" ")
+
+    bc_list = ["free_slip", "no_slip", "pressure", "velocity", "velocity_x", "velocity_y"]
 
     if (BC_Stokes_problem[1][0] not in bc_list):
         exit_code = True
@@ -226,7 +229,7 @@ def check_input_parameters():
         if (rank == 0):
             print("Adding 'topography_top' into paraview_output list.")
 
-    if (BC_Stokes_problem[1][0] == "free_surface" and "topography_bottom" not in paraview_output):
+    if (BC_Stokes_problem[1][0] == "pressure" and "topography_bottom" not in paraview_output):
         paraview_output.append("topography_bottom")
         if (rank == 0):
             print("Adding 'topography_bottom' into paraview_output list.")

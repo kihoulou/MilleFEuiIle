@@ -1,52 +1,65 @@
+# --- Python modules ---
 from dolfin import *
 import matplotlib.pyplot as plt
-
-import numpy as np
 import subprocess
+import numpy as np
+import sys
+
+# --- MilleFEuiIle modules ---
 from plot_MilleFEuiIle import *
 
 comm = MPI.comm_world
 rank = MPI.rank(comm)
-size= MPI.size(comm)
-
-name = "demo_compression"
+size = MPI.size(comm)
+name = "demo3_convection_phase1e15"
 
 skip_plotting = False
 
-plot_streamlines = False
+plot_HDF5_data = True
 
-plot_comp_tracers = [[2, "orange", 0.25], [1, "lightskyblue", 0.25]] #[1, "lightskyblue", 0.25], 
+plot_streamlines = True
+
+plot_tracers = False
 
 plot_melt_tracers = False
 
+plot_comp_tracers = []
+
+plot_trajectories = []
+tail = "comet"
+tail_length = 500 # steps
+
 show_time = True
 
-plot_scalebar = True
+plot_scalebar = False
 
-plot_axes = False
+plot_axes = True
 
-i_start = 0 
+try:
+    i_start = int(sys.argv[1])
+except:
+    i_start = 0
 
 if (skip_plotting == False):
     font_size = 14
 
-    x_label = ["0", "50", "100"]
-    x_label_val = [0, 50e3, 100e3]
+    x_label = ["0", "100", "200"]
+    x_label_val = [0, 100e3, 200e3]
     x_label_text = "x (km)"
 
-    z_label = ["0", "10"]
-    z_label_val = [0, 10e3]
+    z_label = ["0", "100"]
+    z_label_val = [0, 100e3]
     z_label_text = "z (km)"
 
     # --- Values for temperature color bar ---
-    # c_label = ["90", "185", "265"]
-    # c_label_val = [90, 185, 265]
-    # c_label_text = "Temperature (K)"
+    c_label = ["90", "185", "265"]
+    c_label_val = [90, 185, 265]
+    c_label_text = "Temperature (K)"
 
     # --- Values for viscosity color bar ---
-    c_label = ["14", "18", "23"]
-    c_label_val = [14, 18, 23]
-    c_label_text = r"log$_{10}$ viscosity (Pa s)"
+    # c_label = ["14", "18", "23"]
+    # c_label_val = [14, 18, 23]
+    # c_label_text = r"log$_{10}$ viscosity (Pa s)"
 
     # --- Values for melt fraction color bar ---
     m_label = ["0", "3", "6"]
@@ -62,7 +75,7 @@ if (skip_plotting == False):
             points.append([length/num_points*i, 2e3])
 
     x_range = [x_label_val[0], x_label_val[-1]]
-    z_range = [-2e3, 12e3]
+    z_range = [z_label_val[0], z_label_val[-1]]
 
     labels = [[x_label, x_label_text, x_label_val],
             [z_label, z_label_text, z_label_val],
@@ -93,7 +106,7 @@ if (skip_plotting == False):
 
     for ii in steps:
 
-        if (ii[0] >= i_start):
+        if (ii[0] > i_start):
             hdf5_step = ii[0]
             sim_step = ii[1]
 
@@ -108,37 +121,35 @@ if (skip_plotting == False):
 
             Temp = Function(sCG2)
             v = Function(vCG1)
-            visc = Function(sDG0)
-            visc_log = Function(sDG0)
 
-            Temp, v, visc  = load(name, hdf5_step,
+            Temp, v  = load(name, hdf5_step,
                             "temperature", Temp,
-                            "velocity", v,
-                            "viscosity", visc
+                            "velocity", v
                             )
 
-            visc_log.assign(project(ln(visc)/ln(10), sDG0))
-
             if (plot_scalebar == True):
-                scalebar(ax, 100e3, 0, font_size - 4)
+                scalebar(ax, 50e3, 10e3, font_size)
 
             if (plot_axes == False):
                 ax.axis('off')
 
             if (show_time == True):
-                ax.text(0, 1.2*z_label_val[-1], r"$t$ = "+str("{:.1f}".format(ii[2]))+" Myr", fontsize=font_size)
+                ax.text(0, 1.1*z_label_val[-1], r"$t$ = "+str("{:.1f}".format(ii[2]))+" Myr", fontsize=font_size)
+
+             # --- Plot tracer trajectories ---
+            if (len(plot_trajectories) > 0):
+                for j in range(0, len(plot_trajectories)):
+                    plot_trajectory(ax, name, plot_trajectories[j], sim_step, tail, tail_length)
 
             # --- Plot temperature field ---
             print("\nPlotting snapshot", hdf5_step, "/", int(steps[len(steps) - 1][0]))
-            plot_scalar(ax, fig, visc_log, mesh, labels, x_range, z_range, font_size, "flat")
+            plot_scalar(ax, fig, Temp, mesh, labels, x_range, z_range, font_size, "smooth", plot_HDF5_data)
 
-            # --- Plot tracers ---
-            if (len(plot_comp_tracers) > 0):
-                load_comp_tracers(ax, name, hdf5_step, plot_comp_tracers)
+            # --- Plot composition tracers ---
+            if (plot_tracers == True):
+                load_comp_tracers(ax, name, sim_step)
 
-            # ax.text(60e3, -4e3, "Oceanic material", color = 'mediumblue', fontsize=font_size-2)
-            ax.text(60e3, 12e3, "Near-surface material", color = 'darkorange', fontsize=font_size-2)
-
+            # --- Plot melt tracers ---
             if (plot_melt_tracers == True):
                 load_melt_tracers(ax, name, labels, fig, font_size, sim_step)
 
@@ -147,11 +158,11 @@ if (skip_plotting == False):
                 vel_max = MPI.max(mesh.mpi_comm(), np.abs(v.vector().get_local()).max()) 
                 compute_streamlines(ax, v, points, vel_max, fig, font_size, i)
 
-            plt.savefig("data_" + name + "/img/temp_NS_" + str(hdf5_step).zfill(3) + ".png",
+            plt.savefig("data_" + name + "/img/temp_" + str(hdf5_step).zfill(3) + ".png",
                             dpi = 100, transparent = False, pad_inches = 0.3, bbox_inches = 'tight')
             plt.close(fig)
             plt.clf()
 
 # --- Make animation using ImageMagick ---
 print("\nMaking animation.")
-subprocess.run(["convert -delay 5 data_" + name + "/img/temp_NS_*.png data_" + name + "/anim/demo7_NS.gif"], shell=True) 
+subprocess.run(["convert -delay 5 data_" + name + "/img/temp_*.png data_" + name + "/anim/demo3.gif"], shell=True) 

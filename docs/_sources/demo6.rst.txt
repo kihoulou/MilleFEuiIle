@@ -14,6 +14,9 @@ the :download:`parameter file <code/demo6/m_parameters_demo6.py>`\,
 and the :download:`matplotlib script <code/demo6/plot_demo6.py>`\.
 Detailed explanation is given below.
 
+.. note:: Copy the bash script, parameter file, and plotting script from ``/demos/demo6/`` into the main directory.
+
+
 ^^^^^^^^^^^^^^^^^^^^^^^
 Files settings
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -24,7 +27,7 @@ We start with the directory name
     :emphasize-lines: 2
 
     # --- Name of the directory with results ---
-    name = "demo_extension"
+    name = "demo6_extension"
 
 The directory protection will be turned off, meaning that when lauched repeatedly,
 the results will be overwritten each time
@@ -67,7 +70,7 @@ an output will be made every 10 kyr (``output_frequency``).
     # --- String representation of time_units ---
     time_units_string = "Myr"
 
-    # --- Criterion for ending the simulation, e.g., ["time", 1*Myr], ["step", 1000] or ["initial_condition", *]---
+    # --- Criterion for ending the simulation, e.g., ["time", 1*Myr], ["step", 1000], ["time_and_step", 100*kyr, 1000] or ["initial_condition", *]---
     termination_condition = ["time", 2*Myr]
 
     # --- Output method for Paraview, HDF5 and tracers ---
@@ -104,10 +107,10 @@ and the duration of the time step will be saved. We also choose corresponding he
     :emphasize-lines: 2, 5
 
     # --- What values to print in a text file every time step? ---
-    stat_output = ["q_top", "time", "timestep"]
+    stat_output = ["time", "timestep"]
 
     # --- Headers for the columns in the text file
-    stat_header = ["q_top (W/m2)", "Time (h)", "dt (s)"]
+    stat_header = ["Time (h)", "dt (s)"]
 
 |
 
@@ -334,8 +337,7 @@ in ``m_material_properties.py``, the thermal expansivity here is inactive.
     # --- Density of the melt produced by the solid ---
     rho_m 	= rho_l # kg/m3
 
-    alpha_exp = 1.6e-4	# K^-1
-
+    
 |
 
 For the tectonic simulation, plasticity and elasticity need to be considered.

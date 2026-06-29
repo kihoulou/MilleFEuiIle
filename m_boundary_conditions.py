@@ -1,4 +1,7 @@
+# --- Python modules ---
 from dolfin import *
+
+# --- MilleFEuiIle modules ---
 from m_parameters import *
 from m_constants import *
 
@@ -82,7 +85,7 @@ def apply_velocity_BC(V, boundary_parts, top_left, t):
     elif (BC_Stokes_problem[1][0] == "no_slip"):
         bc_stokes.append(DirichletBC(V.sub(1), Constant((0.0,0.0)), boundary_parts, 2))
 
-    elif (BC_Stokes_problem[1][0] == "free_surface"):
+    elif (BC_Stokes_problem[1][0] == "pressure"):
         pass
 
     elif (BC_Stokes_problem[1][0] == "velocity_x"):

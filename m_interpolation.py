@@ -1,9 +1,12 @@
+# --- Python modules ---
 from dolfin import *
 import numpy
 import math
 import os 
 from random import uniform
 import sys
+
+# --- MilleFEuiIle modules ---
 from m_parameters import *
 from m_material_properties import *
 

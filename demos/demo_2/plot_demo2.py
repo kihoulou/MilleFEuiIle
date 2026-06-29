@@ -1,14 +1,18 @@
+
+# --- Python modules ---
 import matplotlib.pyplot as plt 
+
+# --- MilleFEuiIle modules ---
 from plot_MilleFEuiIle import *
 
 fig, ax0 = plt.subplots(1, 1, layout='constrained', figsize=(6, 4)) 
 
 # --- Define the directories ---
 directories = [
-    "data_demo_convection_1e13Pas/statistics.dat",
-    "data_demo_convection_1e14Pas/statistics.dat",
-    "data_demo_convection_1e15Pas/statistics.dat",
-    "data_demo_convection_1e16Pas/statistics.dat"]
+    "data_demo2_convection_1e13Pas/statistics.dat",
+    "data_demo2_convection_1e14Pas/statistics.dat",
+    "data_demo2_convection_1e15Pas/statistics.dat",
+    "data_demo2_convection_1e16Pas/statistics.dat"]
 
 # --- Define the labels ---
 labelnames = [r"$10^{13}$ Pa s",

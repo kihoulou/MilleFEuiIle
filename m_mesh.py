@@ -1,5 +1,8 @@
+# --- Python modules ---
 from dolfin import *
 import numpy
+
+# --- MilleFEuiIle modules ---
 from m_parameters import *
 
 comm = MPI.comm_world
@@ -27,7 +30,7 @@ class MeshModule:
 
         self.bound_mesh = BoundaryMesh(self.mesh, 'exterior')
 
-        if (BC_Stokes_problem[0][0] == "free_surface" or BC_Stokes_problem[1][0] == "free_surface"):
+        if (BC_Stokes_problem[0][0] == "free_surface" or BC_Stokes_problem[1][0] == "pressure"):
             self.moving_mesh = True
         else:
             self.moving_mesh = False
@@ -253,21 +256,21 @@ def save_topography(bound_mesh, name, q_ice, q_water, step):
 
             file.close()  
 
-    if (BC_Stokes_problem[1][0] == "free_surface"):
+    if (BC_Stokes_problem[1][0] == "pressure"):
         # --- Bottom topography ---
         topography_bot = []
-        topography_bot_header = ["#x (m)\t\t", "y (m)\t\t"]
+        topography_bot_header = ["#x (m)\t\t", "y (m)\t\t", []]
         for vertex in vertices(bound_mesh):
             if (vertex.point()[1] < height*0.25):
                 x_pos =vertex.point()[0] 
                 y_pos = vertex.point()[1]
-                topography_bot.append([x_pos, y_pos])
+                topography_bot.append([x_pos, y_pos, []])
 
                 # --- Uncomment for the heat flux along the bottom bounrady ---
                 # q_ice_vertex = q_ice(Point(x_pos, y_pos))[1]
                 # q_water_vertex = q_water(Point(x_pos, y_pos))[1]
-                # topography_bot[-1].append([q_ice_vertex, q_water_vertex])
-                # topography_bot_header.append(["q_i (W/m2)\t", "q_w (W/m2)"])
+                # topography_bot[-1] = [q_ice_vertex, q_water_vertex]
+                # topography_bot_header[-1] = ["q_i (W/m2)\t", "q_w (W/m2)"]
 
         all_topography_bot = []
         gather_topography = comm.allgather(topography_bot)

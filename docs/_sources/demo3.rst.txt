@@ -16,9 +16,27 @@ Download
 Here you can download the :download:`bash script <code/demo3/run_MilleFEuiIle_demo3.sh>`\, the :download:`parameter file <code/demo3/m_parameters_demo3.py>`\ and the :download:`matplotlib script <code/demo3/plot_demo3.py>`\ for the heat flux evolution.
 Detailed explanation is given below.
 
+.. note:: Copy the bash script, parameter file, and plotting script from ``/demos/demo3/`` into the main directory.
+
+
 -----------------------------
 Parameter file modification
 -----------------------------
+
+First, we redefine the directory name:
+
+.. code-block:: python
+    :emphasize-lines: 2
+
+    # --- Name of the directory with results ---
+    name = "demo3_convection_phase1e15"
+
+Then, we make the output more frequent.
+
+.. code-block:: python
+    :emphasize-lines: 1
+
+    output_frequency = ["time", 50*kyr]
 
 Compared to the thermal convection in the previous section, we need the bottom boundary to deform,
 therefre we prescribe the free surface boundary condition
@@ -27,8 +45,8 @@ therefre we prescribe the free surface boundary condition
     :emphasize-lines: 3
 
     # Boundary conditions for velocity (free_slip, no_slip, free surface, velocity, velocity_x, velocity_y)
-    BC_Stokes_problem = [["free_slip"],                # top boundary       (1)
-                        ["free_surface"],    # bottom boundary    (2)
+    BC_Stokes_problem = [["free_slip"],      # top boundary       (1)
+                        ["pressure"],        # bottom boundary    (2)
                         ["free_slip"],       # left boundary      (3)
                         ["free_slip"]]       # right boundary     (4)
 
@@ -46,19 +64,18 @@ ocean-shell exchange.
     # --- Strength of the phase transition at the ice-water boundary ---
     DAL_factor 	= 1e-2 # W/m3
 
-Finally, instead of temperature-dependent viscosity we prescribe the temperature- and stress-dependent rheology
-following Goldsby and Kohlstedt (2001). We choose grain size 1 mm.
+Finally, we prescribe the temperature-dependent viscosity one order of magnitude hugher than in the first example
 
 .. code-block:: python
     :emphasize-lines: 2,7
 
     # --- VISCOSITY ---
-    viscosity_type = "GK_2001"
+    viscosity_type = "temp-dep"
     .
     .
     .
-    # --- Grain size ---
-    d_grain = 1.0e-3
+    # --- Parameters for constant / temperature-dependent viscosity ---
+    eta_0 = 1e15
 
 -----------------------------
 Visualization of streamlines

@@ -1,6 +1,9 @@
+# --- Python modules ---
 from dolfin import *
 import numpy
 import os 
+
+# --- MilleFEuiIle modules ---
 from m_parameters import *
 
 def rho_ice_water(Temp, xm):
@@ -57,6 +60,10 @@ def k(Temp, composition):
 
         """
         k_H2O = 612.0/Temp
+        
+        # --- Demo 5 ---
+        # k_H2O = 2.3
+
         return k_H2O
 
 def cp(Temp, composition):
@@ -68,4 +75,9 @@ def cp(Temp, composition):
         :returns: A user-defined function of temperature and composition.
 
         """
-        return 185.0 + 7.037*Temp
+        cp_H2O = 185.0 + 7.037*Temp
+        
+        # --- Demo 5 ---
+        # cp_H2O = 2100
+        
+        return cp_H2O

@@ -1,7 +1,9 @@
+# --- Python modules ---
 from dolfin import *
+
+# --- MilleFEuiIle modules ---
 from m_parameters import *
      
-
 # Root-mean-square velocity
 def rms_vel(v):
     return sqrt(assemble(dot(v,v)*dx))/(height*length) 

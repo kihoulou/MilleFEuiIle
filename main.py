@@ -105,7 +105,7 @@ def run_code():
             FilesClass.load_HDF5(t, EqClass.dt, time_units, "topography_top", EqClass.h_top)
             EqClass.h_top_k.assign(EqClass.h_top)
 
-        if (BC_Stokes_problem[1][0] == "free_surface"):
+        if (BC_Stokes_problem[1][0] == "pressure"):
             FilesClass.load_HDF5(t, EqClass.dt, time_units, "topography_bottom", EqClass.h_bot)
             EqClass.h_bot_k.assign(EqClass.h_bot)
         
@@ -203,8 +203,7 @@ def run_code():
 
         # Define the temperature even though it will not be solved
         if rank == 0: print("Prescribing initial condition for temperature.")
-        # EqClass.Temp.assign(project(Expression("Tb - x[1]/h*(Tb-Ts)", Tb=BC_heat_transfer[1][1], Ts=BC_heat_transfer[0][1], h=height, degree=1), ElemClass.sCG2))
-        EqClass.Temp.assign(project(Expression("(Tb + Ts)/2.0", Tb=BC_heat_transfer[1][1], Ts=BC_heat_transfer[0][1], h=height, degree=1), ElemClass.sCG2))
+        EqClass.Temp.assign(project(Expression("Tb - x[1]/h*(Tb-Ts)", Tb=BC_heat_transfer[1][1], Ts=BC_heat_transfer[0][1], h=height, degree=1), ElemClass.sCG2))
 
         if (solve_energy_problem == True):             
             

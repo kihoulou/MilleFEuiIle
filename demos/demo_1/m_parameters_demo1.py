@@ -1,99 +1,61 @@
+# --- Python modules ---
 from dolfin import *
-from m_constants import *
+from pathlib import Path
 import numpy as np
+import shutil
 import sys
+import os
+
+# --- MilleFEuiIle modules ---
+from m_constants import *
 
 comm = MPI.comm_world
 rank = MPI.rank(comm)
 size = MPI.size(comm)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#------------------------- 1/ OUTPUT FILES SETTINGS -------------------
-#----------------------------------------------------------------------
+#:::::::::::::::::::: 1/ RUN SETTINGS :::::::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # --- Name of the directory with results ---
-name = "demo_convection_melting"
+name = "demo1_convection"
 
 # Protection from overwriting the directory above
 protect_directory = False
+# --- Whether or not to load HDF5 data from reload_name/HDF5/data.h5 --- 
+reload 		= False
 
 # --- Name of the directory from which the data will be reloaded ---
 reload_name 		= ""
 
-# --- Whether or not to load HDF5 data from reload_name/HDF5/data.h5 --- 
-reload 		= False
-
 # ---  Time stamp of the HDF5 file which will be loaded ---
-reload_step			= 10
+reload_step			= 0
 
 # --- Whether to reset time when reloading ---
 restart_time 	= False
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#-------------------------  TIME SETTINGS -------------------
-#----------------------------------------------------------------------
+#::::::::::::::::::::::::::::: 2/ TIME SETTINGS :::::::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # --- In what units the time will be? ---
 # 1.0 - seconds or nondimensional, or yr, kyr or Myr
 # --- String representation of time_units ---
 time_units_string = "Myr"
-
-# --- Criterion for ending the simulation, e.g., ["time", 1*Myr], ["step", 1000] or ["initial_condition", *]---
+# --- Criterion for ending the simulation, e.g., ["time", 1*Myr], ["step", 1000], ["time_and_step", 100*kyr, 1000] or ["initial_condition", *]---
 termination_condition = ["time", 20*Myr]
 
 # --- Output method for Paraview, HDF5 and  tracers ---
-output_frequency = ["time", 25*kyr] # e.g. ["steps", 10] or ["time", 100*kyr]
+output_frequency = ["time", 100*kyr] # e.g. ["steps", 10] or ["time", 100*kyr]
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#------------------------- FILE SETTINGS -------------------
-#----------------------------------------------------------------------
-
-# --- What properties to save? Must be one of the following (order does not matter):
-# rank              = to which process the tracer belongs
-# dev_stress_xx     = xx component of the deviatoric stress
-# dev_stress_xz     = xz component of the deviatoric stress
-# plastic_strain    = amount of plastic strain
-# original_depth    = original y-coordinate of the tracer
-# composition_0     \
-# composition_1       = material composition of the tracer
-# composition_2     /
-# melt_fraction     = amount of partial melt on the tracer
-# origin            = 0 if the tracer is original, 1 if added later
-# id                = unique ID of the tracer
-tracers_output = []
-
-# --- Headers for the columns in the text file for tracers ---
-tracers_header = [] # KEEP EMPTY, will be filled automatically
-
-# --- What functions to write into Paraview and HDF5 file ---
-paraview_output = ["temperature", "velocity", "viscosity", "melt_fraction", "tidal_heating"]
-
-paraview_output_ini = ["temperature"]
-
-# --- What values to print in a text file every time step? Must be one of the following (order does not matter):
-# nusselt 	= Nusselt number
-# vrms 		= Root mean square velocity
-# tracers 	= Number of tracers
-# q_top 	= Heat flux over the top boundary
-# q_bot 	= Heat flux over the bottom boundary
-# time		= Duration of the simulation (hours)
-# timestep	= Duration of the time step (seconds)
-stat_output = ["q_top", "time", "timestep"]
-
-# --- Headers for the columns in the text file
-# --- Up to the user (order corredponding to "stat_output").
-stat_header = ["q_top (W/m2)", "Time (h)", "dt (s)"]
-
-monitor_cache = False
-
+#::::::::::::::::::::::::::::: 3/ MESH SETTINGS :::::::::::::::::::::::
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#------------------------ 3/ MESH SETTINGS ----------------------------
-#----------------------------------------------------------------------
 
 # --- Mesh height ---
-height = 20e3 # m
+height = 100e3 # m
 
 # --- Mesh length ---
-length = 40e3 # m
+length = 200e3 # m
 
 # --- Whether to read an external mesh ---
 loading_mesh = False
@@ -118,9 +80,65 @@ triangle_types = "crossed" # crossed, left, right, left/right, right/left
 # leave empty for no refinement ---
 refinement = []
 
+# --- Initial topography ---
+initial_topography = False
+
+h_top_ini = Expression("0.0", l = length, pi = np.pi, degree = 1)
+
+h_bot_ini = Expression("0.0", l = length, degree = 1)
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#------------------------- 4/ MATERIAL COMPOSITION -------------------
-#----------------------------------------------------------------------
+#::::::::::::::::::::: 4/ OUTPUT FILES SETTINGS :::::::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# --- What properties to save? Must be one of the following (order does not matter):
+# rank              = to which process the tracer belongs
+# dev_stress_xx     = xx component of the deviatoric stress
+# dev_stress_xz     = xz component of the deviatoric stress
+# plastic_strain    = amount of plastic strain
+# original_depth    = original y-coordinate of the tracer
+# composition_0     \
+# composition_1       = material composition of the tracer
+# composition_2     /
+# melt_fraction     = amount of partial melt on the tracer
+# origin            = 0 if the tracer is original, 1 if added later
+# id                = unique ID of the tracer
+tracers_output = [] # KEEP EMPTY, will be filled automatically
+
+# --- Headers for the columns in the text file for tracers ---
+tracers_header = [] # KEEP EMPTY, will be filled automatically
+
+# --- Specify tracers whose trajectory will be recorded ---
+save_tracer_trajectory = [[length/2.0  - 50, 5e3, "a"],
+                          [length/2.0  + 50, 10e3, "b"],
+                          [length/2.0  - 50, 15e3, "c"],
+                          [length/2.0  + 50, 20e3, "d"],
+                          [length/2.0  - 50, 25e3, "e"]]
+
+# --- What functions to write into Paraview and HDF5 file ---
+paraview_output = ["temperature", "velocity", "viscosity"]
+
+paraview_output_ini = ["temperature"]
+
+# --- What values to print in a text file every time step? Must be one of the following (order does not matter):
+# nusselt 	= Nusselt number
+# vrms 		= Root mean square velocity
+# tracers 	= Number of tracers
+# q_top 	= Heat flux over the top boundary
+# q_bot 	= Heat flux over the bottom boundary
+# time		= Duration of the simulation (hours)
+# timestep	= Duration of the time step (seconds)
+stat_output = ["time", "timestep"]
+
+# --- Headers for the columns in the text file
+# --- Up to the user (order corredponding to "stat_output").
+stat_header = ["Time (h)", "dt (s)"]
+
+monitor_cache = False
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#:::::::::::::::::::: 5/ MATERIAL COMPOSITION SETTINGS ::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # --- Simple material assignment using "interface", "circle" or "rectangle" geometries ---
 # --- The n-th material overrides the (n-1)th.
@@ -145,25 +163,28 @@ empty_cells_composition = 0
 
 empty_cells_region = [] #  So far rectangle implemented
 
-initial_topography = False
-
-h_top_ini = Expression("0.0*sin(120*pi*x[0]/l)", l = length, pi = np.pi, degree = 1)
-
-h_bot_ini = Expression("8.5e3*(tanh((x[0]-l/4)/3000) - tanh((x[0] - 3*l/4)/3000))/2.0", l = length, degree = 1)
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#------------ 4/ STOKES PROBLEM SETTINGS -------------------
-#----------------------------------------------------------------------
+#::::::::::::::::::::::: 6/ STOKES PROBLEM SETTINGS :::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 stokes_elements = "Mini"
 
 time_step_position = "stokes"# (right after Stokes problem) or "end" (at the end of the time loop)
 
 time_step_strategy = "domain"
 
+# The option "constant" prescribes a constant timestep
+dt_const = 1.0*kyr
+
+maximum_time_step = False
+dt_max = 0.1*Myr
+
+scaled_time_step = False
+time_step_scaling = 25 # dt = t / time_step_scaling
+
 cfl = 0.5
 
 # ---  Maximum number of Stokes solver Picard iterations (used for heat equation, advection of tracers) ---
-Picard_iter_max 	= 10
+Picard_iter_max 	= 25
 
 # --- Minimum relative error in velocity field ---
 Picard_iter_error 	= 1e-3
@@ -189,7 +210,7 @@ tracers_per_cell = 10
 weight_tracers_by_ratio = False
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#:::::::::::::::::::: HEAT TRANSFER SETTINGS ::::::::::::::::::::::::::
+#:::::::::::::::::::: 7/ HEAT TRANSFER SETTINGS :::::::::::::::::::::::
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # --- Solve heat transfer? ---
@@ -202,7 +223,7 @@ periodic_BCs = False
 
 # --- Boundary condition for heat transfer equation ---
 BC_heat_transfer   = [["temp", 90.0],     # top boundary    (1)
-                     ["temp", 270.0],     # bottom boundary (2)
+                     ["temp", 265.0],     # bottom boundary (2)
                      ["heat_flux", 0.0],  # left boundary   (3)
                      ["heat_flux", 0.0]]  # right boundary  (4)
 
@@ -217,7 +238,7 @@ insolation = insol_1AU/dist_AU**2
 
 # --- Melting inside the shell ---
 # --- Whether generate partial melt if the temperature of the solid reaches T_melt ---
-internal_melting = True
+internal_melting = False
 
 # --- Melting temperature of the solid ---
 T_melt = 270.0	# K
@@ -226,10 +247,10 @@ T_melt = 270.0	# K
 dT_melt_tresh = 4.0
 
 # --- Tidal heating ---
-tidal_dissipation           = True
+tidal_dissipation           = False
 
 initial_tidal_dissipation   = False
-heating_model               = "Maxwell" # Maxwell, Andrade or none
+heating_model               = "Andrade" # Maxwell, Andrade or none
 H_max = 4e-6 # W m^{-3}
 
 # Andrade parameters
@@ -246,24 +267,9 @@ perturb_ampl 	= 5 # K
 # --Number of half-cosine waves in lateral direction ---
 perturb_freq 	= 1 
 
-# "domain" computes dt_cond based on (T_top + T_bot/2) 
-# and dt_conv based on dx_min and v_max in the domain
-dT_max = 4.0
-
-# "cell" computes timestep in each cell and chooses the minimal
-
-# "constant" prescribes a constant timestep
-dt_const = kyr
-
-maximum_time_step = False
-time_step_scaling = 25 # dt = t / time_step_scaling
-
-scaled_time_step = False
-dt_max = 0.1*Myr
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#---------------------------- 6/ RHEOLOGY -----------------------------
-#::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+#:::::::::::::::::::::::::: 8/ RHEOLOGY SETTINGS ::::::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # === PHYSICAL PARAMETERS ===
 # --- Density of the domain solid ---
@@ -274,8 +280,6 @@ rho_l 	= 1000.0 # kg/m3
 
 # --- Density of the melt produced by the solid ---
 rho_m 	= rho_l # kg/m3
-
-alpha_exp = 1.6e-4	# K^-1
 
 # === PHYSICAL INGREDIENTS ===
 # --- Gravity acceleration ---
@@ -318,8 +322,8 @@ d_grain = 1.0e-3
 eta_max = 1e23
 
 # --- Lower cut-off value for plastic viscosity ---
-eta_min_plast = 1e10 #eta_max/1e6
-eta_min = 1e10 #eta_max/1e6
+eta_min_plast = 1e10
+eta_min = 1e10
 
 # # --- Elasticity ---
 # If elasticity is off, we can compute the new viscosity directly from the strain rate (it will be faster)
@@ -350,3 +354,23 @@ healing = False
 
 # --- Characteristic time scale for the microscopic healing processes ---
 healing_timescale = 100*kyr
+
+if __name__ == "__main__":
+   # --- Copy the original parameter file ---
+   Path("data_" + name + "/source_code").mkdir(parents = True, exist_ok = True)
+   shutil.copy(os.path.basename(__file__), "data_" + name + "/source_code/" + os.path.basename(__file__)) 
+
+   # --- Distinguish the bash script name from loop parameters ---
+   i = 1
+   while True:
+      bash_script= sys.argv[i]
+      if (isinstance(bash_script, str)):
+         if (".sh" in bash_script):
+            break
+         else:
+            i += 1
+      else:
+         i += 1
+
+   # --- Copy the original bash script ---
+   os.system("cp " + bash_script + " data_" + name + "/source_code")

@@ -19,10 +19,10 @@ n_cores_max=8
 # background=0 -> running on foreground and output to screen
 # background=1 -> running on background and output to file
 # choice loop=1 or loop=2 below always write to file
-background=0
+background=1
 
 # --- Unique extension to parameter and main file (m_parameters_*.py) ---
-name="demo6_reload"
+name="demo6"
 
 main_file1="main.py"
 param_file1="m_parameters.py"
@@ -38,10 +38,13 @@ run_MilleFEuiIle() {
     cp $param_file2 $param_file1
     cp $main_file1 $main_file2
 
+    # --- Copy the original parameter file ---
+    python $param_file2 "$0"
+
     if [ $n_cores -eq 1 ]; then
-        if [ $background -eq 0 && $loop -eq 0 ]; then
+        if [ $background -eq 0 ] && [ $loop -eq 0 ]; then
             python $main_file2
-        elif [ $background -eq 1 && $loop -eq 0 ]; then
+        elif [ $background -eq 1 ] && [ $loop -eq 0 ]; then
             python $main_file2 > $out_file1 2> $out_file2&
         fi
     else
@@ -65,6 +68,9 @@ run_MilleFEuiIle_loop() {
 
     cp $param_file2 $param_file1
     cp $main_file1 $main_file2
+
+    # --- Copy the original parameter file ---
+    python $param_file2 "$0"
 
     if [ $loop -eq 1 ]; then
         if [ $n_cores -eq 1 ]; then

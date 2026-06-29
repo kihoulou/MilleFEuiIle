@@ -22,7 +22,7 @@ n_cores_max=8
 background=1
 
 # --- Unique extension to parameter and main file (m_parameters_*.py) ---
-name="demo7"
+name="demo6"
 
 main_file1="main.py"
 param_file1="m_parameters.py"
@@ -37,6 +37,9 @@ run_MilleFEuiIle() {
 
     cp $param_file2 $param_file1
     cp $main_file1 $main_file2
+
+    # --- Copy the original parameter file ---
+    python $param_file2 "$0"
 
     if [ $n_cores -eq 1 ]; then
         if [ $background -eq 0 ] && [ $loop -eq 0 ]; then
@@ -65,6 +68,9 @@ run_MilleFEuiIle_loop() {
 
     cp $param_file2 $param_file1
     cp $main_file1 $main_file2
+
+    # --- Copy the original parameter file ---
+    python $param_file2 "$0"
 
     if [ $loop -eq 1 ]; then
         if [ $n_cores -eq 1 ]; then

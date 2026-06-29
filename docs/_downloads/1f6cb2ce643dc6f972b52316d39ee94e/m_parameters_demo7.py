@@ -1,17 +1,23 @@
+# --- Python modules ---
 from dolfin import *
-from m_constants import *
+from pathlib import Path
 import numpy as np
+import shutil
 import sys
+import os
+
+# --- MilleFEuiIle modules ---
+from m_constants import *
 
 comm = MPI.comm_world
 rank = MPI.rank(comm)
 size = MPI.size(comm)
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#------------------------- 1/ OUTPUT FILES SETTINGS -------------------
-#----------------------------------------------------------------------
+#:::::::::::::::::::: 1/ RUN SETTINGS :::::::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # --- Name of the directory with results ---
-name = "demo_compression"
+name = "demo7_compression"
 """
 :var: Name of the directory with the results. The directory with the results will be named ``data_name``.
 
@@ -75,8 +81,8 @@ Whether to reset time when ``reloading_HDF5 = True``.
 """
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#-------------------------  TIME SETTINGS -------------------
-#----------------------------------------------------------------------
+#::::::::::::::::::::::::::::: 2/ TIME SETTINGS :::::::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # --- In what units the time will be? ---
 # 1.0 - seconds or nondimensional, or yr, kyr or Myr
@@ -90,7 +96,7 @@ time_units_string = "Myr"
 :meta hide-value:
 """
 
-# --- Criterion for ending the simulation, e.g., ["time", 1*Myr], ["step", 1000] or ["initial_condition", *]---
+# --- Criterion for ending the simulation, e.g., ["time", 1*Myr], ["step", 1000], ["time_and_step", 100*kyr, 1000] or ["initial_condition", *]---
 termination_condition = ["time", 2*Myr]
 """ Time or step criterion for ending the simulation naturally.
 
@@ -124,163 +130,8 @@ output_frequency = ["time", 10*kyr] # e.g. ["steps", 10] or ["time", 100*kyr]
 """
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#------------------------- FILE SETTINGS -------------------
-#----------------------------------------------------------------------
-
-# --- What properties to save? Must be one of the following (order does not matter):
-# rank              = to which process the tracer belongs
-# dev_stress_xx     = xx component of the deviatoric stress
-# dev_stress_xz     = xz component of the deviatoric stress
-# plastic_strain    = amount of plastic strain
-# original_depth    = original y-coordinate of the tracer
-# composition_0     \
-# composition_1       = material composition of the tracer
-# composition_2     /
-# melt_fraction     = amount of partial melt on the tracer
-# origin            = 0 if the tracer is original, 1 if added later
-# id                = unique ID of the tracer
-tracers_output = []
-"""
-List of strings indicating which properties carried by the tracers will be saved, e.g.::
-
-   tracers_output = ["rank", "dev_stress_xx", "melt_fraction"]
-
-.. table:: Properties to save on tracers
-   :widths: auto
-
-   =================  ==============
-     String           Description
-   =================  ==============
-   rank                the process the tracer belongs to
-   dev_stress_xx       *xx* component of the deviatoric stress
-   dev_stress_xz       *xz* component of the deviatoric stress
-   plastic_strain      amount of plastic strain
-   original_y          original *z*-coordinate of the tracer
-   composition_n       concentration of material *n* (*n* being a number)
-   melt_fraction       amount of partial melt on the tracer
-   origin              0 if the tracer is original, 1 if added later
-   ID                  unique ID of the tracer
-   =================  ==============
-
-:meta hide-value:
-"""
-
-# --- Headers for the columns in the text file for tracers ---
-tracers_header = [] # KEEP EMPTY, will be filled automatically
-
-# --- What functions to write into Paraview and HDF5 file ---
-paraview_output = ["temperature", "velocity", "viscosity", "plastic_strain", "composition_1", "composition_2", "density", "diff_coef"]
-"""
-List of strings indicating which properties will be saved, e.g.::
-
-   paraview_output = ["viscosity", "temperature", "plastic_strain"]
-
-The following are defined: 
-
-======================  ===================================================
-String                   Description
-======================  ===================================================
-``temperature``         :math:`T` (K)
-``velocity``            :math:`v` (m s :math:`^{-1}`)
-``pressure``            :math:`p` (Pa)
-``viscosity``           :math:`\eta` (Pa s)
-``viscosity_log``       log\ :math:`_{10}(\eta)` (-)
-``eta_v``               :math:`\eta_{ductile}` (Pa s)
-``composition_0``       1st material in ``materials[]``
-``composition_1``       2nd material in ``materials[]``
-``composition_2``       3rd material in ``materials[]``
-``tracers``             number of tracers in the cell
-``tidal_heating``       :math:`H_{tidal}` (W m :math:`^{-3}`)
-``melt_fraction``       :math:`\chi_m` (%)  
-``mesh_displacement``   :math:`\\boldsymbol{u}_{mesh}` (m)  
-``topography_bottom``   :math:`h_{bot}` (-)  
-``topography_top``      :math:`h_{top}` (-)
-``iteration_error``     
-``plastic_strain``      :math:`\\varepsilon_p` (-)
-``yield_stress``        :math:`\sigma_Y` (Pa)
-``stress_dev_inv``      :math:`\sigma_{II}` (Pa)
-``strain_rate_inv``     :math:`\dot{\\varepsilon}_{II}` (s :math:`^{-1}`)
-``yield_function``      1 if yielding, 0 otherwise
-``density``             :math:`\\rho` (kg m :math:`^{-3}`)
-``z_function``          :math:`Z`, visco-elastic parameter
-``shear_modulus``       :math:`G` (Pa)
-``cohesion``            :math:`C` (Pa)
-======================  ===================================================
-
-.. tip:: A function can be added by passing it to ``__init__`` in ``m_filenames.py``. 
-         Follow the procedure for already existing functions.
-                    
-:meta hide-value:
-"""
-
-paraview_output_ini = ["temperature"]
-"""
-List of strings indicating which properties will be saved at initial condition.
-
-The following are defined: 
-
-======================  ===================================================
-Input                   Note
-======================  ===================================================
-``temperature``         :math:`T` (K)
-``topography_top``      :math:`h_{top}` (-)
-``topography_bottom``   :math:`h_{bot}` (-)  
-``tracers``             number of tracers in the cell
-``density``             :math:`\\rho` (kg m :math:`^{-3}`)
-``melt_fraction``       :math:`\chi_m` (%)  
-======================  ===================================================
-
-:meta hide-value:
-"""
-
-# --- What values to print in a text file every time step? Must be one of the following (order does not matter):
-# nusselt 	= Nusselt number
-# vrms 		= Root mean square velocity
-# tracers 	= Number of tracers
-# q_top 	= Heat flux over the top boundary
-# q_bot 	= Heat flux over the bottom boundary
-# time		= Duration of the simulation (hours)
-# timestep	= Duration of the time step (seconds)
-stat_output = ["q_top", "time", "timestep"]
-"""
-List of strings indicating which properties will be saved in the text file at each time step.
-
-The following are defined: 
-
-======================  ===================================================
-Input                   Note
-======================  ===================================================
-``nusselt``             :math:`Nu` (-)
-``q_top``               :math:`q_{top}` (W m :math:`^{-2}`)
-``vrms``                :math:`v_{rms}` (m s :math:`^{-1}`)
-``avg_h_bot``           average bottom topography (m)
-``h_top_max``           maximum top topography (m)
-``time``                wallclock time of the simulation (hours)
-``timestep``            one time step duration (seconds)
-======================  ===================================================
-
-:meta hide-value:
-"""
-
-# --- Headers for the columns in the text file
-# --- Up to the user (order corredponding to "stat_output").
-stat_header = ["q_top (W/m2)", "Time (h)", "dt (s)"]
-
-monitor_cache = False
-"""
-:var: If ``True``, returns the number of cache in each time step strored in ``/home/username/.cache/dijitso/lib/``.
-
-:vartype: boolean
-
-.. warning:: Number of caches should stop increasing after a few time steps. If not, FEnICS is making 
-             a new cache in each time step, which may lead to crash of the code after some time.
-
-:meta hide-value:
-"""
-
+#::::::::::::::::::::::::::::: 3/ MESH SETTINGS :::::::::::::::::::::::
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#------------------------ 3/ MESH SETTINGS ----------------------------
-#----------------------------------------------------------------------
 
 # --- Mesh height ---
 height = 10e3 # m
@@ -299,9 +150,6 @@ length = 100e3 # m
 
 :meta hide-value:
 """
-
-save_tracer_trajectory = []
-
 
 # --- Whether to read an external mesh ---
 loading_mesh = False
@@ -388,8 +236,166 @@ refinement = [] #[0, length, height/2.0, height]
 """
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#------------------------- 4/ MATERIAL COMPOSITION -------------------
-#----------------------------------------------------------------------
+#::::::::::::::::::::: 4/ OUTPUT FILES SETTINGS :::::::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# --- What properties to save? Must be one of the following (order does not matter):
+# rank              = to which process the tracer belongs
+# dev_stress_xx     = xx component of the deviatoric stress
+# dev_stress_xz     = xz component of the deviatoric stress
+# plastic_strain    = amount of plastic strain
+# original_depth    = original y-coordinate of the tracer
+# composition_0     \
+# composition_1       = material composition of the tracer
+# composition_2     /
+# melt_fraction     = amount of partial melt on the tracer
+# origin            = 0 if the tracer is original, 1 if added later
+# id                = unique ID of the tracer
+tracers_output = []
+"""
+List of strings indicating which properties carried by the tracers will be saved, e.g.::
+
+   tracers_output = ["rank", "dev_stress_xx", "melt_fraction"]
+
+.. table:: Properties to save on tracers
+   :widths: auto
+
+   =================  ==============
+     String           Description
+   =================  ==============
+   rank                the process the tracer belongs to
+   dev_stress_xx       *xx* component of the deviatoric stress
+   dev_stress_xz       *xz* component of the deviatoric stress
+   plastic_strain      amount of plastic strain
+   original_y          original *z*-coordinate of the tracer
+   composition_n       concentration of material *n* (*n* being a number)
+   melt_fraction       amount of partial melt on the tracer
+   origin              0 if the tracer is original, 1 if added later
+   ID                  unique ID of the tracer
+   =================  ==============
+
+:meta hide-value:
+"""
+
+# --- Headers for the columns in the text file for tracers ---
+tracers_header = [] # KEEP EMPTY, will be filled automatically
+
+# --- Specify tracers whose trajectory will be recorded ---
+save_tracer_trajectory = []
+
+# --- What functions to write into Paraview and HDF5 file ---
+paraview_output = ["temperature", "velocity", "viscosity", "plastic_strain", "composition_1", "composition_2", "density", "diff_coef"]
+"""
+List of strings indicating which properties will be saved, e.g.::
+
+   paraview_output = ["viscosity", "temperature", "plastic_strain"]
+
+The following are defined: 
+
+======================  ===================================================
+String                   Description
+======================  ===================================================
+``temperature``         :math:`T` (K)
+``velocity``            :math:`v` (m s :math:`^{-1}`)
+``pressure``            :math:`p` (Pa)
+``viscosity``           :math:`\eta` (Pa s)
+``viscosity_log``       log\ :math:`_{10}(\eta)` (-)
+``eta_v``               :math:`\eta_{ductile}` (Pa s)
+``composition_0``       1st material in ``materials[]``
+``composition_1``       2nd material in ``materials[]``
+``composition_2``       3rd material in ``materials[]``
+``tracers``             number of tracers in the cell
+``tidal_heating``       :math:`H_{tidal}` (W m :math:`^{-3}`)
+``melt_fraction``       :math:`\chi_m` (%)  
+``mesh_displacement``   :math:`\\boldsymbol{u}_{mesh}` (m)  
+``topography_bottom``   :math:`h_{bot}` (-)  
+``topography_top``      :math:`h_{top}` (-)
+``iteration_error``     
+``plastic_strain``      :math:`\\varepsilon_p` (-)
+``yield_stress``        :math:`\sigma_Y` (Pa)
+``stress_dev_inv``      :math:`\sigma_{II}` (Pa)
+``strain_rate_inv``     :math:`\dot{\\varepsilon}_{II}` (s :math:`^{-1}`)
+``yield_function``      1 if yielding, 0 otherwise
+``density``             :math:`\\rho` (kg m :math:`^{-3}`)
+``z_function``          :math:`Z`, visco-elastic parameter
+``shear_modulus``       :math:`G` (Pa)
+``cohesion``            :math:`C` (Pa)
+======================  ===================================================
+
+.. tip:: A function can be added by passing it to ``__init__`` in ``m_filenames.py``. 
+         Follow the procedure for already existing functions.
+                    
+:meta hide-value:
+"""
+
+paraview_output_ini = ["temperature"]
+"""
+List of strings indicating which properties will be saved at initial condition.
+
+The following are defined: 
+
+======================  ===================================================
+Input                   Note
+======================  ===================================================
+``temperature``         :math:`T` (K)
+``topography_top``      :math:`h_{top}` (-)
+``topography_bottom``   :math:`h_{bot}` (-)  
+``tracers``             number of tracers in the cell
+``density``             :math:`\\rho` (kg m :math:`^{-3}`)
+``melt_fraction``       :math:`\chi_m` (%)  
+======================  ===================================================
+
+:meta hide-value:
+"""
+
+# --- What values to print in a text file every time step? Must be one of the following (order does not matter):
+# nusselt 	= Nusselt number
+# vrms 		= Root mean square velocity
+# tracers 	= Number of tracers
+# q_top 	= Heat flux over the top boundary
+# q_bot 	= Heat flux over the bottom boundary
+# time		= Duration of the simulation (hours)
+# timestep	= Duration of the time step (seconds)
+stat_output = ["time", "timestep"]
+"""
+List of strings indicating which properties will be saved in the text file at each time step.
+
+The following are defined: 
+
+======================  ===================================================
+Input                   Note
+======================  ===================================================
+``nusselt``             :math:`Nu` (-)
+``q_top``               :math:`q_{top}` (W m :math:`^{-2}`)
+``vrms``                :math:`v_{rms}` (m s :math:`^{-1}`)
+``avg_h_bot``           average bottom topography (m)
+``h_top_max``           maximum top topography (m)
+``time``                wallclock time of the simulation (hours)
+``timestep``            one time step duration (seconds)
+======================  ===================================================
+
+:meta hide-value:
+"""
+
+# --- Headers for the columns in the text file
+# --- Up to the user (order corredponding to "stat_output").
+stat_header = ["Time (h)", "dt (s)"]
+
+monitor_cache = False
+"""
+:var: If ``True``, returns the number of cache in each time step strored in ``/home/username/.cache/dijitso/lib/``.
+
+:vartype: boolean
+
+.. warning:: Number of caches should stop increasing after a few time steps. If not, FEnICS is making 
+             a new cache in each time step, which may lead to crash of the code after some time.
+
+:meta hide-value:
+"""
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#:::::::::::::::::::: 5/ MATERIAL COMPOSITION SETTINGS ::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # --- Simple material assignment using "interface", "circle" or "rectangle" geometries ---
 # --- The n-th material overrides the (n-1)th.
@@ -472,7 +478,7 @@ initial_topography = False
 :meta hide-value:
 """
 
-h_top_ini = Expression("0.0*sin(120*pi*x[0]/l)", l = length, pi = np.pi, degree = 1)
+h_top_ini = Expression("0.0", l = length, pi = np.pi, degree = 1)
 """
 :var: Expression defining initial top topography. Will be take into account only if ``initial_topography = True``. 
 
@@ -481,7 +487,7 @@ h_top_ini = Expression("0.0*sin(120*pi*x[0]/l)", l = length, pi = np.pi, degree 
 :meta hide-value:
 """
 
-h_bot_ini = Expression("8.5e3*(tanh((x[0]-l/4)/3000) - tanh((x[0] - 3*l/4)/3000))/2.0", l = length, degree = 1)
+h_bot_ini = Expression("0.0", l = length, degree = 1)
 """
 :var: Expression defining initial bottom topography. Will be take into account only if ``initial_topography = True``. 
 
@@ -491,8 +497,8 @@ h_bot_ini = Expression("8.5e3*(tanh((x[0]-l/4)/3000) - tanh((x[0] - 3*l/4)/3000)
 """
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#------------ 4/ STOKES PROBLEM SETTINGS -------------------
-#----------------------------------------------------------------------
+#::::::::::::::::::::::: 6/ STOKES PROBLEM SETTINGS :::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 stokes_elements = "Mini"
 
 time_step_position = "stokes"# (right after Stokes problem) or "end" (at the end of the time loop)
@@ -561,7 +567,7 @@ error_type          = "integrated" # "maximum or integrated"
 
 # Boundary conditions for velocity (free_slip, no_slip, free surface, velocity, velocity_x, velocity_y)
 BC_Stokes_problem = [["free_surface"],                # top boundary       (1)
-                    ["free_surface"],    # bottom boundary    (2)
+                    ["pressure"],    # bottom boundary    (2)
                     ["velocity_x", +10e3/Myr],       # left boundary      (3)
                     ["velocity_x", -10e3/Myr]]       # right boundary     (4)
 # BC_Stokes_problem = [["free_surface"],                # top boundary       (1)
@@ -646,7 +652,7 @@ tracers_per_cell = 20
 weight_tracers_by_ratio = False
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#:::::::::::::::::::: HEAT TRANSFER SETTINGS ::::::::::::::::::::::::::
+#:::::::::::::::::::: 7/ HEAT TRANSFER SETTINGS :::::::::::::::::::::::
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # --- Solve heat transfer? ---
@@ -758,7 +764,7 @@ dT_melt_tresh = 4.0
 """
 
 # --- Tidal heating ---
-tidal_dissipation           = False
+tidal_dissipation           = True
 """
 :var: Whether there is a volumetric source term in the heat transfer equation.
 
@@ -830,8 +836,8 @@ scaled_time_step = False
 dt_max = 0.1*Myr
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#---------------------------- 6/ RHEOLOGY -----------------------------
-#::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+#:::::::::::::::::::::::::: 8/ RHEOLOGY SETTINGS ::::::::::::::::::::::
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # === PHYSICAL PARAMETERS ===
 # --- Density of the domain solid ---
@@ -864,7 +870,6 @@ rho_m 	= rho_l # kg/m3
 :meta hide-value:
 """
 
-alpha_exp = 1.6e-4	# K^-1
 
 # === PHYSICAL INGREDIENTS ===
 # --- Gravity acceleration ---
@@ -916,7 +921,7 @@ phase_transition = True
 """
 
 # --- Strength of the phase transition at the ice-water boundary ---
-DAL_factor = 0.0 # W/m3
+DAL_factor = 1e-2 # W/m3
 """
 :var: Strength of the phase transition at the ice-water boundary due to the DAL effect
 
@@ -1096,3 +1101,23 @@ healing_timescale = 100*kyr
 
 :meta hide-value:
 """
+
+if __name__ == "__main__":
+   # --- Copy the original parameter file ---
+   Path("data_" + name + "/source_code").mkdir(parents = True, exist_ok = True)
+   shutil.copy(os.path.basename(__file__), "data_" + name + "/source_code/" + os.path.basename(__file__)) 
+
+   # --- Distinguish the bash script name from loop parameters ---
+   i = 1
+   while True:
+      bash_script= sys.argv[i]
+      if (isinstance(bash_script, str)):
+         if (".sh" in bash_script):
+            break
+         else:
+            i += 1
+      else:
+         i += 1
+
+   # --- Copy the original bash script ---
+   os.system("cp " + bash_script + " data_" + name + "/source_code")

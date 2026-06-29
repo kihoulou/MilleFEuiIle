@@ -1,14 +1,17 @@
+# --- Python modules ---
 from dolfin import *
-from m_parameters import *
-from m_elements import *
-from m_material_properties import *
-from m_rheology import *
-from m_boundary_conditions import *
-from m_timestep import *
-from m_mesh import *
-from m_interpolation import *
 import numpy as np
 import time
+
+# --- MilleFEuiIle modules ---
+from m_boundary_conditions import *
+from m_elements import *
+from m_interpolation import *
+from m_mesh import *
+from m_material_properties import *
+from m_parameters import *
+from m_rheology import *
+from m_timestep import *
 
 class Equations:
     def __init__(self, MeshClass, ElemClass, TracersClass, MeltingClass, FilesClass, t, use_tracers, size):
@@ -258,7 +261,7 @@ class Equations:
                         + k(self.Temp_k, self.composition)*dot(nabla_grad(self.Temp_k), nabla_grad(self.Temp_))))*dx
 
             if (tidal_dissipation == True):
-                    eq_energy += - tidal_heating(self.p_k, self.Temp, self.v_k, self.stress_dev_inv, self.xm, self.composition, self.plastic_strain,
+                    eq_energy += - tidal_heating(self.p_k, self.Temp_k, self.v_k, self.stress_dev_inv, self.xm, self.composition, self.plastic_strain,
                 self.step, self.Picard_iter, self.stress_dev_inv_k, self.dt, self.sr_min)*self.Temp_*dx
 
             if (BC_heat_transfer[0][0] == "radiation"):
@@ -286,7 +289,7 @@ class Equations:
                         + k(self.Temp_k, self.composition)*dot(nabla_grad(self.Temp_k), nabla_grad(self.Temp_))))*dx
             
             if (tidal_dissipation == True):
-                    eq_energy += -tidal_heating(self.p_k, self.Temp, self.v_k, self.stress_dev_inv, self.xm, self.composition, self.plastic_strain,
+                    eq_energy += -tidal_heating(self.p_k, self.Temp_k, self.v_k, self.stress_dev_inv, self.xm, self.composition, self.plastic_strain,
                 self.step, self.Picard_iter, self.stress_dev_inv_k, self.dt, self.sr_min)*self.Temp_*dx
 
             problem_energy = LinearVariationalProblem(lhs(eq_energy), rhs(eq_energy), self.Temp, self.bc_temp)
@@ -324,7 +327,7 @@ class Equations:
             self.eq_momentum += -rho_s*g*self._lambda*self.dt*dot(self._v, self.normal)*dot(self.e_z, self.v_)*self.ds(1)
             
         # --- Hydrostatic pressure and bottom surface "drunken sailor"---
-        if (BC_Stokes_problem[1][0] == "free_surface" or phase_transition == True): 
+        if (BC_Stokes_problem[1][0] == "pressure" or phase_transition == True): 
             self.eq_momentum +=  dot(self.normal, self.v_)*(self.h_bot*rho_l - height*rho_s)*g*self.ds(2)\
             + (rho_l - rho_s)*g*self._lambda*self.dt*dot(self._v + self.u, self.normal)*dot(self.e_z, self.v_)*self.ds(2)
 
@@ -449,7 +452,7 @@ class Equations:
 
         # --- If there is the phase transition, estimate first phase change velocity
         #     as it is in the stabilization term ---
-        if (BC_Stokes_problem[1][0] == "free_surface" and phase_transition == True):
+        if (BC_Stokes_problem[1][0] == "pressure" and phase_transition == True):
             if (rank == 0): "Estimating phase change velocity."
             self.compute_u()
         
@@ -480,7 +483,7 @@ class Equations:
                 self.p_out, self.v_out = self.pv.split(True)
         
             # --- Find the constant velocity in case of both bottom and top free surface condition ---
-            if (BC_Stokes_problem[0][0] == "free_surface" and BC_Stokes_problem[1][0] == "free_surface"):
+            if (BC_Stokes_problem[0][0] == "free_surface" and BC_Stokes_problem[1][0] == "pressure"):
 
                 if (stokes_null == "volume"):
                     self.v_aver.assign(assemble(self.v_out[1]*dx)/assemble(self.unit_scalar*dx))
@@ -682,15 +685,15 @@ class Equations:
         self.n_bot.assign(project((self.e_z - self.e_x*dot(nabla_grad(self.h_bot), self.e_x))/sqrt(1.0 + dot(nabla_grad(self.h_bot), self.e_x)**2), self.vCG1))
 
         # --- Compute the velocity of the phase change ---
-        if (BC_Stokes_problem[1][0] == "free_surface" and phase_transition == True):
+        if (BC_Stokes_problem[1][0] == "pressure" and phase_transition == True):
             self.compute_u()
 
         # --- Compute the bottom topography evolution ---
-        if (BC_Stokes_problem[1][0] == "free_surface"):
+        if (BC_Stokes_problem[1][0] == "pressure"):
             self.solver_free_surface_bot.solve()
 
         # --- Compute the mesh displecement distribution ---
-        if (BC_Stokes_problem[0][0] == "free_surface" or BC_Stokes_problem[1][0] == "free_surface"):    
+        if (BC_Stokes_problem[0][0] == "free_surface" or BC_Stokes_problem[1][0] == "pressure"):    
             self.h2_top.assign(self.h_top - self.h_top_k)
             self.h2_bot.assign(self.h_bot - self.h_bot_k)
 

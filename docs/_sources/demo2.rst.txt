@@ -14,6 +14,8 @@ Download
 Here you can download the :download:`bash script <code/demo2/run_MilleFEuiIle_demo2.sh>`\, the :download:`parameter file <code/demo2/m_parameters_demo2.py>`\ and the :download:`matplotlib script <code/demo2/plot_demo2.py>`\ for the heat flux evolution.
 Detailed explanation is given below.
 
+.. note:: Copy the bash script, parameter file, and plotting script from ``/demos/demo2/`` into the main directory.
+
 ----------------------------
 Bash script modification
 ----------------------------
@@ -76,7 +78,7 @@ Parameter file modification
 
 Compared to the previous tutorial, we only need to do several adjustments to
 accomodate from the bash script. The number that the shell script passes
-to the python code  can be accessed as ``int(sys.argv[1])``.
+to the python code  can be accessed using ``int(sys.argv[1])``.
 
 First, we incorporate this parameter to the directory name, so that every
 simulation has its own directory:
@@ -85,7 +87,18 @@ simulation has its own directory:
     :emphasize-lines: 2
 
     # --- Name of the directory with results ---
-    name = "demo_convection_1e" + str(int(sys.argv[1])) + "Pas"
+    name = "demo2_convection_1e" + str(int(sys.argv[1])) + "Pas"
+
+In order to compare heat fluxes through the bottom boundary, we include them in the statistics
+
+.. code-block:: python
+    :emphasize-lines: 1,2
+
+    stat_output = ["q_top", "time", "timestep"]
+    stat_header = ["q_top (W/m2)", "Time (h)", "dt (s)"]
+
+
+
 
 And as the numer represents the viscosity exponent, we define the viscosity at
 the melting temperature ``eta_0`` as follows:

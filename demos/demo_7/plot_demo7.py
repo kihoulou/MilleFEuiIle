@@ -1,23 +1,32 @@
+# --- Python modules ---
 from dolfin import *
 import matplotlib.pyplot as plt
-
-import numpy as np
 import subprocess
+import numpy as np
+import sys
+
+# --- MilleFEuiIle modules ---
 from plot_MilleFEuiIle import *
 
 comm = MPI.comm_world
 rank = MPI.rank(comm)
-size= MPI.size(comm)
+size = MPI.size(comm)
 
-name = "demo_extension"
+name = "demo7_compression"
 
 skip_plotting = False
 
+plot_HDF5_data = True
+
 plot_streamlines = False
 
-plot_comp_tracers = [[2, "orange", 0.25]] #[1, "lightskyblue", 0.25], 
-
 plot_melt_tracers = False
+
+plot_comp_tracers = [[2, "orange", 0.25], [1, "lightskyblue", 0.25]]
+
+plot_trajectories = []
+tail = "comet"
+tail_length = 500 # steps
 
 show_time = True
 
@@ -25,17 +34,20 @@ plot_scalebar = True
 
 plot_axes = False
 
-i_start = 199 
+try:
+    i_start = int(sys.argv[1])
+except:
+    i_start = 0
 
 if (skip_plotting == False):
     font_size = 14
 
-    x_label = ["0", "25", "50"]
-    x_label_val = [0, 25e3, 50e3]
+    x_label = ["0", "50", "100"]
+    x_label_val = [0, 50e3, 100e3]
     x_label_text = "x (km)"
 
-    z_label = ["0", "25"]
-    z_label_val = [0, 25e3]
+    z_label = ["0", "10"]
+    z_label_val = [0, 10e3]
     z_label_text = "z (km)"
 
     # --- Values for temperature color bar ---
@@ -62,7 +74,7 @@ if (skip_plotting == False):
             points.append([length/num_points*i, 2e3])
 
     x_range = [x_label_val[0], x_label_val[-1]]
-    z_range = [z_label_val[0], 27e3]
+    z_range = [-2e3, 12e3]
 
     labels = [[x_label, x_label_text, x_label_val],
             [z_label, z_label_text, z_label_val],
@@ -120,25 +132,31 @@ if (skip_plotting == False):
             visc_log.assign(project(ln(visc)/ln(10), sDG0))
 
             if (plot_scalebar == True):
-                scalebar(ax, 50e3, 0, font_size)
+                scalebar(ax, 100e3, 10e3, 1e3, font_size - 4)
 
             if (plot_axes == False):
                 ax.axis('off')
 
             if (show_time == True):
-                ax.text(0, 1.1*z_label_val[-1], r"$t$ = "+str("{:.1f}".format(ii[2]))+" Myr", fontsize=font_size)
+                ax.text(0, 1.2*z_label_val[-1], r"$t$ = "+str("{:.1f}".format(ii[2]))+" Myr", fontsize=font_size)
+
+             # --- Plot tracer trajectories ---
+            if (len(plot_trajectories) > 0):
+                for j in range(0, len(plot_trajectories)):
+                    plot_trajectory(ax, name, plot_trajectories[j], sim_step, tail, tail_length)
 
             # --- Plot temperature field ---
             print("\nPlotting snapshot", hdf5_step, "/", int(steps[len(steps) - 1][0]))
-            plot_scalar(ax, fig, visc_log, mesh, labels, x_range, z_range, font_size, "flat")
+            plot_scalar(ax, fig, visc_log, mesh, labels, x_range, z_range, font_size, "flat", plot_HDF5_data)
 
-            # --- Plot tracers ---
+            # --- Plot composition tracers ---
             if (len(plot_comp_tracers) > 0):
                 load_comp_tracers(ax, name, hdf5_step, plot_comp_tracers)
 
-            # ax.text(27e3, -2e3, "Oceanic material", color = 'mediumblue', fontsize=font_size-2)
-            ax.text(27e3, 27e3, "Near-surface material", color = 'darkorange', fontsize=font_size-2)
+            ax.text(60e3, -4e3, "Oceanic material", color = 'mediumblue', fontsize=font_size-2)
+            ax.text(60e3, 12e3, "Near-surface material", color = 'darkorange', fontsize=font_size-2)
 
+            # --- Plot melt tracers ---
             if (plot_melt_tracers == True):
                 load_melt_tracers(ax, name, labels, fig, font_size, sim_step)
 
@@ -147,11 +165,11 @@ if (skip_plotting == False):
                 vel_max = MPI.max(mesh.mpi_comm(), np.abs(v.vector().get_local()).max()) 
                 compute_streamlines(ax, v, points, vel_max, fig, font_size, i)
 
-            plt.savefig("data_" + name + "/img/temp_NS_" + str(hdf5_step).zfill(3) + ".png",
+            plt.savefig("data_" + name + "/img/visc_" + str(hdf5_step).zfill(3) + ".png",
                             dpi = 100, transparent = False, pad_inches = 0.3, bbox_inches = 'tight')
             plt.close(fig)
             plt.clf()
 
 # --- Make animation using ImageMagick ---
 print("\nMaking animation.")
-subprocess.run(["convert -delay 5 data_" + name + "/img/temp_NS_*.png data_" + name + "/anim/demo6_NS.gif"], shell=True) 
+subprocess.run(["convert -delay 5 data_" + name + "/img/visc_*.png data_" + name + "/anim/demo7.gif"], shell=True) 
