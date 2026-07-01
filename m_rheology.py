@@ -160,7 +160,7 @@ def get_new_stress(mesh, Temp, xm, stress_dev_inv, stress_dev_inv_k, strain_rate
             for i in range (len(composition)):
                 comp_cell.append(composition[i](Point(centroid.x(), centroid.y())))
             
-        visc_cell = eta_ductile(temp_cell, eps_II_cell, sigma_II_cell, xm_cell, comp_cell, step, Picard_iter, eval_type)
+        visc_cell = eta_ductile(temp_cell, None, sigma_II_cell, xm_cell, comp_cell, step, Picard_iter, eval_type)
         
         if (elasticity == True):
             sigma_II_k_cell = stress_dev_inv_k(Point(centroid.x(), centroid.y()))

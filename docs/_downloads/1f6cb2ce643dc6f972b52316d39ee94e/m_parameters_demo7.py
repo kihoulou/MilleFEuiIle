@@ -570,10 +570,6 @@ BC_Stokes_problem = [["free_surface"],                # top boundary       (1)
                     ["pressure"],    # bottom boundary    (2)
                     ["velocity_x", +10e3/Myr],       # left boundary      (3)
                     ["velocity_x", -10e3/Myr]]       # right boundary     (4)
-# BC_Stokes_problem = [["free_surface"],                # top boundary       (1)
-#                      ["free_surface"],    # bottom boundary    (2)
-#                      ["velocity_x", -10e3/Myr],       # left boundary      (3)
-#                      ["velocity_x", +10e3/Myr]]       # right boundary     (4)
 
 """
 :var: Boundary conditions for the Stokes problem :func:`m_equations.Equations.equation_Stokes` in the following order

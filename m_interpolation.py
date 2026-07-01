@@ -192,9 +192,13 @@ def stress_update(mesh, tracers_in_cells, tracers, visc, strain_rate_tensor, z_f
             e_xz = strain_rate_tensor(Point(px, pz))[1]
             e_zz = strain_rate_tensor(Point(px, pz))[3]
 
-            tracers[tracer_no][4]  += z_tracer*(2*visc_tracer*e_xx - tracers[tracer_no][4])
-            tracers[tracer_no][5]  += z_tracer*(2*visc_tracer*e_xz - tracers[tracer_no][5])
- 
+            if (elasticity == True):
+                tracers[tracer_no][4]  += z_tracer*(2*visc_tracer*e_xx - tracers[tracer_no][4])
+                tracers[tracer_no][5]  += z_tracer*(2*visc_tracer*e_xz - tracers[tracer_no][5])
+            else:
+                tracers[tracer_no][4]  = 2*visc_tracer*e_xx
+                tracers[tracer_no][5]  = 2*visc_tracer*e_xz
+
 def stress_reduction(mesh, tracers_in_cells, tracers, yield_function, yield_stress, stress_invariant):
     if rank == 0 : print("\n\tReducing stres when yielding\n", flush = True)
     for j in range(mesh.num_cells()):

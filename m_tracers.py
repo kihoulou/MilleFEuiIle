@@ -54,13 +54,14 @@ class Tracers:
                 if (self.only_melt_tracers == False and self.only_tracked_tracers == False and initial_topography == False):
                     self.introduce_tracers()
 
-                 # --- Puts the tracers listed in the parameter file ---
-                if (len(save_tracer_trajectory) > 0):
-                    self.introduce_tracked_tracers()
-
                 else:
                     for j in range(self.mesh.num_cells()):
-                        self.tracers_in_cells.append([])                    
+                        self.tracers_in_cells.append([])      
+                        
+                # --- Puts the tracers listed in the parameter file ---
+                if (len(save_tracer_trajectory) > 0):
+                    self.introduce_tracked_tracers()
+                              
             else:
                 pass # Tracers loaded in main.py
 
@@ -117,6 +118,41 @@ class Tracers:
                         
         file.write("\n")
         
+    def save_trajectory_header(self, file):
+
+        file.write((4*"%s\t")%("Time (" + time_units_string + ")", "step", "x_pos (m)", "y_pos (m)"))   
+
+        for arg in tracer_trajectory_output:
+            file.write(("%s\t")%(arg))
+        file.write("\n")
+
+    def save_trajectory(self, t, time_units, step, Temp):
+        for j in range (0, len(self.tracers)): 
+            if (j not in self.vacancy):
+                for k in range(len(save_tracer_trajectory)):
+                    tracer_ID = save_tracer_trajectory[k][2]
+                    if (self.tracers[j][-1] == tracer_ID):
+                        
+                        temp_tracer = Temp(Point(self.tracers[j][0], self.tracers[j][1]))
+
+                        file = open("data_" + self.name + "/tracers/trajectories/tracer_" + str(tracer_ID) + ".dat","a")
+                        if (step == 1):
+                            self.save_trajectory_header(file)
+
+                        file.write(("%.7E\t" + "%d\t" + 2*"%.7E\t")%(float(t)/time_units, step, 
+                                                                            self.tracers[j][0], 
+                                                                            self.tracers[j][1]))
+                        if ("s_xx (Pa)" in tracer_trajectory_output):
+                            file.write(("%.7E\t")%(self.tracers[j][4]))
+
+                        if ("s_xx (Pa)" in tracer_trajectory_output):
+                            file.write(("%.7E\t")%(self.tracers[j][5]))
+
+                        if ("temperature (K)" in tracer_trajectory_output):
+                            file.write(("%.7E\t")%(temp_tracer))
+
+                        file.write(("\n")%())
+                        file.close()
 
     def rank_interpolation(self):
 
@@ -308,17 +344,6 @@ class Tracers:
 
                         self.tracers_in_cells[j].append(tracer_no)
                         tracer_no +=1   
-
-    def save_trajectory(self, t, time_units, step):
-        for j in range (0, len(self.tracers)): 
-            if (j not in self.vacancy):
-                for k in range(len(save_tracer_trajectory)):
-                    tracer_ID = save_tracer_trajectory[k][2]
-                    if (self.tracers[j][-1] == tracer_ID):
-                        
-                        file = open("data_" + self.name + "/tracers/trajectories/tracer_" + str(tracer_ID) + ".dat","a")
-                        file.write(("%.7E\t" + "%d\t" + 2*"%.7E\t" + "\n")%(float(t)/time_units, step, self.tracers[j][0], self.tracers[j][1]))
-                        file.close()
 
     def load_tracers(self):
 

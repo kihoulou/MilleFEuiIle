@@ -533,7 +533,7 @@ cfl = 0.5
 """
 
 # ---  Maximum number of Stokes solver Picard iterations (used for heat equation, advection of tracers) ---
-Picard_iter_max 	= 10
+Picard_iter_max 	= 25
 """ 
 :var: Maximum number of Stokes solver Picard iterations in case of nonlinear rheology (stress-dependent viscosity, plasticity),
       see :func:`m_equations.Equations.solve_Stokes_problem`\ .

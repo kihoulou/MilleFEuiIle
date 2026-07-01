@@ -329,7 +329,16 @@ def run_code():
         
         # --- Check whether to save results? ---> If yes, save them.
         if (len(save_tracer_trajectory) > 0):
-            TracersClass.save_trajectory(t, time_units, step)
+            if ("s_xx (Pa)" in tracer_trajectory_output or "s_xz (Pa)" in tracer_trajectory_output):
+                if (plasticity == False and elasticity == False):
+                    EqClass.visc.assign(project(eta_ductile(EqClass.Temp, EqClass.v_k, None, EqClass.xm, EqClass.composition, EqClass.step, EqClass.Picard_iter, "mesh"), EqClass.sDG0))
+                else:
+                    EqClass.update_viscosity()
+
+                if (elasticity == False): 
+                    EqClass.update_stress()
+            
+            TracersClass.save_trajectory(t, time_units, step, EqClass.Temp)
         
         step_output, output_now = Output_Timing(step, step_output, t, time_output)
         if (output_now == True):

@@ -103,7 +103,7 @@ during the inicialization, using crossed geometry of the elements. The basic ele
 the longest side of 1 km.
 
 .. code-block:: python
-    :emphasize-lines: 2, 5, 8, 11, 14, 17, 20, 23 
+    :emphasize-lines: 2, 5, 8, 11, 14, 17, 20
 
     # --- Mesh height ---
     height = 20e3 # m

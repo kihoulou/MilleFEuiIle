@@ -34,7 +34,7 @@ We prescribe the ``pressure`` boundary condition at the bottom boundary to allow
 evolution and switch the sign of lateral velocities from divergent to convergent.
 
 .. code-block:: python
-    :emphasize-lines: 2,3,4,5
+    :emphasize-lines: 2,3,4
     
     BC_Stokes_problem = [["free_surface"],                # top boundary       (1)
                     ["pressure"],    # bottom boundary    (2)

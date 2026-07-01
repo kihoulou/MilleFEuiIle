@@ -313,6 +313,10 @@ save_tracer_trajectory = [[length/2.0  - 50, 5e3, "a"],
                           [length/2.0  + 50, 20e3, "d"],
                           [length/2.0  - 50, 25e3, "e"]]
 
+# --- Specify tracers properties to record along the trajectory ---
+# Now implemented: "s_xx (Pa)", "s_xz (Pa)", "temperature (K)" 
+tracer_trajectory_output = ["s_xx (Pa)", "s_xz (Pa)", "temperature (K)"]
+
 # --- What functions to write into Paraview and HDF5 file ---
 paraview_output = ["temperature", "velocity", "viscosity"]
 """

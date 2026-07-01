@@ -12,7 +12,7 @@ comm = MPI.comm_world
 rank = MPI.rank(comm)
 size = MPI.size(comm)
 
-name = "demo6_extension2"
+name = "demo6_extension"
 
 skip_plotting = False
 
@@ -30,9 +30,9 @@ plot_melt_tracers = False
 
 show_time = True
 
-plot_scalebar = True
+plot_scalebar = False
 
-plot_axes = False
+plot_axes = True
 
 try:
     i_start = int(sys.argv[1])
@@ -132,7 +132,7 @@ if (skip_plotting == False):
             visc_log.assign(project(ln(visc)/ln(10), sDG0))
 
             if (plot_scalebar == True):
-                scalebar(ax, 50e3, 10e3, font_size)
+                scalebar(ax, 50e3, 10e3, 1e3, font_size - 4)
 
             if (plot_axes == False):
                 ax.axis('off')
